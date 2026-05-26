@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-
-from pycparser import parse_file, c_ast
 import sys
 import os
+
+from pycparser import parse_file, c_ast
+
+LIBNAME = sys.argv[1]
 
 def getfield(x):
     is_ptr = False
@@ -10,8 +12,8 @@ def getfield(x):
         is_ptr = True
         x.type = x.type.type
 
-    # print(x.type)
-    assert x.name == x.type.declname
+    declname = x.type.declname if not isinstance(x.type, c_ast.ArrayDecl) else x.type.type.declname
+    assert x.name == declname
 
     ty = ty2idr(x.type)
 
@@ -27,39 +29,48 @@ def ty2idr(node):
         case c_ast.TypeDecl():
             match node.type:
                 case c_ast.IdentifierType():
-                    assert len(node.type.names) == 1
-
-                    match node.type.names[0]:
-                        case "void":
+                    match node.type.names:
+                        case ["void"]:
                             return "()"
 
-                        case "uint16_t":
+                        case ["unsigned", "char"]:
+                            return "U8"
+
+                        case ["unsigned", "short"]:
                             return "U16"
-                        case "int16_t":
+
+                        case ["int"]:
+                            return "I64"
+                        case ["unsigned", "int"]:
+                            return "U64"
+
+                        case ["uint16_t"]:
+                            return "U16"
+                        case ["int16_t"]:
                             return "I16"
 
-                        case "int32_t":
+                        case ["int32_t"]:
                             return "I32"
-                        case "uint32_t":
+                        case ["uint32_t"]:
                             return "U32"
 
-                        case "int64_t":
+                        case ["int64_t"]:
                             return "I64"
-                        case "uint64_t":
+                        case ["uint64_t"]:
                             return "U64"
-                        case "size_t":
+                        case ["size_t"]:
                             return "U64"
 
-                        case "float":
+                        case ["float"]:
                             return "F32"
-                        case "double":
+                        case ["double"]:
                             return "F64"
 
-                        case "char" | "uint8_t":
+                        case ["char"] | ["uint8_t"]:
                             return "U8"
 
                         case _:
-                            assert node.type.names[0].startswith("WGPU"), node.type
+                            assert node.type.names[0].startswith("WGPU") | node.type.names[0].startswith("GLFW"), node.type
                             return f"{node.type.names[0]}"
 
                 case c_ast.Struct():
@@ -89,36 +100,76 @@ def ty2idr(node):
             assert node.name is None
             return ty2idr(node.type)
 
+        case c_ast.ArrayDecl():
+            return f"List ({ ty2idr(node.type) })"
+
         case _:
             assert False, f"is {node.__class__} {node}"
 
 def func2idr(node):
     args = [ty2idr(x.type) for x in node.type.args]
-    ret = ty2idr(node.type.type)
+    if args == ["()"]:
+        args = []
+
+    args += [ f"PrimIO ({ ty2idr(node.type.type) })" ]
 
     return f"""
-%foreign "C:{node.name},libwgpu_native"
-{node.name} : { " -> ".join(args) } -> { ret }
+%foreign "C:{node.name},{LIBNAME}"
+export
+{node.name} : { " -> ".join(args) }
     """
+
+def eval_constexpr(x):
+    match x:
+        case c_ast.BinaryOp(op="<<"):
+            return f"(shiftL { eval_constexpr(x.left) } { eval_constexpr(x.right) })"
+        case c_ast.BinaryOp(op="|"):
+            return f"({ eval_constexpr(x.left) } .|. { eval_constexpr(x.right) })"
+        case c_ast.Constant():
+            return f"{ x.value }"
+        case _:
+            assert False, f"TODO: { x }"
 
 class Visitor(c_ast.NodeVisitor):
     def visit_Decl(self, node) -> None:
-        if node.name is None or not node.name.startswith("wgpu"):
-            return
-
-        print(func2idr(node))
+        # print(node)
+        match node.type:
+            case c_ast.Struct():
+                # forward declaration, ignore?
+                return
+            case c_ast.TypeDecl():
+                print()
+                print(f"{ node.type.declname } : { node.type.type.names[0] }")
+                print(f"{ node.type.declname } = { eval_constexpr(node.init) }")
+            case c_ast.FuncDecl():
+                print(func2idr(node))
+            case _:
+                assert False, "TODO"
 
     def visit_Typedef(self, node) -> None:
-        if not node.name.startswith("WGPU"):
+        # ignore these
+        if node.name in [
+            "size_t",
+            "int8_t",
+            "uint8_t",
+            "int16_t",
+            "uint16_t",
+            "int32_t",
+            "uint32_t",
+            "int64_t",
+            "uint64_t",
+        ]:
             return
 
         print()
+        print("public export")
         print(f"{ node.name } : Type")
         print(f"{ node.name } = { ty2idr(node.type) }")
 
         if isinstance(node.type, c_ast.TypeDecl) and isinstance(node.type.type, c_ast.Enum):
             for el in node.type.type.values.enumerators:
                 print()
+                print("public export")
                 print(f"{ el.name } : { node.name }")
                 print(f"{ el.name } = { el.value.value }")
 
@@ -126,47 +177,20 @@ class Visitor(c_ast.NodeVisitor):
 
 
 ast = parse_file(
-    sys.argv[1],
+    sys.argv[3],
     use_cpp = True,
     cpp_path = "clang",
     cpp_args=["-E", "-I" + os.getenv("FAKE_LIBC_INCLUDE")],
 )
 
 # print(ast)
-print("""
-import System.FFI
+print(f"""
+module { sys.argv[2] }
 
-U8 : Type
-U8 = Bits8
+import public System.FFI
+import Data.Bits
 
-I8 : Type
-I8 = Bits8
+import public Utils.CTypes
 
-U16 : Type
-U16 = Bits16
-
-I16 : Type
-I16 = Bits16
-
-U32 : Type
-U32 = Bits32
-
-I32 : Type
-I32 = Bits32
-
-U64 : Type
-U64 = Bits64
-
-I64 : Type
-I64 = Bits64
-
-Enum : Type
-Enum = Bits32
-
-F32 : Type
-F32 = Bits32
-
-F64 : Type
-F64 = Bits64
 """)
 Visitor().visit(ast)

@@ -1,0 +1,18 @@
+= 2026-05-26
+* submit an extended abstract to TyDe?
+	* https://tydeworkshop.org/2026
+* functional programming workshops in paris
+	* https://www.irif.fr/~scherer/events/fpw-2026/announce.html
+
+= 2026-05-25
+* replicate the `Massively Parallel Rendering of Complex Closed-Form Implicit Surfaces` paper?
+	* CSG DSL
+
+= 2026-05-22
+* TODO: library for standard c types
+* port doom to webgpu using idris?
+
+= meeting 2026-05-20
+* stay academically interesting, ie. 100% API coverage isn't necessary
+* aim for the DSL
+

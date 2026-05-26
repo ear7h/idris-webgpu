@@ -1,15 +1,38 @@
 { pkgs ? import <nixpkgs> {} } : let
+  glfw3webgpu = let
+    src = pkgs.fetchgit {
+      url = "https://github.com/eliemichel/glfw3webgpu";
+      hash = "sha256-PYgjk6bFeUhH796vQRUINN5mpafRviZN+AemHuP7wtI=";
+    };
+  in pkgs.runCommandCC "glfw3webgpu" {
+    src = src;
+  } ''
+    mkdir $out{,/lib,/include}
+    cp $src/glfw3webgpu.h $out/include
+    cc \
+      -dynamiclib \
+      -L${ pkgs.glfw }/lib \
+      -I${ pkgs.glfw }/include \
+      -I${ pkgs.wgpu-native.dev }/include \
+      -lglfw \
+      -o $out/lib/libglfw3webgpu.dylib \
+      $src/glfw3webgpu.c
+  '';
 in pkgs.mkShell {
-  DYLD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-    pkgs.wgpu-native
+  IDRIS2_LIBS = with pkgs; lib.makeLibraryPath [
+    wgpu-native
+    glfw
+    glfw3webgpu
   ];
 
-  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-    pkgs.wgpu-native
-  ];
+  NIX_LDFLAGS = with pkgs; ''
+    -F${apple-sdk}/Library/Frameworks
+  '';
 
-  C_INCLUDE_PATH = pkgs.lib.makeIncludePath [
-    pkgs.wgpu-native.dev
+  C_INCLUDE_PATH = with pkgs; lib.makeIncludePath [
+    wgpu-native.dev
+    glfw
+    glfw3webgpu
   ];
 
   FAKE_LIBC_INCLUDE = pkgs.fetchgit {
