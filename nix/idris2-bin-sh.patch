@@ -1,0 +1,57 @@
+diff --git a/src/Compiler/Scheme/Chez.idr b/src/Compiler/Scheme/Chez.idr
+index 802fba08a..bb712362b 100644
+--- a/src/Compiler/Scheme/Chez.idr
++++ b/src/Compiler/Scheme/Chez.idr
+@@ -397,7 +397,7 @@ getFgnCall version (n, fc, d) = schFgnDef fc n d version
+ export
+ startChezPreamble : String
+ startChezPreamble = """
+-  #!/bin/sh
++  #!REPLACE_BIN_BASH
+   # \{ generatedString "Chez" }
+ 
+   set -e # exit on any error
+@@ -434,7 +434,7 @@ startChezCmd chez appdir target progType = """
+ 
+ startChezWinSh : String -> String -> String -> String -> String
+ startChezWinSh chez appdir target progType = """
+-  #!/bin/sh
++  #!REPLACE_BIN_BASH
+   # \{ generatedString "Chez" }
+ 
+   set -e # exit on any error
+diff --git a/src/Compiler/Scheme/ChezSep.idr b/src/Compiler/Scheme/ChezSep.idr
+index dbc82e2e6..a3074d63c 100644
+--- a/src/Compiler/Scheme/ChezSep.idr
++++ b/src/Compiler/Scheme/ChezSep.idr
+@@ -82,7 +82,7 @@ startChezCmd chez appDirSh targetSh = """
+ 
+ startChezWinSh : String -> String -> String -> String
+ startChezWinSh chez appDirSh targetSh = """
+-  #!/bin/sh
++  #!REPLACE_BIN_BASH
+   # \{ generatedString "ChezSep" }
+ 
+   set -e # exit on any error
+diff --git a/src/Compiler/Scheme/Racket.idr b/src/Compiler/Scheme/Racket.idr
+index af71b351a..47e76d664 100644
+--- a/src/Compiler/Scheme/Racket.idr
++++ b/src/Compiler/Scheme/Racket.idr
+@@ -340,7 +340,7 @@ getFgnCall appdir (n, fc, d) = schFgnDef appdir fc n d
+ 
+ startRacket : String -> String -> String -> String
+ startRacket racket appdir target = """
+-  #!/bin/sh
++  #!REPLACE_BIN_BASH
+   # \{ generatedString "Racket" }
+ 
+   set -e # exit on any error
+@@ -371,7 +371,7 @@ startRacketCmd racket appdir target = """
+ 
+ startRacketWinSh : String -> String -> String -> String
+ startRacketWinSh racket appdir target = """
+-  #!/bin/sh
++  #!REPLACE_BIN_BASH
+   # \{ generatedString "Racket" }
+ 
+   set -e # exit on any error

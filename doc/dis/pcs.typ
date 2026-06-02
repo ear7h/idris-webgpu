@@ -50,6 +50,20 @@ in this area, either as described in textbooks, research papers, or in
 publicly available software. You may also describe potentially useful
 tools and technologies here but do not go into project-specific decisions.
 
+- candle - rust ml framework
+  - https://github.com/huggingface/candle
+  - loads arbitrary models (eg. matrices and compute graphs)
+  - has gpu support on nvidia and metal
+- spidr - idris bindings to gpu ml framework
+  - https://codeberg.org/joelberkeley/spidr
+- futhark - functional-ish array processing language
+  - https://futhark-lang.org/index.html
+  - "Because it's nicer than writing CUDA or OpenCL by hand!"
+- functional reactive programming
+  - https://github.com/stefan-hoeck/idris2-rhone
+- "massively parallel rendering of complex closed-form implicit surfaces"
+  - CSG as a basis for DSL for drawing 3d shapes
+
 = Requirements specification
 
 Capturing the properties the software solution must have in the form of

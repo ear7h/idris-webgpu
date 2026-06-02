@@ -1,0 +1,13 @@
+package idris-webgpu
+version = 0.0.1
+
+modules
+	= Graphics.WGPU.Sys
+	, Graphics.GLFW.Sys
+	, Graphics.GLFW3WebGPU
+
+main = Main
+executable = "runTest"
+
+sourcedir = "src"
+

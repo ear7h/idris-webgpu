@@ -34,40 +34,46 @@ def ty2idr(node):
                             return "()"
 
                         case ["unsigned", "char"]:
-                            return "U8"
+                            return "Bits8"
+                        case ["char"]:
+                            return "Bits8"
 
+                        case ["short"]:
+                            return "Int16"
                         case ["unsigned", "short"]:
-                            return "U16"
+                            return "Bits16"
 
                         case ["int"]:
-                            return "I64"
+                            return "Int32"
                         case ["unsigned", "int"]:
-                            return "U64"
+                            return "Bits32"
+
+                        case ["uint8_t"]:
+                            return "Bits8"
+                        case ["int8_t"]:
+                            return "Int8"
 
                         case ["uint16_t"]:
-                            return "U16"
+                            return "Bits16"
                         case ["int16_t"]:
-                            return "I16"
+                            return "Int16"
 
                         case ["int32_t"]:
-                            return "I32"
+                            return "Int32"
                         case ["uint32_t"]:
-                            return "U32"
+                            return "Bits32"
 
                         case ["int64_t"]:
-                            return "I64"
+                            return "Int64"
                         case ["uint64_t"]:
-                            return "U64"
+                            return "Bits64"
                         case ["size_t"]:
-                            return "U64"
+                            return "Bits64"
 
                         case ["float"]:
-                            return "F32"
+                            return "Float"
                         case ["double"]:
-                            return "F64"
-
-                        case ["char"] | ["uint8_t"]:
-                            return "U8"
+                            return "Double"
 
                         case _:
                             assert node.type.names[0].startswith("WGPU") | node.type.names[0].startswith("GLFW"), node.type
@@ -101,7 +107,11 @@ def ty2idr(node):
             return ty2idr(node.type)
 
         case c_ast.ArrayDecl():
-            return f"List ({ ty2idr(node.type) })"
+            if node.dim is None:
+                return f"Ptr ({ ty2idr(node.type) })"
+            else:
+                assert isinstance(node.dim, c_ast.Constant)
+                return f"FTypeArray { node.dim.value } ({ ty2idr(node.type) })"
 
         case _:
             assert False, f"is {node.__class__} {node}"
@@ -119,6 +129,72 @@ export
 {node.name} : { " -> ".join(args) }
     """
 
+def ty2scheme(fieldty, enums):
+    # print(fieldty)
+
+    if isinstance(fieldty, c_ast.Struct):
+        # print(fieldty.name)
+        return "struct"
+
+    match fieldty.names:
+        case ["int8_t"]:
+            return "integer-8"
+
+        case ["uint8_t"]:
+            return "unsigned-8"
+
+        case ["int16_t"]:
+            return "integer-16"
+
+        case ["uint16_t"]:
+            return "unsigned-16"
+
+        case ["int32_t"]:
+            return "integer-32"
+
+        case ["uint32_t"]:
+            return "unsigned-32"
+
+        case ["int64_t"]:
+            return "integer-64"
+
+        case ["uint64_t"]:
+            return "unsigned-64"
+
+        case ["size_t"]:
+            return "size_t"
+
+        case ["unsigned", "char"] | ["char"]:
+            return "char"
+
+        case ["short"]:
+            return "short"
+
+        case ["unsigned", "short"]:
+            return "unsigned-short"
+
+        case ["int"]:
+            return "int"
+
+        case ["unsigned", "int"]:
+            return "unsigned-int"
+
+        case ["float"]:
+            return "single-float"
+
+        case ["double"]:
+            return "double-float"
+
+        case [name]:
+            assert name in enums, f"expecte { name } to be enum"
+            return "int"
+
+        case _:
+            # print(fieldty)
+            # assert node.type.names[0].startswith("WGPU") | node.type.names[0].startswith("GLFW"), node.type
+            # return f"{node.type.names[0]}"
+            assert False, f"extra { fieldty }"
+
 def eval_constexpr(x):
     match x:
         case c_ast.BinaryOp(op="<<"):
@@ -131,6 +207,12 @@ def eval_constexpr(x):
             assert False, f"TODO: { x }"
 
 class Visitor(c_ast.NodeVisitor):
+    def __init__(self):
+        super().__init__()
+        self.enums = set()
+        self.structs = set()
+
+
     def visit_Decl(self, node) -> None:
         # print(node)
         match node.type:
@@ -164,9 +246,24 @@ class Visitor(c_ast.NodeVisitor):
         print()
         print("public export")
         print(f"{ node.name } : Type")
-        print(f"{ node.name } = { ty2idr(node.type) }")
+        ty = ty2idr(node.type)
+        print(f"{ node.name } = { ty }")
+
+        if isinstance(node.type.type, c_ast.Struct):
+            print()
+            print("-- struct here!!")
+            print("%foreign \"\"")
+            print(f"prim__allocStruct{ node.name } : allocStructPrimType { node.name }")
+            print(f"%foreign_impl prim__allocStruct{ node.name } (allocStructPrimCodegen { node.name })")
+            print()
+            print("export")
+            print(f"AllocStruct { node.name } where")
+            print(f"    allocStruct xs =")
+            print(f"        primIO $ hlistApply prim__allocStruct{ node.name } xs")
 
         if isinstance(node.type, c_ast.TypeDecl) and isinstance(node.type.type, c_ast.Enum):
+            self.enums.add(node.name)
+
             for el in node.type.type.values.enumerators:
                 print()
                 print("public export")
@@ -190,7 +287,7 @@ module { sys.argv[2] }
 import public System.FFI
 import Data.Bits
 
-import public Utils.CTypes
+import Utils.CTypes
 
 """)
 Visitor().visit(ast)

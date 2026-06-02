@@ -7,27 +7,14 @@
   in pkgs.runCommandCC "glfw3webgpu" {
     src = src;
   } ''
-    mkdir $out{,/lib,/include}
-    cp $src/glfw3webgpu.h $out/include
-    cc \
-      -dynamiclib \
-      -L${ pkgs.glfw }/lib \
-      -I${ pkgs.glfw }/include \
-      -I${ pkgs.wgpu-native.dev }/include \
-      -lglfw \
-      -o $out/lib/libglfw3webgpu.dylib \
-      $src/glfw3webgpu.c
+    mkdir -p $out/include
+    cp $src/glfw3webgpu.{c,h} $out/include
   '';
 in pkgs.mkShell {
   IDRIS2_LIBS = with pkgs; lib.makeLibraryPath [
     wgpu-native
     glfw
-    glfw3webgpu
   ];
-
-  NIX_LDFLAGS = with pkgs; ''
-    -F${apple-sdk}/Library/Frameworks
-  '';
 
   C_INCLUDE_PATH = with pkgs; lib.makeIncludePath [
     wgpu-native.dev
