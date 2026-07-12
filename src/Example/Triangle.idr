@@ -395,18 +395,3 @@ main = do -- putStrLn "starting"
             primIO $ wgpuTextureRelease (getField surfaceTex "texture")
           )
 
-f1 : IO ()
-f1 = do
-  Right x <- readFile "data/bunny.obj"
-    | Left x => putStrLn "oops: \{ show x }"
-  putStrLn "read file"
-  Just parsed <- pure $ parseObj x
-    | Nothing => putStrLn "oops"
-  putStrLn "parsed"
-  Just tris <- pure $ parsed.tris
-    | Nothing => putStrLn "oops"
-  putStrLn "tris"
-
-  x <- tris2buf tris
-  putStrLn "tris: \{ show $ isJust x }"
-

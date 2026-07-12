@@ -99,7 +99,7 @@ def ty2idr(node):
                 for x in node.args.params
             ]
 
-            return " -> ".join(args) + " -> " + ty2idr(node.type)
+            return " -> ".join(args) + " -> PrimIO (" + ty2idr(node.type) + ")"
 
 
         case c_ast.Typename():
@@ -111,13 +111,13 @@ def ty2idr(node):
                 return f"Ptr ({ ty2idr(node.type) })"
             else:
                 assert isinstance(node.dim, c_ast.Constant)
-                return f"FTypeArray { node.dim.value } ({ ty2idr(node.type) })"
+                return f"CArray { node.dim.value } ({ ty2idr(node.type) })"
 
         case _:
             assert False, f"is {node.__class__} {node}"
 
 def func2idr(node):
-    args = [ty2idr(x.type) for x in node.type.args]
+    args = [f"{ ty2idr(x.type) }" for x in node.type.args]
     if args == ["()"]:
         args = []
 
@@ -221,7 +221,8 @@ class Visitor(c_ast.NodeVisitor):
                 return
             case c_ast.TypeDecl():
                 print()
-                print(f"{ node.type.declname } : { node.type.type.names[0] }")
+                print("public export")
+                print(f"{ node.type.declname } : { ty2idr(node.type) }")
                 print(f"{ node.type.declname } = { eval_constexpr(node.init) }")
             case c_ast.FuncDecl():
                 print(func2idr(node))
@@ -260,6 +261,13 @@ class Visitor(c_ast.NodeVisitor):
             print(f"AllocStruct { node.name } where")
             print(f"    allocStruct xs =")
             print(f"        primIO $ hlistApply prim__allocStruct{ node.name } xs")
+
+        if isinstance(node.type.type, c_ast.FuncDecl):
+            print()
+            print("export")
+            print(f"%foreign \"C:mkFunctionPtr,libidris_wgpu_support\"")
+            print(f"mk{ node.name } : ({ ty2idr(node.type.type) }) -> PrimIO $ { node.name }")
+
 
         if isinstance(node.type, c_ast.TypeDecl) and isinstance(node.type.type, c_ast.Enum):
             self.enums.add(node.name)

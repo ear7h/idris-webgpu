@@ -1,12 +1,15 @@
+-- TODO: rename FFI
 module Utils.CTypes
 
-import Data.IORef
-import Control.Monad.Trans
+import Data.Buffer
 import public System.FFI
 import public Data.String
 import public Data.List.Quantifiers
 
--- %cg chez extraRuntime=src/scheme/utils.ss
+%cg chez extraRuntime=src/scheme/utils.ss
+
+export
+data CArray : Int -> Type -> Type where
 
 export
 trace : Show a => a -> a
@@ -45,40 +48,43 @@ CUnsignedInt = Bits32
 public export
 data Float : Type where
 
-public export
-data FTypeArray : Int -> Type -> Type where
+%foreign "scheme:(lambda (buf loc val) (bytevector-ieee-single-set! buf loc val (native-endianness)))"
+prim__setFloat : Buffer -> Int -> Double -> PrimIO ()
+
+export
+setFloat : HasIO io => Buffer -> Int -> Double -> io ()
+setFloat buf i x = primIO $ prim__setFloat buf (i*4) x
 
 export
 NULL : Ptr t
 NULL = (prim__castPtr prim__getNullAnyPtr)
 
 export
-ptr2int : Ptr _ -> Int
+ptr2int : Ptr _ -> Int64
 ptr2int = believe_me
-
 
 -- %foreign ""
 -- memcpy : AnyPtr -> AnyPtr -> Int -> PrimIO ()
 -- %foreign_impl memcpy "scheme:ear7h-memcpy"
 
-%foreign ""
-prim__schemeMemcpy : AnyPtr -> AnyPtr -> Int64 -> PrimIO ()
-%foreign_impl schemeMemcpy "scheme:(foreign-procedure \"memcpy\" (void* void* size_t) void*)"
+-- %foreign ""
+-- schemeMemcpy : AnyPtr -> AnyPtr -> Int64 -> PrimIO ()
+-- %foreign_impl schemeMemcpy """
 
 export
-string2bytes : String -> IO $ Ptr Bits8
+%foreign "C:memcpy,libc"
+prim__memcpy : AnyPtr -> AnyPtr -> Int -> PrimIO ()
+
+
+%foreign "C:memcpy,libc"
+prim__memcpyString : AnyPtr -> String -> Int -> PrimIO ()
+
+export
+string2bytes : HasIO io => String -> io $ Ptr Bits8
 string2bytes s = do
   ptr <- malloc $ strLength s
-  primIO $ schemeMemcpy ptr (believe_me s) (believe_me $ strLength s)
-  pure $ believe_me ptr
-
-
-{-
-public export
-partial
-allocStructPrimCodegen1 : Type -> String
-allocStructPrimCodegen1 (Struct name fields) = "abc"
--}
+  primIO $ prim__memcpyString ptr s (cast $ strLength s)
+  pure $ prim__castPtr ptr
 
 export
 %foreign ""
@@ -91,11 +97,17 @@ allocStructPrimCodegen : Type -> String
 allocStructPrimCodegen (Struct name fields) = """
 scheme:
 (lambda (\{joinBy " " $ map fst fields })
-  (define-ftype \{name} \{ty2ftype $ Struct name fields}
+  ; (define-ftype \{name} \{ty2ftype $ Struct name fields})
+  (display \"alloc \{ name }\\n\")
   (let
     ([ptr (make-ftype-pointer \{name} (foreign-alloc (ftype-sizeof \{name})))])
     \{ joinBy "\n    " fieldsets }
-    (ftype-pointer-address ptr)
+    (display "returning: ")
+    (display ptr)
+    (display " ")
+    (display (ftype-pointer-address ptr))
+    (display "\n")
+    ptr ; (ftype-pointer-address ptr)
   )
 )
 """
@@ -117,7 +129,8 @@ scheme:
       ty2ftype (Ptr (Struct _ [])) = "void*"
       ty2ftype (Ptr _) = "void*"
       ty2ftype (Struct _ fields) = "(struct \{ joinBy " " $ fielddecls fields })"
-      ty2ftype (FTypeArray n ty) = "(array \{ show n } \{ ty2ftype ty }"
+      ty2ftype (CArray n ty) = "(array \{ show n } \{ ty2ftype ty }"
+      ty2ftype (_ -> _) = "void*"
       ty2ftype _ = ""
 
       -- partial
@@ -128,13 +141,20 @@ scheme:
     partial
     public export
     fieldset : (String, Type) -> String
-    fieldset (fname, FTypeArray n ty) =
+    fieldset (fname, CArray n ty) =
       """
-      (memset (ftype-&ref \{ name } (\{ fname }) ptr) (* \{ show $ n } (ftype-sizeof \{ ty2ftype ty })))
+      (memcpy
+          (ftype-pointer-address (ftype-&ref \{ name } (\{ fname }) ptr))
+          (ftype-pointer-address \{ fname })
+          (* \{ show $ n } (ftype-sizeof \{ ty2ftype ty })))
       """
-    -- cause a compile error :(
-    -- idris_crash fails to normalize
-    fieldset (fname, Struct n ty) = ":(((((((((((((((("
+    fieldset (fname, Struct n tys) =
+      """
+      (memcpy
+          (ftype-pointer-address (ftype-&ref \{ name } (\{ fname }) ptr))
+          (ftype-pointer-address \{ fname })
+          (ftype-sizeof \{ n }))
+      """
     fieldset (fname, ty) = "(ftype-set! \{ name } (\{ fname }) ptr \{ fname })"
 
     partial
@@ -155,22 +175,16 @@ hlistApply f []      = f
 hlistApply f (x::xs) = hlistApply (f x) xs
 
 public export
-toPtr : Type -> Type
-toPtr (FTypeArray n t) = Ptr $ FTypeArray n t
-toPtr (Struct name fields) = Ptr $ Struct name fields
-toPtr x = x
-
-public export
 partial
 allocStructHListType : Type -> Type
 allocStructHListType (Struct name fields) =
-    HList (map (toPtr . snd) fields) -> (IO $ Ptr $ Struct name [])
+    HList (map snd fields) -> (IO $ Struct name fields)
 
 public export
 partial
 allocStructPrimType : Type -> Type
 allocStructPrimType (Struct name fields) =
-    hlistFnTy (map (toPtr . snd) fields) (PrimIO $ Ptr $ Struct name [])
+    hlistFnTy (map snd fields) (PrimIO $ Struct name fields)
 
 public export
 interface AllocStruct a where
@@ -209,6 +223,7 @@ export
 runScoped : Scope a -> IO a
 runScoped (MkScope m) = do
   (l, x) <- m
+  putStrLn "freeing"
   traverse_ free l
   pure x
 
@@ -216,11 +231,40 @@ export
 cleanup : Ptr t -> Scope $ Ptr t
 cleanup ptr = MkScope $ pure ([prim__forgetPtr ptr], ptr)
 
-alloc : AllocStruct (Struct name fields) =>
-        HList (map (Utils.CTypes.toPtr . Builtin.snd) fields) ->
-        (Scope $ Ptr $ Struct name [])
-alloc = (flip (>>=) cleanup) . liftIO . allocStruct { a = Struct name fields }
+%foreign ""
+prim__toPtr : () -> PrimIO $ Ptr $ ()
+%foreign_impl prim__toPtr """
+scheme:
+ftype-pointer-address
+"""
 
--- alloc : HasIO io => io (Ptr t) -> Scope io (Ptr t)
+export
+%foreign ""
+buf2ptr : Buffer -> PrimIO $ AnyPtr
+%foreign_impl buf2ptr """
+scheme:
+object->reference-address
+"""
+
+export
+toPtr : HasIO io => Struct name fields -> io $ Ptr $ Struct name fields
+toPtr p = do
+  ret <- primIO $ prim__toPtr $ believe_me p
+  pure $ believe_me ret
+
+export
+alloc : AllocStruct (Struct name fields) =>
+        HList (map Builtin.snd fields) ->
+        (Scope $ Struct name fields)
+alloc args = do
+  ret <- liftIO $ allocStruct { a = Struct name fields } args
+  _ <- (toPtr ret) >>= cleanup
+  pure ret
+
+export
+alloc' : AllocStruct (Struct name fields) =>
+        HList (map Builtin.snd fields) ->
+        (Scope $ Ptr $ Struct name fields)
+alloc' args = (alloc args) >>= toPtr
 
 

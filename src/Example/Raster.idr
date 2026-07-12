@@ -2,13 +2,16 @@ import System
 import Data.List.Quantifiers
 import Data.Buffer
 import System.File.ReadWrite
-import Control.Monad.Maybe
+import System.File.Buffer
+import Control.Monad.Either
 import Control.Monad.Trans
+import Data.Either
 
 import Graphics.WGPU.Sys
 import Graphics.GLFW.Sys
 import Graphics.GLFW3WebGPU
 import Graphics.Wavefront
+import Math
 
 import Utils.CTypes
 
@@ -34,8 +37,9 @@ render :
     WGPUDevice ->
     WGPUQueue ->
     WGPURenderPipeline ->
+    WGPUBuffer ->
     IO ()
-render window adapter surface texture device queue pipeline = runScoped $ do
+render window adapter surface texture device queue pipeline bunny = runScoped $ do
     enc <- primIO $ wgpuDeviceCreateCommandEncoder
       device
       !(alloc'
@@ -70,12 +74,16 @@ render window adapter surface texture device queue pipeline = runScoped $ do
         ])
 
 
+    bunnysiz <- primIO $ wgpuBufferGetSize bunny
+    primIO $ wgpuRenderPassEncoderSetVertexBuffer pass 0 bunny 0 bunnysiz
     primIO $ wgpuRenderPassEncoderSetPipeline pass pipeline
 
     primIO $ wgpuRenderPassEncoderDraw
       pass
-      3 1
+      (cast $ div bunnysiz (3 * 4)) 1
       0 0
+
+    putStrLn $ "draw \{ show $ div bunnysiz (3 * 4) } vertices"
 
     primIO $ wgpuRenderPassEncoderEnd pass
     primIO $ wgpuRenderPassEncoderRelease pass
@@ -109,28 +117,28 @@ SHADER : String
 SHADER = """
 
 struct VertexOutput {
-    @location(0) color: vec4f,
+    @location(1) color: vec4f,
     @builtin(position) position: vec4f,
 };
 
 @vertex
 fn vert_main(
+  @location(0) vert: vec3f,
   @builtin(vertex_index) vidx: u32,
 ) -> VertexOutput {
     var ret : VertexOutput;
 
-
     ret.color = vec4f(
-      f32(vidx == 0),
-      f32(vidx == 1),
-      f32(vidx == 2),
+      1.0,
+      clamp(vert.y, 0.0, 1.0),
+      0.0,
       1.0,
     );
 
     ret.position = vec4f(
-      f32(i32(vidx) - 1),
-      f32(i32(vidx & 1u) * 2 - 1),
-      0.0,
+      vert.x * 10,
+      vert.z * 10 - 1.0,
+      0.5,
       1.0,
     );
 
@@ -145,19 +153,26 @@ fn frag_main(
 }
 """
 
-tris2buf : HasIO io => List (Face 3 Vec3) -> io (Maybe Buffer)
-tris2buf tris = runMaybeT $ do
-  buf <- MkMaybeT $ newBuffer (9 * 4 * (cast { to = Int } $ length tris))
+public export
+Result : Type -> Type
+Result a = Either String a
+
+tris2buf : HasIO io => List (Face 3 Vec3) -> io (Result Buffer)
+tris2buf tris = runEitherT $ do
+  buf <- MkEitherT $ maybeToEither "failed to alloc" <$> newBuffer (9 * 4 * (cast { to = Int } $ length tris))
   _ <- lift $ foldlM (\i, x => setFace buf (i*9) x >> pure (i + 1)) 0 tris
   pure buf
   where
   setList : Buffer -> Int -> List Double -> io ()
   setList buf i xs = do
-    _ <- foldlM (\i', x => setFloat buf (cast $ dbg i') x >> pure (i' + 1)) i xs
+    _ <- foldlM (\i', x => setFloat buf (cast i') x >> pure (i' + 1)) i xs
     pure ()
 
   setFace : Buffer -> Int -> Face 3 Vec3 -> io ()
   setFace buf idx tri = setList buf idx $ toList $ Data.Vect.concat tri.v
+
+loadBunny : HasIO io => io (Result Buffer)
+loadBunny = mapFst show <$> createBufferFromFile "data/bunny.obj.bin"
 
 export
 main : IO ()
@@ -180,6 +195,11 @@ main = do -- putStrLn "starting"
 
     surface <- primIO $ glfwCreateWindowWGPUSurface instance window
     putStrLn $ "got surface "  ++ (show $ ptr2int surface)
+
+    Right bunny <- loadBunny
+      | Left msg => putStrLn "error: \{ msg }"
+
+    putStrLn $ "bunny loaded"
 
     runScoped $ do
         putStrLn "get adapter sync"
@@ -253,8 +273,6 @@ main = do -- putStrLn "starting"
             ]
           )
 
-
-
         pipeline <- primIO $ wgpuDeviceCreateRenderPipeline
           device
           !(alloc' -- render pipeline descriptor
@@ -275,8 +293,17 @@ main = do -- putStrLn "starting"
                 , !(allocStr "vert_main")
                 , 0 -- const count
                 , NULL -- consts
-                , 0 -- buf count
-                , NULL -- bufs
+                , 1 -- buf count
+                , !(alloc'
+                    [ WGPUVertexStepMode_Vertex
+                    , the Bits64 $ 3 * 4
+                    , 1
+                    , !(alloc'
+                        [ WGPUVertexFormat_Float32x3
+                        , 0
+                        , 0 -- bufs
+                        ])
+                    ])
                 ])
             , !(alloc -- primitive state
                 [ NULL
@@ -308,6 +335,23 @@ main = do -- putStrLn "starting"
                    ])
                 ])
             ])
+
+        bunnySiz <- rawSize bunny
+        bunny' <- primIO $ wgpuDeviceCreateBuffer
+          device
+          !(alloc'
+            [ NULL
+            , !(allocStr "bunny-buffer")
+            , WGPUBufferUsage_Vertex
+            , cast bunnySiz
+            , 1
+            ])
+
+        bunnyMapped <- primIO $ wgpuBufferGetMappedRange bunny' 0 (cast bunnySiz)
+
+        primIO $ prim__memcpy (prim__forgetPtr bunnyMapped) !(primIO $ buf2ptr bunny) bunnySiz
+
+        primIO $ wgpuBufferUnmap bunny'
 
         putStrLn $ "before wgpuSurfaceConfigHelper"
         primIO $ wgpuSurfaceConfigHelper
@@ -347,11 +391,13 @@ main = do -- putStrLn "starting"
           device
           queue
           pipeline
+          bunny'
 
         liftIO $ while
           (do
             putStrLn $ "poll"
             primIO $ glfwPollEvents
+            putStrLn $ "polled"
             x <- primIO $ glfwWindowShouldClose window
             pure $ x == 0
           )
@@ -390,23 +436,10 @@ main = do -- putStrLn "starting"
                 device
                 queue
                 pipeline
+                bunny'
               )
 
             primIO $ wgpuTextureRelease (getField surfaceTex "texture")
           )
 
-f1 : IO ()
-f1 = do
-  Right x <- readFile "data/bunny.obj"
-    | Left x => putStrLn "oops: \{ show x }"
-  putStrLn "read file"
-  Just parsed <- pure $ parseObj x
-    | Nothing => putStrLn "oops"
-  putStrLn "parsed"
-  Just tris <- pure $ parsed.tris
-    | Nothing => putStrLn "oops"
-  putStrLn "tris"
-
-  x <- tris2buf tris
-  putStrLn "tris: \{ show $ isJust x }"
 

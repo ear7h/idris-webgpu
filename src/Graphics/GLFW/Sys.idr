@@ -10,11 +10,19 @@ import Utils.CTypes
 
 public export
 GLFWglproc : Type
-GLFWglproc = Ptr (() -> ())
+GLFWglproc = Ptr (() -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWglproc : (() -> PrimIO (())) -> PrimIO $ GLFWglproc
 
 public export
 GLFWvkproc : Type
-GLFWvkproc = Ptr (() -> ())
+GLFWvkproc = Ptr (() -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWvkproc : (() -> PrimIO (())) -> PrimIO $ GLFWvkproc
 
 public export
 GLFWmonitor : Type
@@ -60,95 +68,187 @@ AllocStruct GLFWcursor where
 
 public export
 GLFWallocatefun : Type
-GLFWallocatefun = Ptr (Bits64 -> Ptr (()) -> Ptr (()))
+GLFWallocatefun = Ptr (Bits64 -> Ptr (()) -> PrimIO (Ptr (())))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWallocatefun : (Bits64 -> Ptr (()) -> PrimIO (Ptr (()))) -> PrimIO $ GLFWallocatefun
 
 public export
 GLFWreallocatefun : Type
-GLFWreallocatefun = Ptr (Ptr (()) -> Bits64 -> Ptr (()) -> Ptr (()))
+GLFWreallocatefun = Ptr (Ptr (()) -> Bits64 -> Ptr (()) -> PrimIO (Ptr (())))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWreallocatefun : (Ptr (()) -> Bits64 -> Ptr (()) -> PrimIO (Ptr (()))) -> PrimIO $ GLFWreallocatefun
 
 public export
 GLFWdeallocatefun : Type
-GLFWdeallocatefun = Ptr (Ptr (()) -> Ptr (()) -> ())
+GLFWdeallocatefun = Ptr (Ptr (()) -> Ptr (()) -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWdeallocatefun : (Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ GLFWdeallocatefun
 
 public export
 GLFWerrorfun : Type
-GLFWerrorfun = Ptr (Int32 -> Ptr (Bits8) -> ())
+GLFWerrorfun = Ptr (Int32 -> Ptr (Bits8) -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWerrorfun : (Int32 -> Ptr (Bits8) -> PrimIO (())) -> PrimIO $ GLFWerrorfun
 
 public export
 GLFWwindowposfun : Type
-GLFWwindowposfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> ())
+GLFWwindowposfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowposfun : (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWwindowposfun
 
 public export
 GLFWwindowsizefun : Type
-GLFWwindowsizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> ())
+GLFWwindowsizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowsizefun : (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWwindowsizefun
 
 public export
 GLFWwindowclosefun : Type
-GLFWwindowclosefun = Ptr (Ptr (GLFWwindow) -> ())
+GLFWwindowclosefun = Ptr (Ptr (GLFWwindow) -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowclosefun : (Ptr (GLFWwindow) -> PrimIO (())) -> PrimIO $ GLFWwindowclosefun
 
 public export
 GLFWwindowrefreshfun : Type
-GLFWwindowrefreshfun = Ptr (Ptr (GLFWwindow) -> ())
+GLFWwindowrefreshfun = Ptr (Ptr (GLFWwindow) -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowrefreshfun : (Ptr (GLFWwindow) -> PrimIO (())) -> PrimIO $ GLFWwindowrefreshfun
 
 public export
 GLFWwindowfocusfun : Type
-GLFWwindowfocusfun = Ptr (Ptr (GLFWwindow) -> Int32 -> ())
+GLFWwindowfocusfun = Ptr (Ptr (GLFWwindow) -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowfocusfun : (Ptr (GLFWwindow) -> Int32 -> PrimIO (())) -> PrimIO $ GLFWwindowfocusfun
 
 public export
 GLFWwindowiconifyfun : Type
-GLFWwindowiconifyfun = Ptr (Ptr (GLFWwindow) -> Int32 -> ())
+GLFWwindowiconifyfun = Ptr (Ptr (GLFWwindow) -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowiconifyfun : (Ptr (GLFWwindow) -> Int32 -> PrimIO (())) -> PrimIO $ GLFWwindowiconifyfun
 
 public export
 GLFWwindowmaximizefun : Type
-GLFWwindowmaximizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> ())
+GLFWwindowmaximizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowmaximizefun : (Ptr (GLFWwindow) -> Int32 -> PrimIO (())) -> PrimIO $ GLFWwindowmaximizefun
 
 public export
 GLFWframebuffersizefun : Type
-GLFWframebuffersizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> ())
+GLFWframebuffersizefun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWframebuffersizefun : (Ptr (GLFWwindow) -> Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWframebuffersizefun
 
 public export
 GLFWwindowcontentscalefun : Type
-GLFWwindowcontentscalefun = Ptr (Ptr (GLFWwindow) -> Float -> Float -> ())
+GLFWwindowcontentscalefun = Ptr (Ptr (GLFWwindow) -> Float -> Float -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWwindowcontentscalefun : (Ptr (GLFWwindow) -> Float -> Float -> PrimIO (())) -> PrimIO $ GLFWwindowcontentscalefun
 
 public export
 GLFWmousebuttonfun : Type
-GLFWmousebuttonfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> ())
+GLFWmousebuttonfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWmousebuttonfun : (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWmousebuttonfun
 
 public export
 GLFWcursorposfun : Type
-GLFWcursorposfun = Ptr (Ptr (GLFWwindow) -> Double -> Double -> ())
+GLFWcursorposfun = Ptr (Ptr (GLFWwindow) -> Double -> Double -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWcursorposfun : (Ptr (GLFWwindow) -> Double -> Double -> PrimIO (())) -> PrimIO $ GLFWcursorposfun
 
 public export
 GLFWcursorenterfun : Type
-GLFWcursorenterfun = Ptr (Ptr (GLFWwindow) -> Int32 -> ())
+GLFWcursorenterfun = Ptr (Ptr (GLFWwindow) -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWcursorenterfun : (Ptr (GLFWwindow) -> Int32 -> PrimIO (())) -> PrimIO $ GLFWcursorenterfun
 
 public export
 GLFWscrollfun : Type
-GLFWscrollfun = Ptr (Ptr (GLFWwindow) -> Double -> Double -> ())
+GLFWscrollfun = Ptr (Ptr (GLFWwindow) -> Double -> Double -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWscrollfun : (Ptr (GLFWwindow) -> Double -> Double -> PrimIO (())) -> PrimIO $ GLFWscrollfun
 
 public export
 GLFWkeyfun : Type
-GLFWkeyfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> Int32 -> ())
+GLFWkeyfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWkeyfun : (Ptr (GLFWwindow) -> Int32 -> Int32 -> Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWkeyfun
 
 public export
 GLFWcharfun : Type
-GLFWcharfun = Ptr (Ptr (GLFWwindow) -> Bits32 -> ())
+GLFWcharfun = Ptr (Ptr (GLFWwindow) -> Bits32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWcharfun : (Ptr (GLFWwindow) -> Bits32 -> PrimIO (())) -> PrimIO $ GLFWcharfun
 
 public export
 GLFWcharmodsfun : Type
-GLFWcharmodsfun = Ptr (Ptr (GLFWwindow) -> Bits32 -> Int32 -> ())
+GLFWcharmodsfun = Ptr (Ptr (GLFWwindow) -> Bits32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWcharmodsfun : (Ptr (GLFWwindow) -> Bits32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWcharmodsfun
 
 public export
 GLFWdropfun : Type
-GLFWdropfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Ptr (Ptr (Bits8)) -> ())
+GLFWdropfun = Ptr (Ptr (GLFWwindow) -> Int32 -> Ptr (Ptr (Bits8)) -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWdropfun : (Ptr (GLFWwindow) -> Int32 -> Ptr (Ptr (Bits8)) -> PrimIO (())) -> PrimIO $ GLFWdropfun
 
 public export
 GLFWmonitorfun : Type
-GLFWmonitorfun = Ptr (Ptr (GLFWmonitor) -> Int32 -> ())
+GLFWmonitorfun = Ptr (Ptr (GLFWmonitor) -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWmonitorfun : (Ptr (GLFWmonitor) -> Int32 -> PrimIO (())) -> PrimIO $ GLFWmonitorfun
 
 public export
 GLFWjoystickfun : Type
-GLFWjoystickfun = Ptr (Int32 -> Int32 -> ())
+GLFWjoystickfun = Ptr (Int32 -> Int32 -> PrimIO (()))
+
+export
+%foreign "C:mkFunctionPtr,libidris_wgpu_support"
+mkGLFWjoystickfun : (Int32 -> Int32 -> PrimIO (())) -> PrimIO $ GLFWjoystickfun
 
 public export
 GLFWvidmode : Type
@@ -194,7 +294,7 @@ AllocStruct GLFWimage where
 
 public export
 GLFWgamepadstate : Type
-GLFWgamepadstate = Struct "GLFWgamepadstate" [("buttons",  (FTypeArray 15 (Bits8))),("axes",  (FTypeArray 6 (Float)))]
+GLFWgamepadstate = Struct "GLFWgamepadstate" [("buttons",  (CArray 15 (Bits8))),("axes",  (CArray 6 (Float)))]
 
 -- struct here!!
 %foreign ""
@@ -819,3 +919,11 @@ glfwVulkanSupported : PrimIO (Int32)
 export
 glfwGetRequiredInstanceExtensions : Ptr (Bits32) -> PrimIO (Ptr (Ptr (Bits8)))
     
+
+public export
+GLFW_CLIENT_API_ : Int32
+GLFW_CLIENT_API_ = 0x00022001
+
+public export
+GLFW_NO_API_ : Int32
+GLFW_NO_API_ = 0

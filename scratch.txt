@@ -1,0 +1,78 @@
+
+{-
+-- this only half works, if there's a pointer in the
+-- structure it'll leak
+gcalloc :
+  HasIO io =>
+  (repr : CType ty) =>
+  UnCType repr ->
+  io (GCPtr ty)
+gcalloc init = do
+  ret <- alloc init
+  onCollect ret (free . prim__forgetPtr)
+-}
+{-
+runScope : (1 _ : (ScopeIO io a)) -> io a
+runScope (MkScope f) = do
+  (freeList, ret) <- f
+  _ <- traverse free freeList
+  pure ret
+
+
+
+export prefix 0 .>
+
+export
+(.>) : HasIO io => (Scope -> ScopeIO io a) -> io a
+
+(.allocInt) : (s : Scope) -> Int -> ScopeIO _ (Ref s Int)
+
+
+toRef : Ptr t -> Ref s t
+
+(.allocInt) s x = toRef $ unsafePerformIO $ alloc x
+
+testScope : IO ()
+testScope = runScope $ \s => do
+  let x = s.allocInt 10
+  pure ()
+
+
+%hint
+refCType : (scope : Scope) => ( repr : CType ty ) => CType (Ref scope ty)
+refCType = believe_me $ CPtr @{ repr }
+
+-}
+
+
+{-
+data Scope : Type -> Type -> Type where
+  MkScope :
+
+Scope = Writer (List AnyPtr)
+
+Functor (Scope s) where
+  map f scope = ?e
+
+data Ref : Type -> Type -> Type where
+  MkRef : (0 tok : Type) => Ptr ty -> Ref tok ty
+
+runScope : HasIO io => (forall s . Scope s a) -> io a
+
+deref :
+  -- Scope s _ =>
+  (repr : CType ty) =>
+  Ref s ty -> Scope s (UnCType' ty)
+
+salloc : Scope s (Ref s Int)
+
+f : Ref s Int -> Ref s Int -> Scope s Int
+
+g : Scope s _ => HasIO io => Ref s Int -> Ref s Int -> io Int
+
+h : IO ()
+h = do
+  -- jailbreak <- runScope $ salloc
+  _ <- runScope $ map deref salloc
+  pure ()
+-}

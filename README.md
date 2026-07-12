@@ -3,8 +3,16 @@
 ## running
 
 ```
-# make sure IDRIS2_LIBS is setup
-# export PATH=$HOME/.idris2-tip/bin:$PATH
-make clean
-make setup
+export PATH=$HOME/.idris2-tip/bin:$PATH
+nix-shell
+export SHELL=zsh
+exec zsh
+make repl
 ```
+
+## models
+
+
+https://graphics.stanford.edu/data/3Dscanrep/
+https://users.cs.utah.edu/~dejohnso/models/teapot.html
+https://raw.githubusercontent.com/alecjacobson/common-3d-test-models/refs/heads/master/data/lucy.obj

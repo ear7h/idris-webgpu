@@ -10,11 +10,39 @@
     mkdir -p $out/include
     cp $src/glfw3webgpu.{c,h} $out/include
   '';
+
+  idrisWGPUSupport = pkgs.runCommandCC "idrisWGPUSupport" {
+    OBJC_INCLUDE_PATH = with pkgs; lib.makeIncludePath [
+      wgpu-native.dev
+      glfw
+      glfw3webgpu
+    ];
+
+    LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
+      wgpu-native
+      glfw
+    ];
+  } ''
+    mkdir -p $out/lib
+
+    cc -dynamiclib \
+      -framework Cocoa \
+      -framework CoreVideo \
+      -framework IOKit \
+      -framework QuartzCore \
+      -lglfw -lwgpu_native \
+      -o $out/lib/libidris_wgpu_support.dylib \
+      -x objective-c \
+      ${ ./src/c/idris_wgpu_support.c }
+  '';
 in pkgs.mkShell {
-  IDRIS2_LIBS = with pkgs; lib.makeLibraryPath [
-    wgpu-native
-    glfw
-  ];
+  IDRIS2_SH =
+    let libs = with pkgs; lib.makeLibraryPath [
+        wgpu-native
+        glfw
+        idrisWGPUSupport
+      ];
+    in "${pkgs.coreutils}/bin/env DYLD_LIBRARY_PATH=${libs} ${pkgs.bash}/bin/sh";
 
   C_INCLUDE_PATH = with pkgs; lib.makeIncludePath [
     wgpu-native.dev
@@ -24,16 +52,18 @@ in pkgs.mkShell {
 
   FAKE_LIBC_INCLUDE = pkgs.fetchgit {
     url = "https://github.com/eliben/pycparser";
+    rev = "release_v3.00";
     sparseCheckout = [
       "utils/fake_libc_include"
     ];
-    hash = "sha256-fZxZTUCC0T1UItXP8sQ2WljXFp4KradWYRbTkdCV2Ao=";
+    hash = "sha256-A/VVi523667bpz/h8hc3f1QeG7ymcfgsbeFH2XAHx9c=";
   } + "/utils/fake_libc_include";
 
   packages = with pkgs; [
     chez
     (python3.withPackages (py: with py; [
       pycparser
+      numpy
     ]))
   ];
 }

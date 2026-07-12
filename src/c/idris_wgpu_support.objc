@@ -1,0 +1,3 @@
+// TODO: patch glfw3webgpu? or set this portably
+#define GLFW_EXPOSE_NATIVE_COCOA
+#include <glfw3webgpu.c>
