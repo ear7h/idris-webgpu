@@ -5,6 +5,7 @@ modules
 	= Graphics.WGPU.Sys
 	, Graphics.GLFW.Sys
 	, Graphics.GLFW3WebGPU
+	, System.ScopedIO
 
 main = Main
 executable = "runTest"

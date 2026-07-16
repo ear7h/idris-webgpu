@@ -1,10 +1,11 @@
 
 module Graphics.WGPU.Sys
 
-import public System.FFI
+-- import public System.FFI
 import Data.Bits
 
 import Utils.CTypes
+import System.ScopedIO
 
 
 
@@ -2619,7 +2620,7 @@ AllocStruct WGPUFuture where
 
 public export
 WGPUInstanceCapabilities : Type
-WGPUInstanceCapabilities = Struct "WGPUInstanceCapabilities" [("nextInChain", Ptr (WGPUChainedStructOut)),("timedWaitAnyEnable",  (WGPUBool)),("timedWaitAnyMaxCount",  (Bits64))]
+WGPUInstanceCapabilities = Struct "WGPUInstanceCapabilities" [("timedWaitAnyEnable",  (WGPUBool)),("timedWaitAnyMaxCount",  (Bits64))]
 
 -- struct here!!
 %foreign ""
@@ -3249,7 +3250,7 @@ AllocStruct WGPUFutureWaitInfo where
 
 public export
 WGPUInstanceDescriptor : Type
-WGPUInstanceDescriptor = Struct "WGPUInstanceDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("features",  (WGPUInstanceCapabilities))]
+WGPUInstanceDescriptor = Struct "WGPUInstanceDescriptor" [("features",  (WGPUInstanceCapabilities))]
 
 -- struct here!!
 %foreign ""

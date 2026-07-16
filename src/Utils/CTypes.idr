@@ -2,14 +2,15 @@
 module Utils.CTypes
 
 import Data.Buffer
-import public System.FFI
+-- import public System.FFI
 import public Data.String
 import public Data.List.Quantifiers
 
+import public System.ScopedIO
+
 %cg chez extraRuntime=src/scheme/utils.ss
 
-export
-data CArray : Int -> Type -> Type where
+-- export data CArray : Int -> Type -> Type where
 
 export
 trace : Show a => a -> a

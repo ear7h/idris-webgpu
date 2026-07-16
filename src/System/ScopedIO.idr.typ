@@ -1,5 +1,5 @@
 #show raw.where(lang: "idris"): set raw(
-  syntaxes: "idris.sublime-syntax",
+  syntaxes: "../../doc/cs5099/dis/idris.sublime-syntax",
 )
 
 = Implementation
@@ -8,9 +8,10 @@
 import Data.Bits
 import Data.List
 import Data.List.Elem
-import Data.List1
-import Data.Vect
 import Data.List.Quantifiers
+import Data.List1
+import Data.String
+import Data.Vect
 import System
 ```
 
@@ -34,13 +35,13 @@ TODO: `Ptr`
 
 Next, compound types `Struct` and `Array` are defined using dependent types.
 A `CArray` is defined by an integer number of elements and the type of those
-elements (footnote: the type is named `CArray` because `Array` is the cannonical
+elements (footnote: the type is named `CArray` because `Array` is the canonical
 name for a similar but pure-idris concept and the back-end handling of
 FFI-crossable types depends only on the name of the type; support for
 this has not made it to the mainline compiler):
 
 ```idris
-data CArray : Int -> Type -> Type where [external]
+data CArray : Int -> Type -> Type where
 ```
 
 A `Struct` is defined by a string name and a list of fields which
@@ -60,7 +61,7 @@ type can be used:
 data CType : Type -> Type where
 ```
 
-This will have a couple interpretions:
+This will have a couple interpretations:
 - `CType a` is the universe of types that I've defined are valid in both
   Idris and C
 - a `CType a` is a proof that some Idris type `a` is representable in C
@@ -71,7 +72,7 @@ type checker. Meaning that,
 as will be demonstrated, no special-casing or hardcoding of these types
 within the compiler is needed for (de)allocation, reading, or writing to
 their values. (footnote: the sizes of these types still needs to be
-hardcodded and made accessible somewhere but this is a much simpler
+hardcoded and made accessible somewhere but this is a much simpler
 task than eg. normalizing and evaluating `CType` within the compiler
 https://idris2.readthedocs.io/en/latest/backends/backend-cookbook.html#foreign-types)
 (footnote: it may be needed for building FFI calls; TODO).
@@ -125,7 +126,7 @@ for the array's length:
 
 
 ```idris
-  -- the verions with the . operator plays nicer with the typechecker
+  -- the versions with the . operator plays nicer with the typechecker
   -- but the meaning is the same as
   -- CStruct : All (\(fname, t) => CType t) fields -> CType (Struct name fields)
   CStruct : All (CType . Builtin.snd) fields -> CType (Struct name fields)
@@ -148,7 +149,7 @@ calling the standard library function `malloc(3)`.
 
 ```idris
 %foreign "scheme:foreign-alloc"
-prim__malloc : Int -> PrimIO AnyPtr
+prim__malloc : Int64 -> PrimIO AnyPtr
 ```
 
 This simply allocates a specified amount of memory, but we'd like
@@ -164,22 +165,22 @@ Going from `PrimIO AnyPtr` to `IO (Ptr a)` is matter of calling
 attentive readers may recognize this as a familiar compiler builtin:
 
 ```idris
-sizeof : (repr : CType a) -> Int
+sizeof : (repr : CType a) -> Int64
 ```
 
-
 Assuming modern 64-bit system and normal compiler (footnote: see above footnote
-about harcoding values, one potential solution is providing pragmas for
+about hardcoding values, one potential solution is providing pragmas for
 non-portably sized types `int`, `char`, pointers, etc.), implementing
 this should be straightforward for most `CType`s. The one
 exception is `CStruct`, where alignment and padding need to be considered.
 The details are out of scope here, but the short version is that values
 need to be on integer multiples of their sizes, and this alignment
-needs to be preserved within arrays.
+needs to be preserved within arrays. Thus, `alignof` is also needed.
 
 ```idris
-alignof : (repr : CType a) -> Int
+alignof : (repr : CType a) -> Int64
 ```
+
 /* idris
 alignof CInt     = 4
 alignof CFloat   = 4
@@ -197,13 +198,10 @@ alignof (CPtr _) = 8
 alignof (CCArray _ repr) = alignof repr
 alignof (CStruct reprs) = go reprs 1
   where
-  go : All (CType . Builtin.snd) fields' -> Int -> Int
+  go : All (CType . Builtin.snd) fields' -> Int64 -> Int64
   go Nil aln = aln
   go (x::xs) aln = go xs (max aln $ alignof x)
-*/
 
-
-```idris
 sizeof CInt             = 4
 sizeof CFloat           = 4
 sizeof CDouble          = 8
@@ -217,16 +215,16 @@ sizeof CBits16          = 2
 sizeof CBits32          = 4
 sizeof CBits64          = 8
 sizeof (CPtr _)         = 8
-sizeof (CCArray n repr) = n * sizeof repr
+sizeof (CCArray n repr) = (cast n) * sizeof repr
 sizeof (CStruct reprs)  =
   fst $ go reprs (0, 1)
   where
   -- https://github.com/libffi/libffi/blob/c93f9428d17cde4eb35517b58feeae6fb43aba5b/include/ffi_common.h#L118
-  doAlign : Int -> Int -> Int
+  doAlign : Int64 -> Int64 -> Int64
   doAlign v a = ((v-1) .|. (a-1))+1
 
   -- https://github.com/libffi/libffi/blob/c93f9428d17cde4eb35517b58feeae6fb43aba5b/src/prep_cif.c#L38
-  go : All (CType . Builtin.snd) fields' -> (Int, Int) -> (Int, Int)
+  go : All (CType . Builtin.snd) fields' -> (Int64, Int64) -> (Int64, Int64)
   go Nil (siz, aln) = (doAlign siz aln, aln) -- add padding to the end of the struct
   go (x::xs) (siz, aln) =
     let alnx = alignof x
@@ -236,7 +234,7 @@ sizeof (CStruct reprs)  =
         (sizeof x)         -- * size of this field
       , max aln alnx       -- maximum alignment
       )
-```
+*/
 
 Finally:
 
@@ -254,27 +252,346 @@ free : Ptr a -> IO ()
 free ptr = primIO $ prim__free $ prim__forgetPtr ptr
 ```
 
-== Marshalling and unmarshalling
+== Memory safety with lifetimes
 
-=== Compiler Primitives
+Now that memory can be allocated, the type system can be used
+to make sure this is done safely and correctly. Lifetimes, as described
+herein, avoid a form of unsafe behavior known as "use-after-free".
+Use-after-free bugs are a common cause of security vulnerabilities
+(TODO: citation needed). Additionally the scope pattern avoids
+memory leaks, that is forgetting to release memory back to the
+allocator such that the program consumes more and more memory
+which could be recycled. This is not necessarily a safety
+problem, but an equally difficult problem to address.
 
-The pointer returned by `alloc` above is unitialized. In order
-to make use of it, there must be some way to read and write to it.
-The following functions (defined for `N` in 8, 16, 32, 64)
-endow Idris the ability to read and write to arbitrary memory:
+Another unsafe behavior, accessing uninitialized memory, is addressed
+by `Marshal` in the following section.
+
+---
+
+After allocation and initialization, memory that is no longer used needs to
+be deallocated and returned to
+the operating system with the `free(3)` system call. Further, after
+the call to `free` the pointer should not be read from or written to,
+doing so is known as "use-after-free" (footnote: a future call to `malloc`
+can return a pointer to the same address, but whether the original
+and new pointers are considered the same depends on the memory
+model; a related issue is pointer provenance)
+
+The design takes inspiration from Rust where "references"
+are pointers with an associated lifetime. Rust's lifetimes are a special
+construct within the type system with different behavior and usage from normal
+datatypes. In this library, `Lifetime`s are be modeled as a plain data type;
+and the `Ref` type thus a dependent type with a `Lifetime` value as well
+as the pointed-to `Type`.
+
+```idris
+-- constructors defined later
+data Lifetime : Type
+
+data Ref : Lifetime -> Type -> Type where [external]
+```
+
+In `Ref`, `[external]` tells the compiler that `Ref` is an
+opaque type which may be constructed. Otherwise, the compiler
+assumes a `Ref` value will never exist since it has no constructors,
+which may lead to code being optimized away. Rather than a
+constructor, an `%unsafe` function with `believe_me` is used;
+this prevents proof search from using it and further communicates
+to users they should think twice about using the functions.
+
+```idris
+%unsafe
+unsafeRefPtr : Ref a' t -> Ptr t
+unsafeRefPtr = believe_me
+
+%unsafe
+unsafePtrRef : Ptr t -> Ref a' t
+unsafePtrRef = believe_me
+```
+
+=== ST
+
+The underlying mechanism for scopes in this library comes from the `ST`
+type (@st-monad). It describes mutable computation within a pure
+language by using some type magic to limit where mutation of
+needed values will happen.
+
+```idris
+data ST : (s : Type) -> (a : Type) -> Type where
+  MkSt : (s -> (a, s)) -> ST s a
+
+data STRef : (s : Type) -> (a : Type) -> Type where
+  MkRef : (s : Type) -> a -> STRef s a
+
+newSTRef   : a -> ST s (STRef s a)
+readSTRef  : STRef s a -> ST s a
+writeSTRef : STRef s a -> a -> ST s ()
+
+runST : ({ s : Type } -> ST s a) -> a
+```
+
+`ST` consists of a function that takes some state `s` and returns
+a result `a` along with some, possibly new, state `s`. Mutable
+values live inside an `STRef`, note that it also has with an associated
+state type `s` but no values of `s`. The reason for this makes sense
+considering the `new`, `read`, and `write` functions, the
+`s` of `STRef` they operate on and the `ST` they produce must
+be the same. Meaning, an `STRef` created within `ST s1` cannot be
+used within `ST s2`.
+
+Further, consider `runST` the type of `runST` (the function which gets
+the result out of `ST`): `{ s : Type } -> ST s a` means the `ST` needs to work
+for _all_ possible state types `s`. Said another way, `runST` determines what the
+`s` should be for the `ST` and consequently for all the `STRef`s
+it creates; thus an `STRef` for one invocation of `runST`
+cannot be used for another.  Consider the following example:
+
+```idris
+failing "When unifying"
+  testRunSTBad : Int
+  testRunSTBad = runST $ readSTRef (runST $ newSTRef 2)
+```
+
+`runST $ newSTRef 2` returns a `STRef SomeS Int`, where `SomeS` is
+a specific type originating from `runST`. `readSTRef`
+then assumes this type for its output `ST SomeS Int`. But the
+outer `runST` needs an `ST` that works for _all_ possible `s`
+while the one provided only works for `SomeS`.
+While `STRef` is able to escape the `runST` invocation
+it is only usable within the invocation. (footnote:
+what I refer to as an "in (footnote: What I refer to as an "invocation
+of `runST`" is called a "thread" in the literature,
+not to be confused with a "thread" used for concurrency),
+
+With this understanding, a simplified version of a scope can
+be defined. `Lifetime` takes the place of `s` and the computation
+inside `Scope` accumulates pointers and a result `a`.
+
+```idris
+data SimpleScope : Lifetime -> Type -> Type where
+  MkScope : (Unit -> (List AnyPtr, a)) -> SimpleScope s a
+
+newRefScope  : a -> SimpleScope s (Ref s a)
+readRefScope : Ref s a -> SimpleScope s a
+
+runScope : ((s : Lifetime) -> SimpleScope s a) -> a
+
+runSubScope : (s : Lifetime) -> ((s' : Lifetime) -> SimpleScope s' a) -> a
+```
+
+This simplified formulation highlights the similarities to `ST`
+but is missing two major aspects: allocation and deallocation require `IO`,
+the `a`s should somehow be related to `CType`. The former can quickly be addressed
+as it's needed for the next section, `Marshal` which addresses the latter.
+
+```idris
+data ScopedIO : Lifetime -> Type -> Type where
+  MkScopedIO : IO (List AnyPtr, a) -> ScopedIO a' a
+
+runScopedIO :
+  HasIO io =>
+  ((0 a' : Lifetime) -> ScopedIO a' a) ->
+  io a
+
+-- can be ignored, these inherit properties of IO which make the computations
+-- easier to compose
+Functor (ScopedIO a')
+Applicative (ScopedIO a')
+Monad (ScopedIO a')
+HasIO (ScopedIO a')
+```
+
+/* idris
+-- NOTE: can't defined runScopedIO yet because Lifetime constructors
+-- haven't been defined
+
+Functor (ScopedIO a') where
+  map f (MkScopedIO x) = MkScopedIO $ map (mapSnd f) x
+
+Applicative (ScopedIO a') where
+  pure x = MkScopedIO $ pure ([], x)
+
+  (<*>) (MkScopedIO f) (MkScopedIO sf) = MkScopedIO $ do
+    (fps, f') <- f
+    (sfps, sf') <- sf
+    pure (sfps ++ fps, f' sf')
+
+Monad (ScopedIO a') where
+  join (MkScopedIO x) = MkScopedIO $ do
+    (l1, MkScopedIO x') <- x
+    (l2, x'') <- x'
+    pure (l1 ++ l2, x'')
+
+HasIO (ScopedIO a') where
+  liftIO x = MkScopedIO $ map ([],) x
+*/
+
+However, for the rest of this section the simplified version will be used for brevity.
+It should also be noted that, `s` was used in this example for clarity but
+conventionally variable names of the form `a'`, `b'`, etc. will be used for `Lifetime`s;
+this follows the Rust `'a` form.
+
+=== Subscopes
+
+One notable difference of `SimpleScope` from `ST` is the `runSubScope` function
+which creates a sub-scope from a parent scope. A desired feature is
+then for `readRefScope` to be able to read a reference from
+the parent scope `Ref s a` and return a value in the smaller
+scope `SimpleScope s' a`. That is, reference with a longer lifetime
+should be allowed in places where a lifetime with a shorter lifetime
+is needed (footnote: the real story is more nuanced once variance is
+considered @rust-subtyping-variance). As formulated, this will not work.
+Further, in Rust this is modeled using subtyping, a notoriously troublesome
+(@ml-overload-undecidable, TODO: check this reference @subtype-undecidable),
+type system feature which Idris avoids. In Idris, this relationship will
+have to be modeled explicitly using, you guessed it, dependent types.
+
+Firstly, `Lifetime` needs to be fully defined. It behaves similarly to `s`, so it
+needs to carry a `Type` that can be quantified over. However, it can
+be created in two ways in a "root" scope from `runScope` or as a
+sub-scope in `runSubScope`. The latter needs to carry its parent scope
+as proof that it is indeed a sub scope.
+
+```idris
+data Lifetime : Type where
+  LRoot : (0 thr : Type) -> Lifetime
+  LSub  : (0 thr : Type) -> (0 _ : Lifetime) -> Lifetime
+```
+
+This models the creation of the subscopes, but it is not enough
+to describe the relationship as a constraint in the type level.
+That is, a type describing a proposition is needed. The proposition
+is that a lifetime `a'` lives as long as another lifetime `b'`.
+
+```idris
+data AtLeastAsLong : Lifetime -> Lifetime -> Type where
+```
+
+There two trivial cases:
+- if `a'` and `b'` are actually the same lifetime, then they live as
+  themselves
+- if `a'` is a direct parent of `b'`, that is `b' = LSub _ b'` then
+  `a'` does live as long as `b'`
+
+```idris
+  ALALSame   : AtLeastAsLong a' a'
+  ALALParent : AtLeastAsLong a' (LSub b a')
+```
+
+And one non-trivial case: the relationship is transitive, if `a'` lives as long
+as `b'` and `b'` lives as long as `c'`, then `a'` lives as long as `c'`. This
+should be implemented directly as:
 
   ```idris
-  prim__ptrWriteN : AnyPtr -> BitsN -> PrimIO Int
+    ALALTrans  : AtLeastAsLong a' b' -> AtLeastAsLong b' c' -> AtLeastAsLong a c
+  ```
+
+But there's a bug in the compiler (TODO: minimize and open issue for this)
+that results in an infinite loop when doing proof search. To work around this,
+`ALALTrans` is defined as:
+
+```idris
+  ALALTrans  : AtLeastAsLong a' (LSub b a') -> AtLeastAsLong (LSub b a')  c' -> AtLeastAsLong a' c'
+```
+
+An improved version of `readRefScope` can then use an auto-implicit
+`AtLeastAsLong` as proof that the lifetime of the reference lives
+as long as the scope it's computing.
+
+```idris
+readRefScope' :
+  Ref a' a ->
+  { auto p : AtLeastAsLong a' b' } ->
+  SimpleScope b' a
+```
+
+Lastly, an `AtLeastAsLong` needs to be provided by `runSubScope` to the function
+that generates the subscope.
+
+```idris
+runSubScope' :
+  (0 a' : Lifetime) ->
+  ((0 b' : Lifetime) -> { p : AtLeastAsLong a' b' } -> SimpleScope b' a) ->
+  SimpleScope a' a
+```
+
+And similarly for `ScopedIO`.
+
+```idris
+runSubScopedIO :
+  (0 a' : Lifetime) ->
+  (
+    (0 b' : Lifetime) ->
+    { 0 p : AtLeastAsLong a' b' } ->
+    ScopedIO b' a
+  ) ->
+  ScopedIO a' a
+```
+
+/* idris
+runScopedIO f = liftIO $ do
+  let MkScopedIO f' = f $ LRoot Void
+  (ptrs, ret) <- f'
+  _ <- traverse (primIO . prim__free) ptrs
+  pure ret
+
+
+runSubScopedIO a' f = do
+  let MkScopedIO f' = f (LSub Void a') { p = ALALParent }
+  (ptrs, ret) <- liftIO f'
+  _ <- traverse (primIO . prim__free) ptrs
+  pure ret
+*/
+
+---
+
+
+== Marshalling and unmarshalling
+
+In the previous section, read and write operations were given without
+justification. In `ST`, the values can simply live in the host language.
+However, for the purposes of this library reads and writes face two
+issues:
+- access to fine grained, assembly style memory loads and stores
+- encoding and decoding values from the host language to a C-like
+  representation
+
+Together this is the problem of marshaling and unmarshalling values
+between the host language and C. Marshaling refers to the direction
+from the host language into C, while unmarshalling is the reverse.
+
+=== Fine grained memory access
+
+Firstly, compiler primitives for fine grained memory access needs
+to be implemented in the back end. The primitives described here
+are intended to be minimal for ease of implementation. They are,
+functions for reading and writing register-sized values
+to memory; a single function for pointer arithmetic; and
+functions for reading the raw bits of floating point values.
+
+
+The pointer read and write functions have the following form
+with values 8, 16, 32, and 64 for `N`. (footnote:
+pointer reads are defined here to have side effects,
+this was chosen arbitrarily, but one may argue the opposite "it's only reading
+not mutating" but equally true is that "invalid pointer reads trigger
+interrupts")
+
+  ```idris
+  prim__ptrWriteN : AnyPtr -> BitsN -> PrimIO Int64
   prim__ptrReadN : AnyPtr -> PrimIO BitsN
   ```
 
-Another necessary ability is pointer arithmetic (footnote: there may
+Next, pointer arithmetic is simply addition. (footnote: there may
 be other formulations of this eg. functions that directly
-convert a pointer to an integer).
+convert a pointer to an integer). Notably, it explicitly uses
+`Int64`; this can safely be optimized away into smaller bit-widths
+on smaller architectures.
 
 ```idris
 %foreign "scheme: (lambda (a b) (+ a b))"
-prim__offsetPtr : AnyPtr -> Int -> AnyPtr
+prim__offsetPtr : AnyPtr -> Int64 -> AnyPtr
 ```
 
 /* idris
@@ -288,16 +605,16 @@ scheme:
 """
 
 %foreign (cgPtrWrite 8)
-prim__ptrWrite8 : AnyPtr -> Bits8 -> PrimIO Int
+prim__ptrWrite8 : AnyPtr -> Bits8 -> PrimIO Int64
 
 %foreign (cgPtrWrite 16)
-prim__ptrWrite16 : AnyPtr -> Bits16 -> PrimIO Int
+prim__ptrWrite16 : AnyPtr -> Bits16 -> PrimIO Int64
 
 %foreign (cgPtrWrite 32)
-prim__ptrWrite32 : AnyPtr -> Bits32 -> PrimIO Int
+prim__ptrWrite32 : AnyPtr -> Bits32 -> PrimIO Int64
 
 %foreign (cgPtrWrite 64)
-prim__ptrWrite64 : AnyPtr -> Bits64 -> PrimIO Int
+prim__ptrWrite64 : AnyPtr -> Bits64 -> PrimIO Int64
 
 
 cgPtrRead : Int -> String
@@ -319,8 +636,9 @@ prim__ptrRead32 : AnyPtr -> PrimIO Bits32
 prim__ptrRead64 : AnyPtr -> PrimIO Bits64
 */
 
-Lastly, functions for getting the underlying bits
-out of floats and pointers.
+Lastly, functions for getting the underlying bits out of floats and pointers.
+Note that this not a `cast` which truncates a single-precision float `1.1` into
+`1`, rather it should reinterpret the bytes into the 32 bit int `1066192077`.
 
   ```idris
   prim__SingleToBits : Double -> Bits32
@@ -329,8 +647,8 @@ out of floats and pointers.
   prim__SingleFromBits : Bits32 -> Double
   prim__DoubleFromBits : Bits64 -> Double
 
-  prim__PtrBits : AnyPtr -> Bits64
-  prim__PtrBits = believe_me
+  prim__PtrToBits : AnyPtr -> Bits64
+  prim__PtrToBits = believe_me
   ```
 
 /* idris
@@ -398,109 +716,205 @@ scheme:
 """
 prim__DoubleFromBits : Bits64 -> Double
 
-prim__PtrBits : AnyPtr -> Bits64
-prim__PtrBits = believe_me
+prim__PtrToBits : AnyPtr -> Bits64
+prim__PtrToBits = believe_me
 */
 
 === The `Marshal` type
 
-To safely marshal between the Idris types and the C memory representations,
-the type `Marshal` is used. `Marshal` wraps
+These primitives don't provide many safety guarantees and don't compose very
+well. The lifetimes above can be used to create a safe and
+composable `Marshal` type:
 
 ```idris
-data Marshal : ity -> cty -> Type where
-  MkMarshal : { auto repr : CType cty } -> (ity -> Ptr cty -> IO Int) -> Marshal ity cty
+data Marshal : Lifetime -> ity -> cty -> Type where
+  MkMarshal : { auto repr : CType cty } -> (ity -> Ptr cty -> IO Int64) -> Marshal a' ity cty
 ```
 
-A `Marshal ity cty` holds a function that can marshal the Idris type `ity` into
-the C type `cty`. One might expect `repr : CType cty` to be necessary for
-`Marshal` but pushing the constraint to the constructor makes the type
-easier to work with (`auto` explained below). The single constructor
-takes a proof that `cty` has a C representation and the actual function for
-doing the marshalling, `ity -> Ptr cty -> IO Int`. The return value of the
-function is the number of bytes written, it's not necessary but avoids unnecessary
-calls to `sizeof`.
+A `Marshal a' ity cty` holds a function that can marshal the Idris type `ity`
+(which can depend on `a'`, that is have a lifetime of `a'`) into the C type
+`cty`. One might expect `repr : CType cty` to be necessary for `Marshal` but pushing
+the constraint to the constructor makes the type easier to work with. The single constructor
+takes the `repr` proof instead, and the actual function for
+doing the marshalling, `ity -> Ptr cty -> IO Int`. Another unexpected detail
+is that the marshaling function takes a `Ptr` instead of a `Ref` even though
+the lifetime is available. This is because an
+implementation of `Marshal` would immediately use `unsafeRefPtr` to get a `Ptr`
+anyways so not much protection is happening.
 
-Implementing a `Marshal` is relatively straightforward for base types, the code below has
-some noise to appease the type system, but it boils down to a pointer write (`prim__ptrWrite`).
+The use of the lifetime on `Marshal` has two purposes. On the caller side, `newRef`, `writeRef`,
+can tie the `Marshal` lifetime to the output `ScopedIO` and `Ref` lifetimes. On the
+implementation side, `Marshal` for `Ref` can have their lifetimes tied. Without
+the lifetime a `Marshal` instance for `Ref` would work for a `ScopedIO` of any
+lifetime.
+
+```idris
+writeRef :
+  { auto marshal : Marshal a' ity cty } ->
+  ity ->
+  Ref a' cty ->
+  ScopedIO a' Int64
+writeRef @{ MkMarshal f } x ptr = liftIO $ f x (unsafeRefPtr ptr)
+
+newRef : ity -> { auto marshal : Marshal a' ity cty } -> ScopedIO a' (Ref a' cty)
+newRef init = do
+  let MkMarshal { repr } _ = marshal
+  ptr <- liftIO $ alloc repr
+  _ <- writeRef { marshal } init (unsafePtrRef ptr)
+  pure $ unsafePtrRef ptr
+```
+
+Implementing a `Marshal` is straightforward for base types, the code below has
+some noise to appease the type system, but it boils down to writing to a pointer (`prim__ptrWrite`).
 
 ```idris
 export
 %hint
-marshalInt : Marshal Int Int
+marshalInt : Marshal a' Int Int
 marshalInt = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast x)
+```
 
+
+And, through the magic of proof search, `newRef` can be called without
+needing to mention `marshalInt`.
+
+```idris
+testNewRefInt : ScopedIO a' (Ref a' Int)
+testNewRefInt = newRef (the Int 25)
+```
+
+And here's how the lifetime on `Marshal` is used when marshaling `Ref` into a `Ptr`.
+
+```idris
 export
 %hint
-marshalFloat : Marshal Double Float
-marshalFloat = MkMarshal $ \x, ptr =>
-    primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast $ prim__SingleToBits x)
-
-export
-%hint
-marshalDouble : Marshal Double Double
-marshalDouble = MkMarshal $ \x, ptr =>
-    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (prim__DoubleToBits x)
+marshalRef : { repr : CType t } -> Marshal a' (Ref a' t) (Ptr t)
+marshalRef = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite64
+      (prim__forgetPtr ptr)
+      (prim__PtrToBits $ prim__forgetPtr $ unsafeRefPtr x)
 ```
 
 /* idris
 export
 %hint
-marshalBool : Marshal Bool Bool
+marshalFloat : Marshal a' Double Float
+marshalFloat = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast $ prim__SingleToBits x)
+
+export
+%hint
+marshalDouble : Marshal a' Double Double
+marshalDouble = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (prim__DoubleToBits x)
+
+export
+%hint
+marshalBool : Marshal a' Bool Bool
 marshalBool = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite8 (prim__forgetPtr ptr) (if x then 1 else 0)
 
 export
 %hint
-marshalInt8 : Marshal Int8 Int8
+marshalInt8 : Marshal a' Int8 Int8
 marshalInt8 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite8 (prim__forgetPtr ptr) (cast x)
 
 export
 %hint
-marshalInt16 : Marshal Int16 Int16
+marshalInt16 : Marshal a' Int16 Int16
 marshalInt16 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite16 (prim__forgetPtr ptr) (cast x)
 
 export
 %hint
-marshalInt32 : Marshal Int32 Int32
+marshalInt32 : Marshal a' Int32 Int32
 marshalInt32 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast x)
 
 export
 %hint
-marshalInt64 : Marshal Int64 Int64
+marshalInt64 : Marshal a' Int64 Int64
 marshalInt64 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (cast x)
 
 export
 %hint
-marshalBits8 : Marshal Bits8 Bits8
+marshalBits8 : Marshal a' Bits8 Bits8
 marshalBits8 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite8 (prim__forgetPtr ptr) x
 
 export
 %hint
-marshalBits16 : Marshal Bits16 Bits16
+marshalBits16 : Marshal a' Bits16 Bits16
 marshalBits16 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite16 (prim__forgetPtr ptr) x
 
 export
 %hint
-marshalBits32 : Marshal Bits32 Bits32
+marshalBits32 : Marshal a' Bits32 Bits32
 marshalBits32 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) x
 
 export
 %hint
-marshalBits64 : Marshal Bits64 Bits64
+marshalBits64 : Marshal a' Bits64 Bits64
 marshalBits64 = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) x
 
+-- integer instances
+
+export
+%hint
+marshalInt8Integer : Marshal a' Integer Int8
+marshalInt8Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite8 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalInt16Integer : Marshal a' Integer Int16
+marshalInt16Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite16 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalInt32Integer : Marshal a' Integer Int32
+marshalInt32Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalInt64Integer : Marshal a' Integer Int64
+marshalInt64Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalBits8Integer : Marshal a' Integer Bits8
+marshalBits8Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite8 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalBits16Integer : Marshal a' Integer Bits16
+marshalBits16Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite16 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalBits32Integer : Marshal a' Integer Bits32
+marshalBits32Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite32 (prim__forgetPtr ptr) (cast x)
+
+export
+%hint
+marshalBits64Integer : Marshal a' Integer Bits64
+marshalBits64Integer = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (cast x)
 */
 
+/*
 Two things to note here:
 - the `repr` argument in `MkMarshal` is an "auto implicit", this means
   the Idris type checker will try to build a `CType` that fits what
@@ -521,45 +935,68 @@ Two things to note here:
   enormous (the syntax tree is infinite, though the actual space is finite),
   but some of the possibilities may never halt. The general problem here
   is program synthesis).
+*/
 
-In order to use `marshalInt` and other possible implementations,
-a helper function `doMarshal` takes a `Marshal`, a correspoinding
-Idris value (`ity`), and a destination pointer.
 
-```idris
-doMarshal : Marshal ity cty -> ity -> AnyPtr -> IO Int
-doMarshal (MkMarshal { repr } f) x ptr = f x (prim__castPtr ptr)
-```
+---
 
-Marshalling a struct is more complicated. Firstly,
-the Idris type I've chose to inialize a struct is a tuples.
-Idris desugars tuples into nested pairs
+Marshalling into a `Struct` is more complicated. Firstly, there's
+the question of which Idris type should represent a struct. Secondly,
+alignment and padding of fields within the struct needs to be calculated, as with `sizeof` the details are omitted from this document.
+
+The Idris type I've chosen to marshal into structs is tuples.
+(footnote: `HList` is another possible choice but, in practice,
+proof search struggles to find `Marshal` implementations as too
+many other types are defined with the `Nil` and `::` constructors)
+
+In pseudo-code the `Marshal` instances for structs should look like:
+
+  ```idris
+  Marshal a' (ix, iy, iz, ...) (Struct _ [(_, cx), (_, cy), (_, cz), ...])
+  ```
+
+However, there are a few issues. Firstly, 1-tuples do not exist because
+Idris desugars them into nested `Pair`s which have exactly two elements.
 (footnote:
 ```
 (1, True, "hello") == MkPair 1 (MkPair True "hello")
 ```
-), which means 1-tuples don't exist. The most consistent work around
-is to suffix all tuples with a unit type `()`. Thus, for a struct
-with `N` fields, it can be initialized with an `N+1` tuple with
-the same `N` types and `()`.  More concretely, the `Marshal` instances
-should look somehing like:
+)
+Secondly, each `ix` and corresponding `cx` needs its own `Marshal`
+instance. Implementing each of these to some finite limit is be acceptable in
+lesser language such as Rust, but a beautiful, dependently typed language
+like Idris allows us to avoid this by using recursion. The base case is defined
+such that a `Marshal` for a plain value can be used to construct a `Marshal`
+for a `Struct` with one field.
 
 ```idris
-marshalStruct1 : Marshal (a, ())        (Struct _ [(_, a)])
-marshalStruct2 : Marshal (a, b, ())     (Struct _ [(_, a), (_, b)])
-marshalStruct3 : Marshal (a, b, c, ())  (Struct _ [(_, a), (_, b), (_, c)])
+%hint
+marshalStructBase :
+  { 0 ia : Type } ->
+  { auto repr : CType ca} ->
+  Marshal a' ia ca ->
+  Marshal a' ia (Struct name [(f, ca)])
 ```
 
-Implementing each of these to some finite limit may be acceptable in lesser
-language such as Rust, but a beautiful, functional programming language
-like Idris allows us to avoid this. A new type
+The recursive case combines a `Marshal` for a single value with a `Marshal` for
+a `Struct` and creates a `Marshal` for a `Struct` with the additional field.
 
 ```idris
+%hint
+marshalStructRec :
+  { auto repr : CType ca } ->
+  Marshal a' ia ca ->
+  { auto reprs : All (CType . Builtin.snd) cb } ->
+  Marshal a' ib (Struct name cb) ->
+  Marshal a' (Pair ia ib) (Struct name ((field, ca)::cb))
+```
 
-(.ctype) : Marshal ity cty -> CType cty
+/* idris
+(.ctype) : Marshal a' ity cty -> CType cty
 (.ctype) (MkMarshal { repr } _) = repr
 
-padto : AnyPtr -> CType a -> Int
+
+padto : AnyPtr -> CType a -> Int64
 padto ptr repr =
   let ptrBits = the Int64 $ believe_me ptr
   in cast $ (doAlign (cast ptrBits) (cast $ alignof repr)) - (cast ptrBits)
@@ -568,368 +1005,217 @@ padto ptr repr =
   doAlign : Bits64 -> Bits64 -> Bits64
   doAlign v a = ((v-1) .|. (a-1))+1
 
-%hint
-marshalStructBase :
-  { 0 a : Type } ->
-  { auto repr : CType a' } ->
-  Marshal a a' ->
-  Marshal a (Struct name [(f, a')])
 marshalStructBase ma = MkMarshal $ \x, ptr =>
   let MkMarshal f = ma
   in f x (prim__castPtr $ prim__forgetPtr ptr)
 
-%hint
-marshalStructRec :
-  { auto repr : CType a' } ->
-  Marshal a a' ->
-  { auto reprs : All (CType . Builtin.snd) bs' } ->
-  Marshal bs (Struct name bs') ->
-  Marshal (Pair a bs) (Struct name ((field, a')::bs'))
-marshalStructRec ma mbs = MkMarshal $ \(a, bs), ptr => do
+marshalStructRec ma mb = MkMarshal $ \(a, bs), ptr => do
   let anyptr = prim__forgetPtr ptr
   let pad = padto anyptr ma.ctype
-  siz <- (+ pad) <$> doMarshal ma a (prim__offsetPtr anyptr pad)
-  map (+ siz) $ doMarshal mbs bs (prim__offsetPtr anyptr siz)
-```
+  let MkMarshal maf = ma
+  let MkMarshal mbf = mb
+  siz <- (+ pad) <$> maf a (prim__castPtr $ prim__offsetPtr anyptr pad)
+  (+ siz) <$> mbf bs (prim__castPtr $ prim__offsetPtr anyptr $ cast siz)
+*/
 
-Now, there's enough information for a safe allocation
+The following examples further illustrate the power of proof search.
+Instances of `Marshal` can be built up automatically for only the cost
+of writing `%hint`. Other languages might require metaprogramming,
+such as macros, which have their own learning curve. However, with
+proof search, the programmer simply writes Idris code.
 
 ```idris
-allocSafe : a -> { auto marshal : Marshal a a' } -> IO (Ptr a')
-allocSafe init = do
-  ptr <- alloc marshal.ctype
-  _ <- doMarshal marshal init (prim__forgetPtr ptr)
-  pure ptr
+testNewRefStruct1 : ScopedIO a' (Ref a' (Struct "hello" [("f", Int)]))
+testNewRefStruct1 = newRef (the Int 25)
 
-testAllocInt : IO (Ptr Int)
-testAllocInt = allocSafe (the Int 25)
+testNewRefStruct2 : ScopedIO a' (Ref a' (Struct "hello" [("f", Int), ("g", Int)]))
+testNewRefStruct2 = newRef ((the Int 25), (the Int 50))
 
-testAllocStruct1 : IO (Ptr (Struct "hello" [("f", Int)]))
-testAllocStruct1 = allocSafe (the Int 25)
+testNewRefStruct3 : ScopedIO a' (Ref a'
+  (Struct "hello"
+    [("f", Int), ("g", Ptr Int)]))
+testNewRefStruct3 = newRef ((the Int 25), !testNewRefInt)
 
-testAllocStruct2 : IO (Ptr (Struct "hello" [("f", Int), ("g", Int)]))
-testAllocStruct2 = allocSafe ((the Int 25), (the Int 50))
+testNewRefStruct4 : ScopedIO a' (Ref a'
+  (Struct "hello"
+    [ ("f", Int)
+    , ( "g" , Struct "world"
+        [ ("h", Int)
+        , ("i", Ptr Int)
+      ])
+    ])
+  )
+testNewRefStruct4 = newRef ((the Int 25), (the Int 50, !testNewRefInt))
 ```
 
 === The `Unmarshal` type
 
-Unmarshalling follows the same pattern, however compound types are skipped. Later
-on, they will be projected into other pointers.
+Unmarshalling follows the same pattern, however compound types like `Struct`,
+cannot be unmarshalled. Instead, the API allows "projection" of references.
 
 ```idris
-data Unmarshal : ity -> cty -> Type where
-  -- NOTE: you have access to a pointer but this must be pure!!!
-  MkUnmarshal : { auto repr : CType cty } -> (Ptr cty -> ity) -> Unmarshal ity cty
+data Unmarshal : Lifetime -> ity -> cty -> Type where
+  MkUnmarshal : { auto repr : CType cty } -> (Ptr cty -> IO ity) -> Unmarshal a' ity cty
 
-doUnmarshal : Unmarshal ity cty -> AnyPtr -> ity
-doUnmarshal (MkUnmarshal f) ptr = f (prim__castPtr ptr)
+readRef :
+  { auto unmarshal : Unmarshal a' ity cty } ->
+  { auto 0 p : AtLeastAsLong a' b' } ->
+  Ref a' cty ->
+  ScopedIO b' ity
+readRef @{ MkUnmarshal f } ref = liftIO $ f (unsafeRefPtr ref)
 
 %hint
-unmarshalInt : Unmarshal Int Int
+unmarshalInt : Unmarshal a' Int Int
 unmarshalInt = MkUnmarshal $ \ptr =>
-  unsafePerformIO $ map cast $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
+  map cast $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
 ```
 
-== Memory safety with lifetimes
+Reference projection means a reference to a struct can be turned into a
+reference, of the same lifetime, to one of the struct's fields. Once
+again, this requires a proposition type to guarantee that the value
+of the field does exist.
 
-The last, and most important property of this API is enforcing correct
-lifecyle of allocated memory. After allocation and initialization,
-memory that is no longer used needs to be deallocated and returned to
-the operating system with the `free(3)` system call. Further, after
-the call to `free` the pointer should not be read from or written to
-(footnote: this is known is "user after free" and is a common cause of
-vulnerabilities, citation needed).
-
-As mentioned, the design takes inspiration from Rust where "references"
-are pointers with an associated lifetime. Rust's lifetimes are a special
-construct within the type sytem and the "borrow checker". In Idris it can
-be modeled as a plain data type; and the `Ref` type is then dependent on
-the lifetime (in addition to the type of the underlying pointer).
 
 ```idris
--- constructors defined later
-data Lifetime : Type
+data Field : String -> List (String, Type) -> Type where
+  First : Field name ((name, ty)::fs)
+  Later : Field name fs -> Field name (f::fs)
 
-data Ref : Lifetime -> Type -> Type where [external]
-```
-Ignoring `thr`, the `Lifetime` constructor hints at the hiearchial relationship
-between lifetimes. Starting from a root scope, shorter sub scopes can be
-created.
+0 FieldType : Field fname fs -> Type
+FieldType (First { ty }) = ty
+FieldType (Later l) = FieldType l
 
-TODO: explain `[external]` above
-
-In `Ref`, `[external]` tells the compiler that `Ref` is an
-opaque type which may be constructed. Otherwise, the compiler
-assumes a `Ref` value will never exist since it has no constructors,
-which may lead to code being optimized away. Rather than a
-constructor, an `%unsafe` function with `believe_me` is used;
-this prevents proof search from using it and further communicates
-to users they should think twice about using the functions.
-
-```idris
-%unsafe
-unsafeRefPtr : Ref a' t -> Ptr t
-unsafeRefPtr = believe_me
-
-%unsafe
-unsafePtrRef : Ptr t -> Ref a' t
-unsafePtrRef = believe_me
-```
-
-=== `ScopedIO`
-
-The type that brings all the concepts together is `ScopedIO`. It is inspired
-by the `ST` type (@ st-monad). So a quick review of it is warrented before
-`ScopedIO`. `ST` is type that describes mutable computation within a pure
-language. `ST` and it's associated operations are defined as:
-
-```idris
-data ST : (s : Type) -> (a : Type) -> Type where
-  MkSt : (s -> (a, s)) -> ST s a
-
-data STRef : (s : Type) -> (a : Type) -> Type where
-  MkRef : (s : Type) -> a -> STRef s a
-
-newSTRef   : a -> ST s (STRef s a)
-readSTRef  : STRef s a -> ST s a
-writeSTRef : STRef s a -> a -> ST s ()
-
-runST : ({ s : Type } -> ST s a) -> a
-```
-
-`ST` is simply a function that takes some state `s` and returns
-a result `a` along with some, possibly new, state `s`. The
-`new`, `read`, and `write` functions are the "primitives"
-for working "inside" `ST`; note that the `s` of the
-`STRef` neds to match the `s` of `ST`.
-
-Lastly, `runST`
-is used to actually get the result `a` from an `ST s a`.
-Howver, the first argument has an important nuance:
-`{ s : Type } -> ST s a` means the `ST` needs to work for _all_ possible
-state types `s`. Said another way, `runST` determines what the
-`s` should be for the `ST` and consequently for all the `STRef`s
-it creates; thus an `STRef` for one invocation of `runST`
-cannot be used for another.  Consider the following example:
-
-```idris
-failing "When unifying"
-  testRunSTBad : Int
-  testRunSTBad = runST $ readSTRef (runST $ newSTRef 2)
-```
-
-`runST $ newSTRef 2` returns a `STRef SomeS Int`, where `SomeS` is
-a specific type originating from `runST`. `readSTRef`
-then assumes this type for its output `ST SomeS Int`. But the
-outer `runST` needs an `ST` that works for _all_ possible `s`
-while the one provided only works for `SomeS`.
-While `STRef` is able to escape the `runST` invocation
-it is only useable within the invocation. (footnote:
-what I refer to as an "in (footnote: What I refer to as an "invocation
-of `runST`" is called a "thread" in the literature hence `thr` in
-the lifetime, not to be confused with "threads" in concurrent programming),
-
----
-
-For this library, `s` becomes `Lifetime`, with the to-be-quantified type, in
-the constructors:
-
-```idris
-data Lifetime : Type where
-  LRoot : (0 thr : Type) -> Lifetime
-  LSub  : (0 thr : Type) -> (0 _ : Lifetime) -> Lifetime
-```
-
-Then, a simplified version of `Scope` and `runScope` look like:
-
-```idris
-data Scope : Lifetime -> Type -> Type where
-  MkScope : (Unit -> (List AnyPtr, a)) -> Scope a' a
-
-newRef' :
-  (0 a' : Lifetime) ->
-  ity ->
-  (cty : Type) -> { auto marshal : Marshal ity cty } ->
-  Scope a' (Ref a' cty)
-readRef' : Ref a' cty -> { auto unmarshal : Unmarshal cty ity } -> Scope a' ity
-
-runScope : ((a' : Lifetime) -> Scope a' a) -> a
-```
-
-Here, a `Scope` is a function that accumulates pointers to be freed at the end
-of the computation, and a result `a`. Running a scoped computation requires
-a `Scope` that works for any single `Lifetime`; as with `ST` this means
-that the `Scope`'s operations only use `Ref`s with a matching lifetime.
-Also note the requirement of implicit `Marshal` and `Unmaarshal` types.
-
-However, this implementation has two problems. Firstly, allocation
-and deallocation require side effects, ie. working within `IO`;
-this fix is simple and left for later. More importantly, lifetimes are hiearchial and
-a reference with a longer lifetime
-should be allowed to be used in places where a refernce with a shorter lifetime is needed.
-In Rust, this is modeled using subtyping. Idris does not have
-native subtyping relationships, so the relationship is modeled using,
-you guessed it, another dependent type represeting a proposition,
-that eventually gets proof searched.
-
-```idris
-data AtLeastAsLong : Lifetime -> Lifetime -> Type where
-  ALALSame   : AtLeastAsLong a' a'
-  ALALDirect : AtLeastAsLong a' (LSub b a')
-
-  -- ALALTrans can be read as the following line, the obfuscation is a workaround
-  -- to an infinite loop somewhere in the compiler
-  -- ALALTrans  : AtLeastAsLong a' b' -> AtLeastAsLong b' c' -> AtLeastAsLong a c
-
-  ALALTrans  : AtLeastAsLong a' (LSub b a') -> AtLeastAsLong (LSub b a')  c' -> AtLeastAsLong a c
-```
-
-The a value of type `AtLeastAsLong a' b'` is a proof that the lifetime `a'` is at least as long as `b'`.
-This proof is provided functions computing within a sub-scope:
-
-```idris
-runSubScope :
-  (0 a' : Lifetime) ->
-  ((0 b' : Lifetime) -> { 0 p : AtLeastAsLong a' b' } -> Scope b' a) ->
-  Scope a' a
-```
-
-Which can then be used for reading references from a parent scope:
-
-```idris
-readRefLonger :
-  Ref a' cty ->
-  { auto unmarshal : Unmarshal cty ity } ->
-  { auto 0 p : AtLeastAsLong a' b' } ->
-  Scope b' ity
-```
-
-== All together
-
-With all these pieces, `ScopedIO` can be defined for safe memory allocation with
-access to `IO`. From the internal `IO`, the usual `Monad` and friends can also
-be defined.
-
-```idris
-data ScopedIO : Lifetime -> Type -> Type where
-  MkScopedIO : IO (List AnyPtr, a) -> ScopedIO a' a
-
-Functor (ScopedIO a')
-Applicative (ScopedIO a')
-Monad (ScopedIO a')
-HasIO (ScopedIO a')
+getField :
+  { auto reprs : All (CType . Builtin.snd) fields } ->
+  Ref a' (Struct name fields) ->
+  (f : String) ->
+  { auto F : Field fname fields } ->
+  Ref a' (FieldType F)
 ```
 
 /* idris
-Functor (ScopedIO a') where
-  map f (MkScopedIO x) = MkScopedIO $ map (mapSnd f) x
-
-Applicative (ScopedIO a') where
-  pure x = MkScopedIO $ pure ([], x)
-
-  (<*>) (MkScopedIO f) (MkScopedIO sf) = MkScopedIO $ do
-    (fps, f') <- f
-    (sfps, sf') <- sf
-    pure (sfps ++ fps, f' sf')
-
-Monad (ScopedIO a') where
-  join (MkScopedIO x) = MkScopedIO $ do
-    (l1, MkScopedIO x') <- x
-    (l2, x'') <- x'
-    pure (l1 ++ l2, x'')
-
-HasIO (ScopedIO a') where
-  liftIO x = MkScopedIO $ map ([],) x
+getField ref fname =
+  unsafePtrRef $ prim__castPtr $ offset (prim__forgetPtr $ unsafeRefPtr ref) reprs F
+  where
+  offset :
+    AnyPtr ->
+    All (CType . Builtin.snd) fields' ->
+    (_ : Field fname' fields') ->
+    AnyPtr
+  offset ptr (r::rs) (Later f) =
+    let ptr' = prim__offsetPtr ptr $ (sizeof r) + (padto ptr r)
+    in offset ptr' rs f
+  offset ptr (r::_)  First    = prim__offsetPtr ptr (padto ptr r)
 */
 
-With access to side effects, `runScopedIO` and `runSubScopedIO`
-can be also be fully defined.
 
-```idris
-runScopedIO :
-  HasIO io =>
-  ((0 a' : Lifetime) -> ScopedIO a' a) ->
-  io a
-runScopedIO f = liftIO $ do
-  let MkScopedIO f' = f $ LRoot Void
-  (ptrs, ret) <- f'
-  _ <- traverse (primIO . prim__free) ptrs
-  pure ret
+== Examples
 
-runSubScopedIO :
-  (0 a' : Lifetime) ->
-  (
-    (0 b' : Lifetime) ->
-    { 0 p : AtLeastAsLong a' b' } ->
-    ScopedIO b' a
-  ) ->
-  ScopedIO a' a
-runSubScopedIO a' f = do
-  let MkScopedIO f' = f (LSub Void a') { p = ALALDirect }
-  (ptrs, ret) <- liftIO f'
-  _ <- traverse (primIO . prim__free) ptrs
-  pure ret
-```
-
-
-```idris
-newRef :
-  ity ->
-  { auto marshal : Marshal ity cty } ->
-  ScopedIO a' (Ref a' cty)
-newRef init =
-  liftIO $ unsafePtrRef <$> allocSafe init
-
-readRef :
-  Ref a' cty ->
-  { auto unmarshal : Unmarshal ity cty } ->
-  { auto 0 p : AtLeastAsLong a' b' } ->
-  ScopedIO b' ity
-readRef ref = pure $ doUnmarshal unmarshal (prim__forgetPtr $ unsafeRefPtr ref)
-```
-
-=== Examples
 
 ```idris
 testScope1 : IO Int
 testScope1 = runScopedIO $ \a' => do
   x <- newRef { cty = Int } $ the Int 10
-  readRef x
-
-testScope2 : IO Int
-testScope2 = runScopedIO $ \a' => do
-  x <- newRef { cty = Int } $ the Int 10
-  y <- runSubScopedIO a' $ \b' => do
+  runSubScopedIO a' $ \b' => do
     readRef x
-  pure y
 
 failing "Can't solve constraint"
-  testScope3 : IO Int
-  testScope3 = runScopedIO $ \a' => do
+  testScope2 : IO Int
+  testScope2 = runScopedIO $ \a' => do
     x <- runSubScopedIO a' $ \b' => do
       newRef { cty = Int } $ the Int 10
     readRef x
 ```
 
-=== Discussion
+== Discussion and caveats
 
-`Unmarshal` for structs isn't defined, rather a `getField` function
-is used for "projecting" the reference to one of the struct's fields
+```idris
+stringVar : String -> ScopedIO a' (Ref a' Bits8)
+stringVar s = do
+  ptr <- primIO $ prim__malloc $ cast $ strLength s
+  pure $ unsafePtrRef $ prim__castPtr ptr
 
-  ```idris
-  getField : Ref a' (Struct name fields) -> (f : String) -> Ref a' (lookup f fields)
-  ```
+```
 
-/* idris
+```idris
+public export
+data FFICall : Lifetime -> Type -> Type -> Type where
+  FCReturn :
+    FFICall a' () (PrimIO b)
+
+  FCSame :
+    CType a =>
+    FFICall a' args f ->
+    FFICall a' (Pair a args) (a -> f)
+
+  FCInteger :
+    CType a =>
+    Cast Integer a =>
+    FFICall a' args f ->
+    FFICall a' (Pair Integer args) (a -> f)
+
+  FCDerefStructPtr :
+    All (CType . Builtin.snd) fields =>
+    FFICall a' args f ->
+    FFICall a' (Pair (Ptr (Struct name fields)) args) (Struct name fields -> f)
+
+  FCDerefStructRef :
+    All (CType . Builtin.snd) fields =>
+    FFICall a' args f ->
+    FFICall a' (Pair (Ref a' (Struct name fields)) args) (Struct name fields -> f)
+
+public export
+0 FFICallRet : FFICall _ _ _ -> Type
+FFICallRet (FCReturn { b }) = b
+FFICallRet (FCSame rest) = FFICallRet rest
+FFICallRet (FCInteger rest) = FFICallRet rest
+FFICallRet (FCDerefStructPtr rest) = FFICallRet rest
+FFICallRet (FCDerefStructRef rest) = FFICallRet rest
+
+-- TODO: chez specific!!
+prim__ptrDeref : Ptr a -> a
+prim__ptrDeref = believe_me
+
+checkRef : Ref a' x -> ScopedIO a' ()
+checkRef _ = pure ()
+
 export
-%hint
-marshalRef :
-  { 0 a' : Lifetime } ->
-  { repr : CType t } ->
-  Marshal (Ref a' t) (Ptr t)
-marshalRef = MkMarshal $ \x, ptr => do
-    let unref = prim__PtrBits $ prim__forgetPtr $ unsafeRefPtr x
-    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) unref
-*/
+safeFFI : { auto call : FFICall a' args f } -> f -> args -> ScopedIO a' (FFICallRet call)
+safeFFI = go call
+  where
+  go : (call' : FFICall a' args' f') -> f' -> args' -> ScopedIO a' (FFICallRet call')
+  go FCReturn f _ = primIO f
+  go (FCSame rest) f (a, arg) = go rest (f a) arg
+  go (FCInteger rest) f (a, arg) = go rest (f $ cast a) arg
+  go (FCDerefStructPtr rest) f (a, arg) = go rest (f $ prim__ptrDeref a) arg
+  go (FCDerefStructRef rest) f (a, arg) = do
+    _ <- checkRef a
+    go rest (f $ prim__ptrDeref $ unsafeRefPtr a) arg
 
+TestStruct : Type
+TestStruct = Struct "TestStruct"
+  [ ("a", Bits8)
+  , ("b", Bits16)
+  , ("c", Bits32)
+  , ("d", Bits64) ]
 
+%foreign "C:printStruct,libidris_wgpu_support"
+printStruct : TestStruct -> PrimIO ()
+
+test : IO ()
+test = runScopedIO $ \a' => do
+  x <- newRef { cty = TestStruct }
+    ( the Bits8  101
+    , the Bits16 10203
+    , the Bits32 20405060
+    , the Bits64 50404020205 )
+  safeFFI printStruct (x, ())
+  -- primIO $ printStruct $ prim__ptrDeref $ unsafeRefPtr x
+
+dbgAuto : (a : Type) -> { auto x : CType a } -> CType a
+dbgAuto _ = x
+```
+
+#pagebreak()
+
+#bibliography("../../doc/cs5099/refs.bib", title: "References", style: "association-for-computing-machinery")
