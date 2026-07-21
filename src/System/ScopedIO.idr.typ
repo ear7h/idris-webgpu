@@ -5,6 +5,8 @@
 = Implementation
 
 ```idris
+module System.ScopedIO
+
 import Data.Bits
 import Data.List
 import Data.List.Elem
@@ -28,6 +30,7 @@ it is marshalled from and unmarshalled to `Double` on the Idris side
 (more on this later).
 
 ```idris
+public export
 data Float : Type where
 ```
 
@@ -41,6 +44,7 @@ FFI-crossable types depends only on the name of the type; support for
 this has not made it to the mainline compiler):
 
 ```idris
+public export
 data CArray : Int -> Type -> Type where
 ```
 
@@ -49,6 +53,7 @@ consist of the string names and types:
 
 ```idris
 -- This type already exists in System.FFI
+public export
 data Struct : String -> List (String, Type) -> Type where [external]
 ```
 
@@ -58,7 +63,14 @@ to limit which types are supported C types an indexed data
 type can be used:
 
 ```idris
-data CType : Type -> Type where
+public export
+data CType : Type -> Type
+
+public export
+data FFIFn : Type -> Type where
+  CFReturn     : CType t -> FFIFn (PrimIO t)
+  CFReturnVoid : FFIFn (PrimIO ())
+  CFParam : CType t -> FFIFn rest -> FFIFn (t -> rest)
 ```
 
 This will have a couple interpretations:
@@ -83,6 +95,7 @@ codebase, and provides a better plain-English understanding of `CType`.
 Starting from the basics, the constructors for `CType` are:
 
 ```idris
+data CType : Type -> Type where
   CInt : CType Int
   CFloat  : CType Float
   CDouble : CType Double
@@ -110,8 +123,12 @@ The utility of this proof can be seen in the following `CType`:
 */
 
 ```idris
-  CPtr    : CType t -> CType (Ptr t)
+  CPtr     : CType t -> CType (Ptr t)
+  CVoidPtr : CType AnyPtr
+  CFnPtr  : FFIFn t -> CType (Ptr t)
 ```
+TODO: explain CVoidPtr
+
 
 `CPtr` uses `CType` recursively to say "given a type `t` with
 a C representation, `Ptr t` has a C representation. This is
@@ -182,21 +199,23 @@ alignof : (repr : CType a) -> Int64
 ```
 
 /* idris
-alignof CInt     = 4
-alignof CFloat   = 4
-alignof CDouble  = 8
-alignof CBool    = 1
-alignof CInt8    = 1
-alignof CInt16   = 2
-alignof CInt32   = 4
-alignof CInt64   = 8
-alignof CBits8   = 1
-alignof CBits16  = 2
-alignof CBits32  = 4
-alignof CBits64  = 8
-alignof (CPtr _) = 8
+alignof CInt       = 4
+alignof CFloat     = 4
+alignof CDouble    = 8
+alignof CBool      = 1
+alignof CInt8      = 1
+alignof CInt16     = 2
+alignof CInt32     = 4
+alignof CInt64     = 8
+alignof CBits8     = 1
+alignof CBits16    = 2
+alignof CBits32    = 4
+alignof CBits64    = 8
+alignof (CPtr _)   = 8
+alignof (CVoidPtr) = 8
+alignof (CFnPtr _) = 8
 alignof (CCArray _ repr) = alignof repr
-alignof (CStruct reprs) = go reprs 1
+alignof (CStruct reprs)  = go reprs 1
   where
   go : All (CType . Builtin.snd) fields' -> Int64 -> Int64
   go Nil aln = aln
@@ -215,6 +234,8 @@ sizeof CBits16          = 2
 sizeof CBits32          = 4
 sizeof CBits64          = 8
 sizeof (CPtr _)         = 8
+sizeof (CVoidPtr)       = 8
+sizeof (CFnPtr _)       = 8
 sizeof (CCArray n repr) = (cast n) * sizeof repr
 sizeof (CStruct reprs)  =
   fst $ go reprs (0, 1)
@@ -287,8 +308,10 @@ as the pointed-to `Type`.
 
 ```idris
 -- constructors defined later
+public export
 data Lifetime : Type
 
+public export
 data Ref : Lifetime -> Type -> Type where [external]
 ```
 
@@ -301,10 +324,12 @@ this prevents proof search from using it and further communicates
 to users they should think twice about using the functions.
 
 ```idris
+export
 %unsafe
 unsafeRefPtr : Ref a' t -> Ptr t
 unsafeRefPtr = believe_me
 
+export
 %unsafe
 unsafePtrRef : Ptr t -> Ref a' t
 unsafePtrRef = believe_me
@@ -386,9 +411,14 @@ the `a`s should somehow be related to `CType`. The former can quickly be address
 as it's needed for the next section, `Marshal` which addresses the latter.
 
 ```idris
-data ScopedIO : Lifetime -> Type -> Type where
-  MkScopedIO : IO (List AnyPtr, a) -> ScopedIO a' a
 
+ScopedIOState = List (IO ())
+
+export
+data ScopedIO : Lifetime -> Type -> Type where
+  MkScopedIO : IO (Pair ScopedIOState a) -> ScopedIO a' a
+
+export
 runScopedIO :
   HasIO io =>
   ((0 a' : Lifetime) -> ScopedIO a' a) ->
@@ -396,9 +426,16 @@ runScopedIO :
 
 -- can be ignored, these inherit properties of IO which make the computations
 -- easier to compose
+export
 Functor (ScopedIO a')
+
+export
 Applicative (ScopedIO a')
+
+export
 Monad (ScopedIO a')
+
+export
 HasIO (ScopedIO a')
 ```
 
@@ -407,30 +444,42 @@ HasIO (ScopedIO a')
 -- haven't been defined
 
 Functor (ScopedIO a') where
-  map f (MkScopedIO x) = MkScopedIO $ map (mapSnd f) x
+  map f (MkScopedIO x) = MkScopedIO $ map f <$> x
 
 Applicative (ScopedIO a') where
-  pure x = MkScopedIO $ pure ([], x)
+  pure x = MkScopedIO $ pure $ pure x
 
-  (<*>) (MkScopedIO f) (MkScopedIO sf) = MkScopedIO $ do
-    (fps, f') <- f
-    (sfps, sf') <- sf
-    pure (sfps ++ fps, f' sf')
+  (<*>) (MkScopedIO f) (MkScopedIO sf) = MkScopedIO [| f <*> sf |]
 
 Monad (ScopedIO a') where
   join (MkScopedIO x) = MkScopedIO $ do
-    (l1, MkScopedIO x') <- x
-    (l2, x'') <- x'
-    pure (l1 ++ l2, x'')
+    (state', MkScopedIO x') <- x
+    (state'', x'') <- x'
+    pure (state'' <+> state', x'')
 
 HasIO (ScopedIO a') where
-  liftIO x = MkScopedIO $ map ([],) x
+  liftIO x = MkScopedIO $ map (neutral,) x
 */
 
 However, for the rest of this section the simplified version will be used for brevity.
 It should also be noted that, `s` was used in this example for clarity but
 conventionally variable names of the form `a'`, `b'`, etc. will be used for `Lifetime`s;
 this follows the Rust `'a` form.
+
+TODO:
+
+```idris
+defer : IO () -> ScopedIO a' ()
+defer f = MkScopedIO $ pure ([f], ())
+```
+
+```idris
+allocScoped : (repr : CType a) -> ScopedIO a' (Ptr a)
+allocScoped repr = do
+  addr <- liftIO $ alloc repr
+  defer $ primIO $ prim__free $ prim__forgetPtr addr
+  pure addr
+```
 
 === Subscopes
 
@@ -465,6 +514,7 @@ That is, a type describing a proposition is needed. The proposition
 is that a lifetime `a'` lives as long as another lifetime `b'`.
 
 ```idris
+public export
 data AtLeastAsLong : Lifetime -> Lifetime -> Type where
 ```
 
@@ -483,17 +533,23 @@ And one non-trivial case: the relationship is transitive, if `a'` lives as long
 as `b'` and `b'` lives as long as `c'`, then `a'` lives as long as `c'`. This
 should be implemented directly as:
 
-  ```idris
-    ALALTrans  : AtLeastAsLong a' b' -> AtLeastAsLong b' c' -> AtLeastAsLong a c
-  ```
+TODO: hack not needed
+
+```idris
+  ALALTrans  : AtLeastAsLong a' b' -> AtLeastAsLong b' c' -> AtLeastAsLong a' c'
+```
 
 But there's a bug in the compiler (TODO: minimize and open issue for this)
 that results in an infinite loop when doing proof search. To work around this,
 `ALALTrans` is defined as:
 
-```idris
-  ALALTrans  : AtLeastAsLong a' (LSub b a') -> AtLeastAsLong (LSub b a')  c' -> AtLeastAsLong a' c'
-```
+  ```idris
+    ALALTrans  : AtLeastAsLong a' (LSub b a') -> AtLeastAsLong (LSub b a')  c' -> AtLeastAsLong a' c'
+
+  export
+  %hint
+  0 alalTrans : AtLeastAsLong a' b' -> AtLeastAsLong b' c' -> AtLeastAsLong a' c'
+  ```
 
 An improved version of `readRefScope` can then use an auto-implicit
 `AtLeastAsLong` as proof that the lifetime of the reference lives
@@ -519,6 +575,7 @@ runSubScope' :
 And similarly for `ScopedIO`.
 
 ```idris
+export
 runSubScopedIO :
   (0 a' : Lifetime) ->
   (
@@ -527,20 +584,34 @@ runSubScopedIO :
     ScopedIO b' a
   ) ->
   ScopedIO a' a
+
+export
+runSubScopedIO' :
+  (0 a' : Lifetime) ->
+  (
+    (0 b' : Lifetime) ->
+    (0 p : AtLeastAsLong a' b') ->
+    ScopedIO b' a
+  ) ->
+  ScopedIO a' a
+runSubScopedIO' a' f = runSubScopedIO a' f'
+  where
+  f' : (0 b' : Lifetime) -> { 0 p : AtLeastAsLong a' b' } -> ScopedIO b' a
+  f' b' = f b' p
 ```
 
 /* idris
 runScopedIO f = liftIO $ do
   let MkScopedIO f' = f $ LRoot Void
-  (ptrs, ret) <- f'
-  _ <- traverse (primIO . prim__free) ptrs
+  (cleanup, ret) <- f'
+  _ <- sequence cleanup
   pure ret
 
 
 runSubScopedIO a' f = do
   let MkScopedIO f' = f (LSub Void a') { p = ALALParent }
-  (ptrs, ret) <- liftIO f'
-  _ <- traverse (primIO . prim__free) ptrs
+  (cleanup, ret) <- liftIO f'
+  _ <- liftIO $ sequence cleanup
   pure ret
 */
 
@@ -649,6 +720,9 @@ Note that this not a `cast` which truncates a single-precision float `1.1` into
 
   prim__PtrToBits : AnyPtr -> Bits64
   prim__PtrToBits = believe_me
+
+  prim__PtrFromBits : Bits64 -> AnyPtr
+  prim__PtrFromBits = believe_me
   ```
 
 /* idris
@@ -718,6 +792,9 @@ prim__DoubleFromBits : Bits64 -> Double
 
 prim__PtrToBits : AnyPtr -> Bits64
 prim__PtrToBits = believe_me
+
+prim__PtrFromBits : Bits64 -> AnyPtr
+prim__PtrFromBits = believe_me
 */
 
 === The `Marshal` type
@@ -749,6 +826,7 @@ the lifetime a `Marshal` instance for `Ref` would work for a `ScopedIO` of any
 lifetime.
 
 ```idris
+export
 writeRef :
   { auto marshal : Marshal a' ity cty } ->
   ity ->
@@ -756,6 +834,7 @@ writeRef :
   ScopedIO a' Int64
 writeRef @{ MkMarshal f } x ptr = liftIO $ f x (unsafeRefPtr ptr)
 
+export
 newRef : ity -> { auto marshal : Marshal a' ity cty } -> ScopedIO a' (Ref a' cty)
 newRef init = do
   let MkMarshal { repr } _ = marshal
@@ -796,6 +875,7 @@ marshalRef = MkMarshal $ \x, ptr =>
       (prim__PtrToBits $ prim__forgetPtr $ unsafeRefPtr x)
 ```
 
+
 /* idris
 export
 %hint
@@ -808,6 +888,12 @@ export
 marshalDouble : Marshal a' Double Double
 marshalDouble = MkMarshal $ \x, ptr =>
     primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (prim__DoubleToBits x)
+
+export
+%hint
+marshalPtr : CType t => Marshal a' (Ptr t) (Ptr t)
+marshalPtr = MkMarshal $ \x, ptr =>
+    primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (prim__PtrToBits $ prim__forgetPtr x)
 
 export
 %hint
@@ -970,6 +1056,7 @@ such that a `Marshal` for a plain value can be used to construct a `Marshal`
 for a `Struct` with one field.
 
 ```idris
+export
 %hint
 marshalStructBase :
   { 0 ia : Type } ->
@@ -982,6 +1069,7 @@ The recursive case combines a `Marshal` for a single value with a `Marshal` for
 a `Struct` and creates a `Marshal` for a `Struct` with the additional field.
 
 ```idris
+export
 %hint
 marshalStructRec :
   { auto repr : CType ca } ->
@@ -989,6 +1077,26 @@ marshalStructRec :
   { auto reprs : All (CType . Builtin.snd) cb } ->
   Marshal a' ib (Struct name cb) ->
   Marshal a' (Pair ia ib) (Struct name ((field, ca)::cb))
+```
+
+TODO
+
+```idris
+export
+%hint
+marshalDerefStructRef: Marshal a' (Ref a' (Struct name fields)) (Struct name fields)
+
+export
+%hint
+marshalDerefStructPtr: Marshal a' (Ptr (Struct name fields)) (Struct name fields)
+
+export
+%hint
+marshalAnyPtr: Marshal a' AnyPtr AnyPtr
+
+export
+%hint
+marshalFnPtr: FFIFn t -> Marshal a' (Ptr t) (Ptr t)
 ```
 
 /* idris
@@ -1054,9 +1162,11 @@ Unmarshalling follows the same pattern, however compound types like `Struct`,
 cannot be unmarshalled. Instead, the API allows "projection" of references.
 
 ```idris
+public export
 data Unmarshal : Lifetime -> ity -> cty -> Type where
   MkUnmarshal : { auto repr : CType cty } -> (Ptr cty -> IO ity) -> Unmarshal a' ity cty
 
+public export
 readRef :
   { auto unmarshal : Unmarshal a' ity cty } ->
   { auto 0 p : AtLeastAsLong a' b' } ->
@@ -1064,11 +1174,95 @@ readRef :
   ScopedIO b' ity
 readRef @{ MkUnmarshal f } ref = liftIO $ f (unsafeRefPtr ref)
 
+public export
+shortenRef :
+  (0 b' : Lifetime) ->
+  Ref a' cty ->
+  { auto 0 p : AtLeastAsLong a' b' } ->
+  Ref b' cty
+
+export
 %hint
 unmarshalInt : Unmarshal a' Int Int
 unmarshalInt = MkUnmarshal $ \ptr =>
   map cast $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
 ```
+
+/* idris
+
+export
+%hint
+unmarshalFloat : Unmarshal a' Double Float
+unmarshalFloat = MkUnmarshal $ \ptr =>
+  map prim__SingleFromBits $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalDouble : Unmarshal a' Double Double
+unmarshalDouble = MkUnmarshal $ \ptr =>
+  map prim__DoubleFromBits $ primIO $ prim__ptrRead64 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalPtr : CType t => Unmarshal a' (Ptr t) (Ptr t)
+unmarshalPtr = MkUnmarshal $ \ptr =>
+  map (prim__castPtr . prim__PtrFromBits) $ primIO $ prim__ptrRead64 (prim__forgetPtr ptr)
+
+
+export
+%hint
+unmarshalBool : Unmarshal a' Bool Bool
+unmarshalBool = MkUnmarshal $ \ptr =>
+  map (/= 0) $ primIO $ prim__ptrRead8 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalBits8 : Unmarshal a' Bits8 Bits8
+unmarshalBits8 = MkUnmarshal $ \ptr =>
+  primIO $ prim__ptrRead8 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalBits16 : Unmarshal a' Bits16 Bits16
+unmarshalBits16 = MkUnmarshal $ \ptr =>
+  primIO $ prim__ptrRead16 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalBits32 : Unmarshal a' Bits32 Bits32
+unmarshalBits32 = MkUnmarshal $ \ptr =>
+  primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalBits64 : Unmarshal a' Bits64 Bits64
+unmarshalBits64 = MkUnmarshal $ \ptr =>
+  primIO $ prim__ptrRead64 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalInt8 : Unmarshal a' Int8 Int8
+unmarshalInt8 = MkUnmarshal $ \ptr =>
+  map cast $ primIO $ prim__ptrRead8 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalInt16 : Unmarshal a' Int16 Int16
+unmarshalInt16 = MkUnmarshal $ \ptr =>
+  map cast $ primIO $ prim__ptrRead16 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalInt32 : Unmarshal a' Int32 Int32
+unmarshalInt32 = MkUnmarshal $ \ptr =>
+  map cast $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
+
+export
+%hint
+unmarshalInt64 : Unmarshal a' Int64 Int64
+unmarshalInt64 = MkUnmarshal $ \ptr =>
+  map cast $ primIO $ prim__ptrRead64 (prim__forgetPtr ptr)
+*/
 
 Reference projection means a reference to a struct can be turned into a
 reference, of the same lifetime, to one of the struct's fields. Once
@@ -1077,25 +1271,28 @@ of the field does exist.
 
 
 ```idris
+public export
 data Field : String -> List (String, Type) -> Type where
   First : Field name ((name, ty)::fs)
   Later : Field name fs -> Field name (f::fs)
 
+public export
 0 FieldType : Field fname fs -> Type
 FieldType (First { ty }) = ty
 FieldType (Later l) = FieldType l
 
+export
 getField :
   { auto reprs : All (CType . Builtin.snd) fields } ->
   Ref a' (Struct name fields) ->
-  (f : String) ->
-  { auto F : Field fname fields } ->
-  Ref a' (FieldType F)
+  (fname : String) ->
+  { auto f : Field fname fields } ->
+  Ref a' (FieldType f)
 ```
 
 /* idris
 getField ref fname =
-  unsafePtrRef $ prim__castPtr $ offset (prim__forgetPtr $ unsafeRefPtr ref) reprs F
+  unsafePtrRef $ prim__castPtr $ offset (prim__forgetPtr $ unsafeRefPtr ref) reprs f
   where
   offset :
     AnyPtr ->
@@ -1107,6 +1304,22 @@ getField ref fname =
     in offset ptr' rs f
   offset ptr (r::_)  First    = prim__offsetPtr ptr (padto ptr r)
 */
+
+TODO: explain pointer projection
+
+```idris
+
+public export
+0 Ptr2Ref : (a' : Lifetime) -> Type -> Type
+Ptr2Ref a' (Ptr t) = Ref a' t
+Ptr2Ref a' t = Ref a' t
+
+export
+getPtr :
+  { auto repr : CType t } ->
+  Ref a' (Ptr t) ->
+  Ref a' t
+```
 
 
 == Examples
@@ -1130,47 +1343,64 @@ failing "Can't solve constraint"
 == Discussion and caveats
 
 ```idris
-stringVar : String -> ScopedIO a' (Ref a' Bits8)
-stringVar s = do
+export
+stringRef : String -> ScopedIO a' (Ref a' Bits8)
+{-
+TODO: add to cleanup, memcpy
+stringRef s = do
   ptr <- primIO $ prim__malloc $ cast $ strLength s
   pure $ unsafePtrRef $ prim__castPtr ptr
+-}
 
 ```
 
 ```idris
 public export
-data FFICall : Lifetime -> Type -> Type -> Type where
+data FFICall : Lifetime -> List Type -> Type -> Type where
   FCReturn :
-    FFICall a' () (PrimIO b)
+    CType b =>
+    FFICall a' [] (PrimIO b)
+
+  FCReturnVoid :
+    FFICall a' [] (PrimIO ())
 
   FCSame :
     CType a =>
     FFICall a' args f ->
-    FFICall a' (Pair a args) (a -> f)
+    FFICall a' (a::args) (a -> f)
 
   FCInteger :
     CType a =>
     Cast Integer a =>
     FFICall a' args f ->
-    FFICall a' (Pair Integer args) (a -> f)
+    FFICall a' (Integer::args) (a -> f)
+
+  FCRefPtr :
+    CType a =>
+    FFICall a' args f ->
+    FFICall a' ((Ref a' a)::args) (Ptr a -> f)
 
   FCDerefStructPtr :
     All (CType . Builtin.snd) fields =>
     FFICall a' args f ->
-    FFICall a' (Pair (Ptr (Struct name fields)) args) (Struct name fields -> f)
+    FFICall a' ((Ptr (Struct name fields))::args) (Struct name fields -> f)
 
   FCDerefStructRef :
     All (CType . Builtin.snd) fields =>
     FFICall a' args f ->
-    FFICall a' (Pair (Ref a' (Struct name fields)) args) (Struct name fields -> f)
+    FFICall a' ((Ref a' (Struct name fields))::args) (Struct name fields -> f)
 
 public export
-0 FFICallRet : FFICall _ _ _ -> Type
+0 FFICallRet : FFICall a' args f -> Type
 FFICallRet (FCReturn { b }) = b
+FFICallRet (FCReturnVoid) = ()
 FFICallRet (FCSame rest) = FFICallRet rest
 FFICallRet (FCInteger rest) = FFICallRet rest
+FFICallRet (FCRefPtr rest) = FFICallRet rest
 FFICallRet (FCDerefStructPtr rest) = FFICallRet rest
 FFICallRet (FCDerefStructRef rest) = FFICallRet rest
+FFICallRet _ = the Type $ assert_total $
+               idris_crash "the totality checker doesn't like FFICall"
 
 -- TODO: chez specific!!
 prim__ptrDeref : Ptr a -> a
@@ -1180,17 +1410,37 @@ checkRef : Ref a' x -> ScopedIO a' ()
 checkRef _ = pure ()
 
 export
-safeFFI : { auto call : FFICall a' args f } -> f -> args -> ScopedIO a' (FFICallRet call)
-safeFFI = go call
+safeFFI :
+  { auto call : FFICall a' args f } ->
+  f -> HList args -> ScopedIO a' (FFICallRet call)
+safeFFI = (assert_total go) call
   where
-  go : (call' : FFICall a' args' f') -> f' -> args' -> ScopedIO a' (FFICallRet call')
+  partial go :
+    (call' : FFICall a' args' f') ->
+    f' -> HList args' -> ScopedIO a' (FFICallRet call')
   go FCReturn f _ = primIO f
-  go (FCSame rest) f (a, arg) = go rest (f a) arg
-  go (FCInteger rest) f (a, arg) = go rest (f $ cast a) arg
-  go (FCDerefStructPtr rest) f (a, arg) = go rest (f $ prim__ptrDeref a) arg
-  go (FCDerefStructRef rest) f (a, arg) = do
+  go FCReturnVoid f _ = primIO f
+  go (FCSame rest) f (a::arg) = go rest (f a) arg
+  go (FCInteger rest) f (a::arg) = go rest (f $ cast a) arg
+  go (FCRefPtr rest) f (a::arg) = do
+    _ <- checkRef a
+    go rest (f $ unsafeRefPtr a) arg
+  go (FCDerefStructPtr rest) f (a::arg) = go rest (f $ prim__ptrDeref a) arg
+  go (FCDerefStructRef rest) f (a::arg) = do
     _ <- checkRef a
     go rest (f $ prim__ptrDeref $ unsafeRefPtr a) arg
+
+
+    {-
+export
+safeFFIRef :
+  { auto call : FFICall a' args f } ->
+  { auto ptr  : IsPtr (FFICallRet call) } ->
+  -- (FFICallRet call -> IO ()) ->
+  f ->
+  HList args ->
+  ScopedIO a' (Ref a' ptr.inner)
+-}
 
 TestStruct : Type
 TestStruct = Struct "TestStruct"
@@ -1209,11 +1459,16 @@ test = runScopedIO $ \a' => do
     , the Bits16 10203
     , the Bits32 20405060
     , the Bits64 50404020205 )
-  safeFFI printStruct (x, ())
+  safeFFI printStruct [x]
   -- primIO $ printStruct $ prim__ptrDeref $ unsafeRefPtr x
 
-dbgAuto : (a : Type) -> { auto x : CType a } -> CType a
-dbgAuto _ = x
+export
+autoCType : (a : Type) -> { auto x : CType a } -> CType a
+autoCType _ = x
+
+export
+autoMarshal : (cty : Type) -> { auto x : Marshal a' ity cty } -> Marshal a' ity cty
+autoMarshal _ = x
 ```
 
 #pagebreak()
