@@ -1,11 +1,10 @@
 -- TODO: rename to something like "WGPUGlue" or "Support"
-
-import System.FFI
+module Graphics.GLFW3WebGPU
 
 import Graphics.WGPU.Sys
 import Graphics.GLFW.Sys
 
-import Utils.CTypes
+import Utils.FFI
 
 export
 %foreign "C:glfwCreateWindowWGPUSurface,libidris_wgpu_support"
@@ -22,12 +21,6 @@ wgpuAdapterRequestDeviceSync : WGPUInstance -> WGPUAdapter -> Ptr (WGPUDeviceDes
 export
 %foreign "C:wgpuSetupLogging,libidris_wgpu_support"
 wgpuSetupLogging : Int -> PrimIO ()
-
-export
-allocStr : String -> Scope $ WGPUStringView
-allocStr s = do
-  byt <- (string2bytes s) >>= cleanup
-  alloc [byt, cast $ strLength s]
 
 export
 %foreign "C:wgpuStringClone,libidris_wgpu_support"

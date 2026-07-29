@@ -1,12 +1,9 @@
-
 module Graphics.WGPU.Sys
 
--- import public System.FFI
 import Data.Bits
 
-import Utils.CTypes
 import System.ScopedIO
-
+import Utils.FFI
 
 
 public export
@@ -21,14 +18,6 @@ public export
 WGPUStringView : Type
 WGPUStringView = Struct "WGPUStringView" [("data", Ptr (Bits8)),("length",  (Bits64))]
 
--- struct here!!
-%foreign (allocStructPrimCodegen WGPUStringView)
-prim__allocStructWGPUStringView : allocStructPrimType WGPUStringView
-
-export
-AllocStruct WGPUStringView where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUStringView xs
 
 public export
 WGPUAdapter : Type
@@ -120,7 +109,7 @@ WGPUTextureView = Ptr (Struct "WGPUTextureViewImpl" [])
 
 public export
 WGPUAdapterType : Type
-WGPUAdapterType = Enum
+WGPUAdapterType = Bits32
 
 public export
 WGPUAdapterType_DiscreteGPU : WGPUAdapterType
@@ -144,7 +133,7 @@ WGPUAdapterType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUAddressMode : Type
-WGPUAddressMode = Enum
+WGPUAddressMode = Bits32
 
 public export
 WGPUAddressMode_Undefined : WGPUAddressMode
@@ -168,7 +157,7 @@ WGPUAddressMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUBackendType : Type
-WGPUBackendType = Enum
+WGPUBackendType = Bits32
 
 public export
 WGPUBackendType_Undefined : WGPUBackendType
@@ -212,7 +201,7 @@ WGPUBackendType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUBlendFactor : Type
-WGPUBlendFactor = Enum
+WGPUBlendFactor = Bits32
 
 public export
 WGPUBlendFactor_Undefined : WGPUBlendFactor
@@ -292,7 +281,7 @@ WGPUBlendFactor_Force32 = 0x7FFFFFFF
 
 public export
 WGPUBlendOperation : Type
-WGPUBlendOperation = Enum
+WGPUBlendOperation = Bits32
 
 public export
 WGPUBlendOperation_Undefined : WGPUBlendOperation
@@ -324,7 +313,7 @@ WGPUBlendOperation_Force32 = 0x7FFFFFFF
 
 public export
 WGPUBufferBindingType : Type
-WGPUBufferBindingType = Enum
+WGPUBufferBindingType = Bits32
 
 public export
 WGPUBufferBindingType_BindingNotUsed : WGPUBufferBindingType
@@ -352,7 +341,7 @@ WGPUBufferBindingType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUBufferMapState : Type
-WGPUBufferMapState = Enum
+WGPUBufferMapState = Bits32
 
 public export
 WGPUBufferMapState_Unmapped : WGPUBufferMapState
@@ -372,7 +361,7 @@ WGPUBufferMapState_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCallbackMode : Type
-WGPUCallbackMode = Enum
+WGPUCallbackMode = Bits32
 
 public export
 WGPUCallbackMode_WaitAnyOnly : WGPUCallbackMode
@@ -392,7 +381,7 @@ WGPUCallbackMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCompareFunction : Type
-WGPUCompareFunction = Enum
+WGPUCompareFunction = Bits32
 
 public export
 WGPUCompareFunction_Undefined : WGPUCompareFunction
@@ -436,7 +425,7 @@ WGPUCompareFunction_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCompilationInfoRequestStatus : Type
-WGPUCompilationInfoRequestStatus = Enum
+WGPUCompilationInfoRequestStatus = Bits32
 
 public export
 WGPUCompilationInfoRequestStatus_Success : WGPUCompilationInfoRequestStatus
@@ -460,7 +449,7 @@ WGPUCompilationInfoRequestStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCompilationMessageType : Type
-WGPUCompilationMessageType = Enum
+WGPUCompilationMessageType = Bits32
 
 public export
 WGPUCompilationMessageType_Error : WGPUCompilationMessageType
@@ -480,7 +469,7 @@ WGPUCompilationMessageType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCompositeAlphaMode : Type
-WGPUCompositeAlphaMode = Enum
+WGPUCompositeAlphaMode = Bits32
 
 public export
 WGPUCompositeAlphaMode_Auto : WGPUCompositeAlphaMode
@@ -508,7 +497,7 @@ WGPUCompositeAlphaMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCreatePipelineAsyncStatus : Type
-WGPUCreatePipelineAsyncStatus = Enum
+WGPUCreatePipelineAsyncStatus = Bits32
 
 public export
 WGPUCreatePipelineAsyncStatus_Success : WGPUCreatePipelineAsyncStatus
@@ -536,7 +525,7 @@ WGPUCreatePipelineAsyncStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUCullMode : Type
-WGPUCullMode = Enum
+WGPUCullMode = Bits32
 
 public export
 WGPUCullMode_Undefined : WGPUCullMode
@@ -560,7 +549,7 @@ WGPUCullMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUDeviceLostReason : Type
-WGPUDeviceLostReason = Enum
+WGPUDeviceLostReason = Bits32
 
 public export
 WGPUDeviceLostReason_Unknown : WGPUDeviceLostReason
@@ -584,7 +573,7 @@ WGPUDeviceLostReason_Force32 = 0x7FFFFFFF
 
 public export
 WGPUErrorFilter : Type
-WGPUErrorFilter = Enum
+WGPUErrorFilter = Bits32
 
 public export
 WGPUErrorFilter_Validation : WGPUErrorFilter
@@ -604,7 +593,7 @@ WGPUErrorFilter_Force32 = 0x7FFFFFFF
 
 public export
 WGPUErrorType : Type
-WGPUErrorType = Enum
+WGPUErrorType = Bits32
 
 public export
 WGPUErrorType_NoError : WGPUErrorType
@@ -632,7 +621,7 @@ WGPUErrorType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUFeatureLevel : Type
-WGPUFeatureLevel = Enum
+WGPUFeatureLevel = Bits32
 
 public export
 WGPUFeatureLevel_Compatibility : WGPUFeatureLevel
@@ -648,7 +637,7 @@ WGPUFeatureLevel_Force32 = 0x7FFFFFFF
 
 public export
 WGPUFeatureName : Type
-WGPUFeatureName = Enum
+WGPUFeatureName = Bits32
 
 public export
 WGPUFeatureName_Undefined : WGPUFeatureName
@@ -724,7 +713,7 @@ WGPUFeatureName_Force32 = 0x7FFFFFFF
 
 public export
 WGPUFilterMode : Type
-WGPUFilterMode = Enum
+WGPUFilterMode = Bits32
 
 public export
 WGPUFilterMode_Undefined : WGPUFilterMode
@@ -744,7 +733,7 @@ WGPUFilterMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUFrontFace : Type
-WGPUFrontFace = Enum
+WGPUFrontFace = Bits32
 
 public export
 WGPUFrontFace_Undefined : WGPUFrontFace
@@ -764,7 +753,7 @@ WGPUFrontFace_Force32 = 0x7FFFFFFF
 
 public export
 WGPUIndexFormat : Type
-WGPUIndexFormat = Enum
+WGPUIndexFormat = Bits32
 
 public export
 WGPUIndexFormat_Undefined : WGPUIndexFormat
@@ -784,7 +773,7 @@ WGPUIndexFormat_Force32 = 0x7FFFFFFF
 
 public export
 WGPULoadOp : Type
-WGPULoadOp = Enum
+WGPULoadOp = Bits32
 
 public export
 WGPULoadOp_Undefined : WGPULoadOp
@@ -804,7 +793,7 @@ WGPULoadOp_Force32 = 0x7FFFFFFF
 
 public export
 WGPUMapAsyncStatus : Type
-WGPUMapAsyncStatus = Enum
+WGPUMapAsyncStatus = Bits32
 
 public export
 WGPUMapAsyncStatus_Success : WGPUMapAsyncStatus
@@ -832,7 +821,7 @@ WGPUMapAsyncStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUMipmapFilterMode : Type
-WGPUMipmapFilterMode = Enum
+WGPUMipmapFilterMode = Bits32
 
 public export
 WGPUMipmapFilterMode_Undefined : WGPUMipmapFilterMode
@@ -852,7 +841,7 @@ WGPUMipmapFilterMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUOptionalBool : Type
-WGPUOptionalBool = Enum
+WGPUOptionalBool = Bits32
 
 public export
 WGPUOptionalBool_False : WGPUOptionalBool
@@ -872,7 +861,7 @@ WGPUOptionalBool_Force32 = 0x7FFFFFFF
 
 public export
 WGPUPopErrorScopeStatus : Type
-WGPUPopErrorScopeStatus = Enum
+WGPUPopErrorScopeStatus = Bits32
 
 public export
 WGPUPopErrorScopeStatus_Success : WGPUPopErrorScopeStatus
@@ -892,7 +881,7 @@ WGPUPopErrorScopeStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUPowerPreference : Type
-WGPUPowerPreference = Enum
+WGPUPowerPreference = Bits32
 
 public export
 WGPUPowerPreference_Undefined : WGPUPowerPreference
@@ -912,7 +901,7 @@ WGPUPowerPreference_Force32 = 0x7FFFFFFF
 
 public export
 WGPUPresentMode : Type
-WGPUPresentMode = Enum
+WGPUPresentMode = Bits32
 
 public export
 WGPUPresentMode_Undefined : WGPUPresentMode
@@ -940,7 +929,7 @@ WGPUPresentMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUPrimitiveTopology : Type
-WGPUPrimitiveTopology = Enum
+WGPUPrimitiveTopology = Bits32
 
 public export
 WGPUPrimitiveTopology_Undefined : WGPUPrimitiveTopology
@@ -972,7 +961,7 @@ WGPUPrimitiveTopology_Force32 = 0x7FFFFFFF
 
 public export
 WGPUQueryType : Type
-WGPUQueryType = Enum
+WGPUQueryType = Bits32
 
 public export
 WGPUQueryType_Occlusion : WGPUQueryType
@@ -988,7 +977,7 @@ WGPUQueryType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUQueueWorkDoneStatus : Type
-WGPUQueueWorkDoneStatus = Enum
+WGPUQueueWorkDoneStatus = Bits32
 
 public export
 WGPUQueueWorkDoneStatus_Success : WGPUQueueWorkDoneStatus
@@ -1012,7 +1001,7 @@ WGPUQueueWorkDoneStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPURequestAdapterStatus : Type
-WGPURequestAdapterStatus = Enum
+WGPURequestAdapterStatus = Bits32
 
 public export
 WGPURequestAdapterStatus_Success : WGPURequestAdapterStatus
@@ -1040,7 +1029,7 @@ WGPURequestAdapterStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPURequestDeviceStatus : Type
-WGPURequestDeviceStatus = Enum
+WGPURequestDeviceStatus = Bits32
 
 public export
 WGPURequestDeviceStatus_Success : WGPURequestDeviceStatus
@@ -1064,7 +1053,7 @@ WGPURequestDeviceStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUSType : Type
-WGPUSType = Enum
+WGPUSType = Bits32
 
 public export
 WGPUSType_ShaderSourceSPIRV : WGPUSType
@@ -1108,7 +1097,7 @@ WGPUSType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUSamplerBindingType : Type
-WGPUSamplerBindingType = Enum
+WGPUSamplerBindingType = Bits32
 
 public export
 WGPUSamplerBindingType_BindingNotUsed : WGPUSamplerBindingType
@@ -1136,7 +1125,7 @@ WGPUSamplerBindingType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUStatus : Type
-WGPUStatus = Enum
+WGPUStatus = Bits32
 
 public export
 WGPUStatus_Success : WGPUStatus
@@ -1152,7 +1141,7 @@ WGPUStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUStencilOperation : Type
-WGPUStencilOperation = Enum
+WGPUStencilOperation = Bits32
 
 public export
 WGPUStencilOperation_Undefined : WGPUStencilOperation
@@ -1196,7 +1185,7 @@ WGPUStencilOperation_Force32 = 0x7FFFFFFF
 
 public export
 WGPUStorageTextureAccess : Type
-WGPUStorageTextureAccess = Enum
+WGPUStorageTextureAccess = Bits32
 
 public export
 WGPUStorageTextureAccess_BindingNotUsed : WGPUStorageTextureAccess
@@ -1224,7 +1213,7 @@ WGPUStorageTextureAccess_Force32 = 0x7FFFFFFF
 
 public export
 WGPUStoreOp : Type
-WGPUStoreOp = Enum
+WGPUStoreOp = Bits32
 
 public export
 WGPUStoreOp_Undefined : WGPUStoreOp
@@ -1244,7 +1233,7 @@ WGPUStoreOp_Force32 = 0x7FFFFFFF
 
 public export
 WGPUSurfaceGetCurrentTextureStatus : Type
-WGPUSurfaceGetCurrentTextureStatus = Enum
+WGPUSurfaceGetCurrentTextureStatus = Bits32
 
 public export
 WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal : WGPUSurfaceGetCurrentTextureStatus
@@ -1284,7 +1273,7 @@ WGPUSurfaceGetCurrentTextureStatus_Force32 = 0x7FFFFFFF
 
 public export
 WGPUTextureAspect : Type
-WGPUTextureAspect = Enum
+WGPUTextureAspect = Bits32
 
 public export
 WGPUTextureAspect_Undefined : WGPUTextureAspect
@@ -1308,7 +1297,7 @@ WGPUTextureAspect_Force32 = 0x7FFFFFFF
 
 public export
 WGPUTextureDimension : Type
-WGPUTextureDimension = Enum
+WGPUTextureDimension = Bits32
 
 public export
 WGPUTextureDimension_Undefined : WGPUTextureDimension
@@ -1332,7 +1321,7 @@ WGPUTextureDimension_Force32 = 0x7FFFFFFF
 
 public export
 WGPUTextureFormat : Type
-WGPUTextureFormat = Enum
+WGPUTextureFormat = Bits32
 
 public export
 WGPUTextureFormat_Undefined : WGPUTextureFormat
@@ -1724,7 +1713,7 @@ WGPUTextureFormat_Force32 = 0x7FFFFFFF
 
 public export
 WGPUTextureSampleType : Type
-WGPUTextureSampleType = Enum
+WGPUTextureSampleType = Bits32
 
 public export
 WGPUTextureSampleType_BindingNotUsed : WGPUTextureSampleType
@@ -1760,7 +1749,7 @@ WGPUTextureSampleType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUTextureViewDimension : Type
-WGPUTextureViewDimension = Enum
+WGPUTextureViewDimension = Bits32
 
 public export
 WGPUTextureViewDimension_Undefined : WGPUTextureViewDimension
@@ -1796,7 +1785,7 @@ WGPUTextureViewDimension_Force32 = 0x7FFFFFFF
 
 public export
 WGPUVertexFormat : Type
-WGPUVertexFormat = Enum
+WGPUVertexFormat = Bits32
 
 public export
 WGPUVertexFormat_Uint8 : WGPUVertexFormat
@@ -1968,7 +1957,7 @@ WGPUVertexFormat_Force32 = 0x7FFFFFFF
 
 public export
 WGPUVertexStepMode : Type
-WGPUVertexStepMode = Enum
+WGPUVertexStepMode = Bits32
 
 public export
 WGPUVertexStepMode_VertexBufferNotUsed : WGPUVertexStepMode
@@ -1992,7 +1981,7 @@ WGPUVertexStepMode_Force32 = 0x7FFFFFFF
 
 public export
 WGPUWGSLLanguageFeatureName : Type
-WGPUWGSLLanguageFeatureName = Enum
+WGPUWGSLLanguageFeatureName = Bits32
 
 public export
 WGPUWGSLLanguageFeatureName_ReadonlyAndReadwriteStorageTextures : WGPUWGSLLanguageFeatureName
@@ -2016,7 +2005,7 @@ WGPUWGSLLanguageFeatureName_Force32 = 0x7FFFFFFF
 
 public export
 WGPUWaitStatus : Type
-WGPUWaitStatus = Enum
+WGPUWaitStatus = Bits32
 
 public export
 WGPUWaitStatus_Success : WGPUWaitStatus
@@ -2192,1257 +2181,503 @@ mkWGPUProc : (() -> PrimIO (())) -> PrimIO $ WGPUProc
 
 public export
 WGPUBufferMapCallback : Type
-WGPUBufferMapCallback = Ptr (WGPUMapAsyncStatus -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUBufferMapCallback = Ptr (WGPUMapAsyncStatus -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUBufferMapCallback : (WGPUMapAsyncStatus -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUBufferMapCallback
+mkWGPUBufferMapCallback : (WGPUMapAsyncStatus -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUBufferMapCallback
 
 public export
 WGPUCompilationInfoCallback : Type
-WGPUCompilationInfoCallback = Ptr (WGPUCompilationInfoRequestStatus -> Ptr (Struct "WGPUCompilationInfo" []) -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUCompilationInfoCallback = Ptr (WGPUCompilationInfoRequestStatus -> Ptr (Struct "WGPUCompilationInfo" []) -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUCompilationInfoCallback : (WGPUCompilationInfoRequestStatus -> Ptr (Struct "WGPUCompilationInfo" []) -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUCompilationInfoCallback
+mkWGPUCompilationInfoCallback : (WGPUCompilationInfoRequestStatus -> Ptr (Struct "WGPUCompilationInfo" []) -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUCompilationInfoCallback
 
 public export
 WGPUCreateComputePipelineAsyncCallback : Type
-WGPUCreateComputePipelineAsyncCallback = Ptr (WGPUCreatePipelineAsyncStatus -> WGPUComputePipeline -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUCreateComputePipelineAsyncCallback = Ptr (WGPUCreatePipelineAsyncStatus -> WGPUComputePipeline -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUCreateComputePipelineAsyncCallback : (WGPUCreatePipelineAsyncStatus -> WGPUComputePipeline -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUCreateComputePipelineAsyncCallback
+mkWGPUCreateComputePipelineAsyncCallback : (WGPUCreatePipelineAsyncStatus -> WGPUComputePipeline -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUCreateComputePipelineAsyncCallback
 
 public export
 WGPUCreateRenderPipelineAsyncCallback : Type
-WGPUCreateRenderPipelineAsyncCallback = Ptr (WGPUCreatePipelineAsyncStatus -> WGPURenderPipeline -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUCreateRenderPipelineAsyncCallback = Ptr (WGPUCreatePipelineAsyncStatus -> WGPURenderPipeline -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUCreateRenderPipelineAsyncCallback : (WGPUCreatePipelineAsyncStatus -> WGPURenderPipeline -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUCreateRenderPipelineAsyncCallback
+mkWGPUCreateRenderPipelineAsyncCallback : (WGPUCreatePipelineAsyncStatus -> WGPURenderPipeline -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUCreateRenderPipelineAsyncCallback
 
 public export
 WGPUDeviceLostCallback : Type
-WGPUDeviceLostCallback = Ptr (Ptr (WGPUDevice) -> WGPUDeviceLostReason -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUDeviceLostCallback = Ptr (Ptr (WGPUDevice) -> WGPUDeviceLostReason -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUDeviceLostCallback : (Ptr (WGPUDevice) -> WGPUDeviceLostReason -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUDeviceLostCallback
+mkWGPUDeviceLostCallback : (Ptr (WGPUDevice) -> WGPUDeviceLostReason -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUDeviceLostCallback
 
 public export
 WGPUPopErrorScopeCallback : Type
-WGPUPopErrorScopeCallback = Ptr (WGPUPopErrorScopeStatus -> WGPUErrorType -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUPopErrorScopeCallback = Ptr (WGPUPopErrorScopeStatus -> WGPUErrorType -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUPopErrorScopeCallback : (WGPUPopErrorScopeStatus -> WGPUErrorType -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUPopErrorScopeCallback
+mkWGPUPopErrorScopeCallback : (WGPUPopErrorScopeStatus -> WGPUErrorType -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUPopErrorScopeCallback
 
 public export
 WGPUQueueWorkDoneCallback : Type
-WGPUQueueWorkDoneCallback = Ptr (WGPUQueueWorkDoneStatus -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUQueueWorkDoneCallback = Ptr (WGPUQueueWorkDoneStatus -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUQueueWorkDoneCallback : (WGPUQueueWorkDoneStatus -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUQueueWorkDoneCallback
+mkWGPUQueueWorkDoneCallback : (WGPUQueueWorkDoneStatus -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUQueueWorkDoneCallback
 
 public export
 WGPURequestAdapterCallback : Type
-WGPURequestAdapterCallback = Ptr (WGPURequestAdapterStatus -> WGPUAdapter -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPURequestAdapterCallback = Ptr (WGPURequestAdapterStatus -> WGPUAdapter -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPURequestAdapterCallback : (WGPURequestAdapterStatus -> WGPUAdapter -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPURequestAdapterCallback
+mkWGPURequestAdapterCallback : (WGPURequestAdapterStatus -> WGPUAdapter -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPURequestAdapterCallback
 
 public export
 WGPURequestDeviceCallback : Type
-WGPURequestDeviceCallback = Ptr (WGPURequestDeviceStatus -> WGPUDevice -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPURequestDeviceCallback = Ptr (WGPURequestDeviceStatus -> WGPUDevice -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPURequestDeviceCallback : (WGPURequestDeviceStatus -> WGPUDevice -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPURequestDeviceCallback
+mkWGPURequestDeviceCallback : (WGPURequestDeviceStatus -> WGPUDevice -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPURequestDeviceCallback
 
 public export
 WGPUUncapturedErrorCallback : Type
-WGPUUncapturedErrorCallback = Ptr (Ptr (WGPUDevice) -> WGPUErrorType -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (()))
+WGPUUncapturedErrorCallback = Ptr (Ptr (WGPUDevice) -> WGPUErrorType -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUUncapturedErrorCallback : (Ptr (WGPUDevice) -> WGPUErrorType -> WGPUStringView -> Ptr (()) -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPUUncapturedErrorCallback
+mkWGPUUncapturedErrorCallback : (Ptr (WGPUDevice) -> WGPUErrorType -> WGPUStringView -> AnyPtr -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPUUncapturedErrorCallback
 
 public export
 WGPUChainedStruct : Type
 WGPUChainedStruct = Struct "WGPUChainedStruct" [("next", Ptr (Struct "WGPUChainedStruct" [])),("sType",  (WGPUSType))]
 
--- struct here!!
-%foreign (allocStructPrimCodegen WGPUChainedStruct)
-prim__allocStructWGPUChainedStruct : allocStructPrimType WGPUChainedStruct
-
-export
-AllocStruct WGPUChainedStruct where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUChainedStruct xs
 
 public export
 WGPUChainedStructOut : Type
 WGPUChainedStructOut = Struct "WGPUChainedStructOut" [("next", Ptr (Struct "WGPUChainedStructOut" [])),("sType",  (WGPUSType))]
 
--- struct here!!
-%foreign (allocStructPrimCodegen WGPUChainedStructOut)
-prim__allocStructWGPUChainedStructOut : allocStructPrimType WGPUChainedStructOut
-
-export
-AllocStruct WGPUChainedStructOut where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUChainedStructOut xs
 
 public export
 WGPUBufferMapCallbackInfo : Type
-WGPUBufferMapCallbackInfo = Struct "WGPUBufferMapCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUBufferMapCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUBufferMapCallbackInfo = Struct "WGPUBufferMapCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUBufferMapCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBufferMapCallbackInfo : allocStructPrimType WGPUBufferMapCallbackInfo
-%foreign_impl prim__allocStructWGPUBufferMapCallbackInfo (allocStructPrimCodegen WGPUBufferMapCallbackInfo)
-
-export
-AllocStruct WGPUBufferMapCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBufferMapCallbackInfo xs
 
 public export
 WGPUCompilationInfoCallbackInfo : Type
-WGPUCompilationInfoCallbackInfo = Struct "WGPUCompilationInfoCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCompilationInfoCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUCompilationInfoCallbackInfo = Struct "WGPUCompilationInfoCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCompilationInfoCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCompilationInfoCallbackInfo : allocStructPrimType WGPUCompilationInfoCallbackInfo
-%foreign_impl prim__allocStructWGPUCompilationInfoCallbackInfo (allocStructPrimCodegen WGPUCompilationInfoCallbackInfo)
-
-export
-AllocStruct WGPUCompilationInfoCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCompilationInfoCallbackInfo xs
 
 public export
 WGPUCreateComputePipelineAsyncCallbackInfo : Type
-WGPUCreateComputePipelineAsyncCallbackInfo = Struct "WGPUCreateComputePipelineAsyncCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCreateComputePipelineAsyncCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUCreateComputePipelineAsyncCallbackInfo = Struct "WGPUCreateComputePipelineAsyncCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCreateComputePipelineAsyncCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCreateComputePipelineAsyncCallbackInfo : allocStructPrimType WGPUCreateComputePipelineAsyncCallbackInfo
-%foreign_impl prim__allocStructWGPUCreateComputePipelineAsyncCallbackInfo (allocStructPrimCodegen WGPUCreateComputePipelineAsyncCallbackInfo)
-
-export
-AllocStruct WGPUCreateComputePipelineAsyncCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCreateComputePipelineAsyncCallbackInfo xs
 
 public export
 WGPUCreateRenderPipelineAsyncCallbackInfo : Type
-WGPUCreateRenderPipelineAsyncCallbackInfo = Struct "WGPUCreateRenderPipelineAsyncCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCreateRenderPipelineAsyncCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUCreateRenderPipelineAsyncCallbackInfo = Struct "WGPUCreateRenderPipelineAsyncCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUCreateRenderPipelineAsyncCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCreateRenderPipelineAsyncCallbackInfo : allocStructPrimType WGPUCreateRenderPipelineAsyncCallbackInfo
-%foreign_impl prim__allocStructWGPUCreateRenderPipelineAsyncCallbackInfo (allocStructPrimCodegen WGPUCreateRenderPipelineAsyncCallbackInfo)
-
-export
-AllocStruct WGPUCreateRenderPipelineAsyncCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCreateRenderPipelineAsyncCallbackInfo xs
 
 public export
 WGPUDeviceLostCallbackInfo : Type
-WGPUDeviceLostCallbackInfo = Struct "WGPUDeviceLostCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUDeviceLostCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUDeviceLostCallbackInfo = Struct "WGPUDeviceLostCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUDeviceLostCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUDeviceLostCallbackInfo : allocStructPrimType WGPUDeviceLostCallbackInfo
-%foreign_impl prim__allocStructWGPUDeviceLostCallbackInfo (allocStructPrimCodegen WGPUDeviceLostCallbackInfo)
-
-export
-AllocStruct WGPUDeviceLostCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUDeviceLostCallbackInfo xs
 
 public export
 WGPUPopErrorScopeCallbackInfo : Type
-WGPUPopErrorScopeCallbackInfo = Struct "WGPUPopErrorScopeCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUPopErrorScopeCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUPopErrorScopeCallbackInfo = Struct "WGPUPopErrorScopeCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUPopErrorScopeCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPopErrorScopeCallbackInfo : allocStructPrimType WGPUPopErrorScopeCallbackInfo
-%foreign_impl prim__allocStructWGPUPopErrorScopeCallbackInfo (allocStructPrimCodegen WGPUPopErrorScopeCallbackInfo)
-
-export
-AllocStruct WGPUPopErrorScopeCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPopErrorScopeCallbackInfo xs
 
 public export
 WGPUQueueWorkDoneCallbackInfo : Type
-WGPUQueueWorkDoneCallbackInfo = Struct "WGPUQueueWorkDoneCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUQueueWorkDoneCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUQueueWorkDoneCallbackInfo = Struct "WGPUQueueWorkDoneCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPUQueueWorkDoneCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUQueueWorkDoneCallbackInfo : allocStructPrimType WGPUQueueWorkDoneCallbackInfo
-%foreign_impl prim__allocStructWGPUQueueWorkDoneCallbackInfo (allocStructPrimCodegen WGPUQueueWorkDoneCallbackInfo)
-
-export
-AllocStruct WGPUQueueWorkDoneCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUQueueWorkDoneCallbackInfo xs
 
 public export
 WGPURequestAdapterCallbackInfo : Type
-WGPURequestAdapterCallbackInfo = Struct "WGPURequestAdapterCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPURequestAdapterCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPURequestAdapterCallbackInfo = Struct "WGPURequestAdapterCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPURequestAdapterCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURequestAdapterCallbackInfo : allocStructPrimType WGPURequestAdapterCallbackInfo
-%foreign_impl prim__allocStructWGPURequestAdapterCallbackInfo (allocStructPrimCodegen WGPURequestAdapterCallbackInfo)
-
-export
-AllocStruct WGPURequestAdapterCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURequestAdapterCallbackInfo xs
 
 public export
 WGPURequestDeviceCallbackInfo : Type
-WGPURequestDeviceCallbackInfo = Struct "WGPURequestDeviceCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPURequestDeviceCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPURequestDeviceCallbackInfo = Struct "WGPURequestDeviceCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("mode",  (WGPUCallbackMode)),("callback",  (WGPURequestDeviceCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURequestDeviceCallbackInfo : allocStructPrimType WGPURequestDeviceCallbackInfo
-%foreign_impl prim__allocStructWGPURequestDeviceCallbackInfo (allocStructPrimCodegen WGPURequestDeviceCallbackInfo)
-
-export
-AllocStruct WGPURequestDeviceCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURequestDeviceCallbackInfo xs
 
 public export
 WGPUUncapturedErrorCallbackInfo : Type
-WGPUUncapturedErrorCallbackInfo = Struct "WGPUUncapturedErrorCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("callback",  (WGPUUncapturedErrorCallback)),("userdata1", Ptr (())),("userdata2", Ptr (()))]
+WGPUUncapturedErrorCallbackInfo = Struct "WGPUUncapturedErrorCallbackInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("callback",  (WGPUUncapturedErrorCallback)),("userdata1",  (AnyPtr)),("userdata2",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUUncapturedErrorCallbackInfo : allocStructPrimType WGPUUncapturedErrorCallbackInfo
-%foreign_impl prim__allocStructWGPUUncapturedErrorCallbackInfo (allocStructPrimCodegen WGPUUncapturedErrorCallbackInfo)
-
-export
-AllocStruct WGPUUncapturedErrorCallbackInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUUncapturedErrorCallbackInfo xs
 
 public export
 WGPUAdapterInfo : Type
 WGPUAdapterInfo = Struct "WGPUAdapterInfo" [("nextInChain", Ptr (WGPUChainedStructOut)),("vendor",  (WGPUStringView)),("architecture",  (WGPUStringView)),("device",  (WGPUStringView)),("description",  (WGPUStringView)),("backendType",  (WGPUBackendType)),("adapterType",  (WGPUAdapterType)),("vendorID",  (Bits32)),("deviceID",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUAdapterInfo : allocStructPrimType WGPUAdapterInfo
-%foreign_impl prim__allocStructWGPUAdapterInfo (allocStructPrimCodegen WGPUAdapterInfo)
-
-export
-AllocStruct WGPUAdapterInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUAdapterInfo xs
 
 public export
 WGPUBindGroupEntry : Type
 WGPUBindGroupEntry = Struct "WGPUBindGroupEntry" [("nextInChain", Ptr (WGPUChainedStruct)),("binding",  (Bits32)),("buffer",  (WGPUBuffer)),("offset",  (Bits64)),("size",  (Bits64)),("sampler",  (WGPUSampler)),("textureView",  (WGPUTextureView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupEntry : allocStructPrimType WGPUBindGroupEntry
-%foreign_impl prim__allocStructWGPUBindGroupEntry (allocStructPrimCodegen WGPUBindGroupEntry)
-
-export
-AllocStruct WGPUBindGroupEntry where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupEntry xs
 
 public export
 WGPUBlendComponent : Type
 WGPUBlendComponent = Struct "WGPUBlendComponent" [("operation",  (WGPUBlendOperation)),("srcFactor",  (WGPUBlendFactor)),("dstFactor",  (WGPUBlendFactor))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBlendComponent : allocStructPrimType WGPUBlendComponent
-%foreign_impl prim__allocStructWGPUBlendComponent (allocStructPrimCodegen WGPUBlendComponent)
-
-export
-AllocStruct WGPUBlendComponent where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBlendComponent xs
 
 public export
 WGPUBufferBindingLayout : Type
 WGPUBufferBindingLayout = Struct "WGPUBufferBindingLayout" [("nextInChain", Ptr (WGPUChainedStruct)),("type",  (WGPUBufferBindingType)),("hasDynamicOffset",  (WGPUBool)),("minBindingSize",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBufferBindingLayout : allocStructPrimType WGPUBufferBindingLayout
-%foreign_impl prim__allocStructWGPUBufferBindingLayout (allocStructPrimCodegen WGPUBufferBindingLayout)
-
-export
-AllocStruct WGPUBufferBindingLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBufferBindingLayout xs
 
 public export
 WGPUBufferDescriptor : Type
 WGPUBufferDescriptor = Struct "WGPUBufferDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("usage",  (WGPUBufferUsage)),("size",  (Bits64)),("mappedAtCreation",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBufferDescriptor : allocStructPrimType WGPUBufferDescriptor
-%foreign_impl prim__allocStructWGPUBufferDescriptor (allocStructPrimCodegen WGPUBufferDescriptor)
-
-export
-AllocStruct WGPUBufferDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBufferDescriptor xs
 
 public export
 WGPUColor : Type
 WGPUColor = Struct "WGPUColor" [("r",  (Double)),("g",  (Double)),("b",  (Double)),("a",  (Double))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUColor : allocStructPrimType WGPUColor
-%foreign_impl prim__allocStructWGPUColor (allocStructPrimCodegen WGPUColor)
-
-export
-AllocStruct WGPUColor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUColor xs
 
 public export
 WGPUCommandBufferDescriptor : Type
 WGPUCommandBufferDescriptor = Struct "WGPUCommandBufferDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCommandBufferDescriptor : allocStructPrimType WGPUCommandBufferDescriptor
-%foreign_impl prim__allocStructWGPUCommandBufferDescriptor (allocStructPrimCodegen WGPUCommandBufferDescriptor)
-
-export
-AllocStruct WGPUCommandBufferDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCommandBufferDescriptor xs
 
 public export
 WGPUCommandEncoderDescriptor : Type
 WGPUCommandEncoderDescriptor = Struct "WGPUCommandEncoderDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCommandEncoderDescriptor : allocStructPrimType WGPUCommandEncoderDescriptor
-%foreign_impl prim__allocStructWGPUCommandEncoderDescriptor (allocStructPrimCodegen WGPUCommandEncoderDescriptor)
-
-export
-AllocStruct WGPUCommandEncoderDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCommandEncoderDescriptor xs
 
 public export
 WGPUCompilationMessage : Type
 WGPUCompilationMessage = Struct "WGPUCompilationMessage" [("nextInChain", Ptr (WGPUChainedStruct)),("message",  (WGPUStringView)),("type",  (WGPUCompilationMessageType)),("lineNum",  (Bits64)),("linePos",  (Bits64)),("offset",  (Bits64)),("length",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCompilationMessage : allocStructPrimType WGPUCompilationMessage
-%foreign_impl prim__allocStructWGPUCompilationMessage (allocStructPrimCodegen WGPUCompilationMessage)
-
-export
-AllocStruct WGPUCompilationMessage where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCompilationMessage xs
 
 public export
 WGPUComputePassTimestampWrites : Type
 WGPUComputePassTimestampWrites = Struct "WGPUComputePassTimestampWrites" [("querySet",  (WGPUQuerySet)),("beginningOfPassWriteIndex",  (Bits32)),("endOfPassWriteIndex",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUComputePassTimestampWrites : allocStructPrimType WGPUComputePassTimestampWrites
-%foreign_impl prim__allocStructWGPUComputePassTimestampWrites (allocStructPrimCodegen WGPUComputePassTimestampWrites)
-
-export
-AllocStruct WGPUComputePassTimestampWrites where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUComputePassTimestampWrites xs
 
 public export
 WGPUConstantEntry : Type
 WGPUConstantEntry = Struct "WGPUConstantEntry" [("nextInChain", Ptr (WGPUChainedStruct)),("key",  (WGPUStringView)),("value",  (Double))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUConstantEntry : allocStructPrimType WGPUConstantEntry
-%foreign_impl prim__allocStructWGPUConstantEntry (allocStructPrimCodegen WGPUConstantEntry)
-
-export
-AllocStruct WGPUConstantEntry where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUConstantEntry xs
 
 public export
 WGPUExtent3D : Type
 WGPUExtent3D = Struct "WGPUExtent3D" [("width",  (Bits32)),("height",  (Bits32)),("depthOrArrayLayers",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUExtent3D : allocStructPrimType WGPUExtent3D
-%foreign_impl prim__allocStructWGPUExtent3D (allocStructPrimCodegen WGPUExtent3D)
-
-export
-AllocStruct WGPUExtent3D where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUExtent3D xs
 
 public export
 WGPUFuture : Type
 WGPUFuture = Struct "WGPUFuture" [("id",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUFuture : allocStructPrimType WGPUFuture
-%foreign_impl prim__allocStructWGPUFuture (allocStructPrimCodegen WGPUFuture)
-
-export
-AllocStruct WGPUFuture where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUFuture xs
 
 public export
 WGPUInstanceCapabilities : Type
-WGPUInstanceCapabilities = Struct "WGPUInstanceCapabilities" [("timedWaitAnyEnable",  (WGPUBool)),("timedWaitAnyMaxCount",  (Bits64))]
+WGPUInstanceCapabilities = Struct "WGPUInstanceCapabilities" [("nextInChain", Ptr (WGPUChainedStructOut)),("timedWaitAnyEnable",  (WGPUBool)),("timedWaitAnyMaxCount",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUInstanceCapabilities : allocStructPrimType WGPUInstanceCapabilities
-%foreign_impl prim__allocStructWGPUInstanceCapabilities (allocStructPrimCodegen WGPUInstanceCapabilities)
-
-export
-AllocStruct WGPUInstanceCapabilities where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUInstanceCapabilities xs
 
 public export
 WGPULimits : Type
 WGPULimits = Struct "WGPULimits" [("nextInChain", Ptr (WGPUChainedStructOut)),("maxTextureDimension1D",  (Bits32)),("maxTextureDimension2D",  (Bits32)),("maxTextureDimension3D",  (Bits32)),("maxTextureArrayLayers",  (Bits32)),("maxBindGroups",  (Bits32)),("maxBindGroupsPlusVertexBuffers",  (Bits32)),("maxBindingsPerBindGroup",  (Bits32)),("maxDynamicUniformBuffersPerPipelineLayout",  (Bits32)),("maxDynamicStorageBuffersPerPipelineLayout",  (Bits32)),("maxSampledTexturesPerShaderStage",  (Bits32)),("maxSamplersPerShaderStage",  (Bits32)),("maxStorageBuffersPerShaderStage",  (Bits32)),("maxStorageTexturesPerShaderStage",  (Bits32)),("maxUniformBuffersPerShaderStage",  (Bits32)),("maxUniformBufferBindingSize",  (Bits64)),("maxStorageBufferBindingSize",  (Bits64)),("minUniformBufferOffsetAlignment",  (Bits32)),("minStorageBufferOffsetAlignment",  (Bits32)),("maxVertexBuffers",  (Bits32)),("maxBufferSize",  (Bits64)),("maxVertexAttributes",  (Bits32)),("maxVertexBufferArrayStride",  (Bits32)),("maxInterStageShaderVariables",  (Bits32)),("maxColorAttachments",  (Bits32)),("maxColorAttachmentBytesPerSample",  (Bits32)),("maxComputeWorkgroupStorageSize",  (Bits32)),("maxComputeInvocationsPerWorkgroup",  (Bits32)),("maxComputeWorkgroupSizeX",  (Bits32)),("maxComputeWorkgroupSizeY",  (Bits32)),("maxComputeWorkgroupSizeZ",  (Bits32)),("maxComputeWorkgroupsPerDimension",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPULimits : allocStructPrimType WGPULimits
-%foreign_impl prim__allocStructWGPULimits (allocStructPrimCodegen WGPULimits)
-
-export
-AllocStruct WGPULimits where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPULimits xs
 
 public export
 WGPUMultisampleState : Type
 WGPUMultisampleState = Struct "WGPUMultisampleState" [("nextInChain", Ptr (WGPUChainedStruct)),("count",  (Bits32)),("mask",  (Bits32)),("alphaToCoverageEnabled",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUMultisampleState : allocStructPrimType WGPUMultisampleState
-%foreign_impl prim__allocStructWGPUMultisampleState (allocStructPrimCodegen WGPUMultisampleState)
-
-export
-AllocStruct WGPUMultisampleState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUMultisampleState xs
 
 public export
 WGPUOrigin3D : Type
 WGPUOrigin3D = Struct "WGPUOrigin3D" [("x",  (Bits32)),("y",  (Bits32)),("z",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUOrigin3D : allocStructPrimType WGPUOrigin3D
-%foreign_impl prim__allocStructWGPUOrigin3D (allocStructPrimCodegen WGPUOrigin3D)
-
-export
-AllocStruct WGPUOrigin3D where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUOrigin3D xs
 
 public export
 WGPUPipelineLayoutDescriptor : Type
 WGPUPipelineLayoutDescriptor = Struct "WGPUPipelineLayoutDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("bindGroupLayoutCount",  (Bits64)),("bindGroupLayouts", Ptr (WGPUBindGroupLayout))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPipelineLayoutDescriptor : allocStructPrimType WGPUPipelineLayoutDescriptor
-%foreign_impl prim__allocStructWGPUPipelineLayoutDescriptor (allocStructPrimCodegen WGPUPipelineLayoutDescriptor)
-
-export
-AllocStruct WGPUPipelineLayoutDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPipelineLayoutDescriptor xs
 
 public export
 WGPUPrimitiveState : Type
 WGPUPrimitiveState = Struct "WGPUPrimitiveState" [("nextInChain", Ptr (WGPUChainedStruct)),("topology",  (WGPUPrimitiveTopology)),("stripIndexFormat",  (WGPUIndexFormat)),("frontFace",  (WGPUFrontFace)),("cullMode",  (WGPUCullMode)),("unclippedDepth",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPrimitiveState : allocStructPrimType WGPUPrimitiveState
-%foreign_impl prim__allocStructWGPUPrimitiveState (allocStructPrimCodegen WGPUPrimitiveState)
-
-export
-AllocStruct WGPUPrimitiveState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPrimitiveState xs
 
 public export
 WGPUQuerySetDescriptor : Type
 WGPUQuerySetDescriptor = Struct "WGPUQuerySetDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("type",  (WGPUQueryType)),("count",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUQuerySetDescriptor : allocStructPrimType WGPUQuerySetDescriptor
-%foreign_impl prim__allocStructWGPUQuerySetDescriptor (allocStructPrimCodegen WGPUQuerySetDescriptor)
-
-export
-AllocStruct WGPUQuerySetDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUQuerySetDescriptor xs
 
 public export
 WGPUQueueDescriptor : Type
 WGPUQueueDescriptor = Struct "WGPUQueueDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUQueueDescriptor : allocStructPrimType WGPUQueueDescriptor
-%foreign_impl prim__allocStructWGPUQueueDescriptor (allocStructPrimCodegen WGPUQueueDescriptor)
-
-export
-AllocStruct WGPUQueueDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUQueueDescriptor xs
 
 public export
 WGPURenderBundleDescriptor : Type
 WGPURenderBundleDescriptor = Struct "WGPURenderBundleDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderBundleDescriptor : allocStructPrimType WGPURenderBundleDescriptor
-%foreign_impl prim__allocStructWGPURenderBundleDescriptor (allocStructPrimCodegen WGPURenderBundleDescriptor)
-
-export
-AllocStruct WGPURenderBundleDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderBundleDescriptor xs
 
 public export
 WGPURenderBundleEncoderDescriptor : Type
 WGPURenderBundleEncoderDescriptor = Struct "WGPURenderBundleEncoderDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("colorFormatCount",  (Bits64)),("colorFormats", Ptr (WGPUTextureFormat)),("depthStencilFormat",  (WGPUTextureFormat)),("sampleCount",  (Bits32)),("depthReadOnly",  (WGPUBool)),("stencilReadOnly",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderBundleEncoderDescriptor : allocStructPrimType WGPURenderBundleEncoderDescriptor
-%foreign_impl prim__allocStructWGPURenderBundleEncoderDescriptor (allocStructPrimCodegen WGPURenderBundleEncoderDescriptor)
-
-export
-AllocStruct WGPURenderBundleEncoderDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderBundleEncoderDescriptor xs
 
 public export
 WGPURenderPassDepthStencilAttachment : Type
 WGPURenderPassDepthStencilAttachment = Struct "WGPURenderPassDepthStencilAttachment" [("view",  (WGPUTextureView)),("depthLoadOp",  (WGPULoadOp)),("depthStoreOp",  (WGPUStoreOp)),("depthClearValue",  (Float)),("depthReadOnly",  (WGPUBool)),("stencilLoadOp",  (WGPULoadOp)),("stencilStoreOp",  (WGPUStoreOp)),("stencilClearValue",  (Bits32)),("stencilReadOnly",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPassDepthStencilAttachment : allocStructPrimType WGPURenderPassDepthStencilAttachment
-%foreign_impl prim__allocStructWGPURenderPassDepthStencilAttachment (allocStructPrimCodegen WGPURenderPassDepthStencilAttachment)
-
-export
-AllocStruct WGPURenderPassDepthStencilAttachment where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPassDepthStencilAttachment xs
 
 public export
 WGPURenderPassMaxDrawCount : Type
 WGPURenderPassMaxDrawCount = Struct "WGPURenderPassMaxDrawCount" [("chain",  (WGPUChainedStruct)),("maxDrawCount",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPassMaxDrawCount : allocStructPrimType WGPURenderPassMaxDrawCount
-%foreign_impl prim__allocStructWGPURenderPassMaxDrawCount (allocStructPrimCodegen WGPURenderPassMaxDrawCount)
-
-export
-AllocStruct WGPURenderPassMaxDrawCount where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPassMaxDrawCount xs
 
 public export
 WGPURenderPassTimestampWrites : Type
 WGPURenderPassTimestampWrites = Struct "WGPURenderPassTimestampWrites" [("querySet",  (WGPUQuerySet)),("beginningOfPassWriteIndex",  (Bits32)),("endOfPassWriteIndex",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPassTimestampWrites : allocStructPrimType WGPURenderPassTimestampWrites
-%foreign_impl prim__allocStructWGPURenderPassTimestampWrites (allocStructPrimCodegen WGPURenderPassTimestampWrites)
-
-export
-AllocStruct WGPURenderPassTimestampWrites where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPassTimestampWrites xs
 
 public export
 WGPURequestAdapterOptions : Type
 WGPURequestAdapterOptions = Struct "WGPURequestAdapterOptions" [("nextInChain", Ptr (WGPUChainedStruct)),("featureLevel",  (WGPUFeatureLevel)),("powerPreference",  (WGPUPowerPreference)),("forceFallbackAdapter",  (WGPUBool)),("backendType",  (WGPUBackendType)),("compatibleSurface",  (WGPUSurface))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURequestAdapterOptions : allocStructPrimType WGPURequestAdapterOptions
-%foreign_impl prim__allocStructWGPURequestAdapterOptions (allocStructPrimCodegen WGPURequestAdapterOptions)
-
-export
-AllocStruct WGPURequestAdapterOptions where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURequestAdapterOptions xs
 
 public export
 WGPUSamplerBindingLayout : Type
 WGPUSamplerBindingLayout = Struct "WGPUSamplerBindingLayout" [("nextInChain", Ptr (WGPUChainedStruct)),("type",  (WGPUSamplerBindingType))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSamplerBindingLayout : allocStructPrimType WGPUSamplerBindingLayout
-%foreign_impl prim__allocStructWGPUSamplerBindingLayout (allocStructPrimCodegen WGPUSamplerBindingLayout)
-
-export
-AllocStruct WGPUSamplerBindingLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSamplerBindingLayout xs
 
 public export
 WGPUSamplerDescriptor : Type
 WGPUSamplerDescriptor = Struct "WGPUSamplerDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("addressModeU",  (WGPUAddressMode)),("addressModeV",  (WGPUAddressMode)),("addressModeW",  (WGPUAddressMode)),("magFilter",  (WGPUFilterMode)),("minFilter",  (WGPUFilterMode)),("mipmapFilter",  (WGPUMipmapFilterMode)),("lodMinClamp",  (Float)),("lodMaxClamp",  (Float)),("compare",  (WGPUCompareFunction)),("maxAnisotropy",  (Bits16))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSamplerDescriptor : allocStructPrimType WGPUSamplerDescriptor
-%foreign_impl prim__allocStructWGPUSamplerDescriptor (allocStructPrimCodegen WGPUSamplerDescriptor)
-
-export
-AllocStruct WGPUSamplerDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSamplerDescriptor xs
 
 public export
 WGPUShaderModuleDescriptor : Type
 WGPUShaderModuleDescriptor = Struct "WGPUShaderModuleDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderModuleDescriptor : allocStructPrimType WGPUShaderModuleDescriptor
-%foreign_impl prim__allocStructWGPUShaderModuleDescriptor (allocStructPrimCodegen WGPUShaderModuleDescriptor)
-
-export
-AllocStruct WGPUShaderModuleDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderModuleDescriptor xs
 
 public export
 WGPUShaderSourceSPIRV : Type
 WGPUShaderSourceSPIRV = Struct "WGPUShaderSourceSPIRV" [("chain",  (WGPUChainedStruct)),("codeSize",  (Bits32)),("code", Ptr (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderSourceSPIRV : allocStructPrimType WGPUShaderSourceSPIRV
-%foreign_impl prim__allocStructWGPUShaderSourceSPIRV (allocStructPrimCodegen WGPUShaderSourceSPIRV)
-
-export
-AllocStruct WGPUShaderSourceSPIRV where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderSourceSPIRV xs
 
 public export
 WGPUShaderSourceWGSL : Type
 WGPUShaderSourceWGSL = Struct "WGPUShaderSourceWGSL" [("chain",  (WGPUChainedStruct)),("code",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderSourceWGSL : allocStructPrimType WGPUShaderSourceWGSL
-%foreign_impl prim__allocStructWGPUShaderSourceWGSL (allocStructPrimCodegen WGPUShaderSourceWGSL)
-
-export
-AllocStruct WGPUShaderSourceWGSL where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderSourceWGSL xs
 
 public export
 WGPUStencilFaceState : Type
 WGPUStencilFaceState = Struct "WGPUStencilFaceState" [("compare",  (WGPUCompareFunction)),("failOp",  (WGPUStencilOperation)),("depthFailOp",  (WGPUStencilOperation)),("passOp",  (WGPUStencilOperation))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUStencilFaceState : allocStructPrimType WGPUStencilFaceState
-%foreign_impl prim__allocStructWGPUStencilFaceState (allocStructPrimCodegen WGPUStencilFaceState)
-
-export
-AllocStruct WGPUStencilFaceState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUStencilFaceState xs
 
 public export
 WGPUStorageTextureBindingLayout : Type
 WGPUStorageTextureBindingLayout = Struct "WGPUStorageTextureBindingLayout" [("nextInChain", Ptr (WGPUChainedStruct)),("access",  (WGPUStorageTextureAccess)),("format",  (WGPUTextureFormat)),("viewDimension",  (WGPUTextureViewDimension))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUStorageTextureBindingLayout : allocStructPrimType WGPUStorageTextureBindingLayout
-%foreign_impl prim__allocStructWGPUStorageTextureBindingLayout (allocStructPrimCodegen WGPUStorageTextureBindingLayout)
-
-export
-AllocStruct WGPUStorageTextureBindingLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUStorageTextureBindingLayout xs
 
 public export
 WGPUSupportedFeatures : Type
 WGPUSupportedFeatures = Struct "WGPUSupportedFeatures" [("featureCount",  (Bits64)),("features", Ptr (WGPUFeatureName))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSupportedFeatures : allocStructPrimType WGPUSupportedFeatures
-%foreign_impl prim__allocStructWGPUSupportedFeatures (allocStructPrimCodegen WGPUSupportedFeatures)
-
-export
-AllocStruct WGPUSupportedFeatures where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSupportedFeatures xs
 
 public export
 WGPUSupportedWGSLLanguageFeatures : Type
 WGPUSupportedWGSLLanguageFeatures = Struct "WGPUSupportedWGSLLanguageFeatures" [("featureCount",  (Bits64)),("features", Ptr (WGPUWGSLLanguageFeatureName))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSupportedWGSLLanguageFeatures : allocStructPrimType WGPUSupportedWGSLLanguageFeatures
-%foreign_impl prim__allocStructWGPUSupportedWGSLLanguageFeatures (allocStructPrimCodegen WGPUSupportedWGSLLanguageFeatures)
-
-export
-AllocStruct WGPUSupportedWGSLLanguageFeatures where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSupportedWGSLLanguageFeatures xs
 
 public export
 WGPUSurfaceCapabilities : Type
 WGPUSurfaceCapabilities = Struct "WGPUSurfaceCapabilities" [("nextInChain", Ptr (WGPUChainedStructOut)),("usages",  (WGPUTextureUsage)),("formatCount",  (Bits64)),("formats", Ptr (WGPUTextureFormat)),("presentModeCount",  (Bits64)),("presentModes", Ptr (WGPUPresentMode)),("alphaModeCount",  (Bits64)),("alphaModes", Ptr (WGPUCompositeAlphaMode))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceCapabilities : allocStructPrimType WGPUSurfaceCapabilities
-%foreign_impl prim__allocStructWGPUSurfaceCapabilities (allocStructPrimCodegen WGPUSurfaceCapabilities)
-
-export
-AllocStruct WGPUSurfaceCapabilities where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceCapabilities xs
 
 public export
 WGPUSurfaceConfiguration : Type
 WGPUSurfaceConfiguration = Struct "WGPUSurfaceConfiguration" [("nextInChain", Ptr (WGPUChainedStruct)),("device",  (WGPUDevice)),("format",  (WGPUTextureFormat)),("usage",  (WGPUTextureUsage)),("width",  (Bits32)),("height",  (Bits32)),("viewFormatCount",  (Bits64)),("viewFormats", Ptr (WGPUTextureFormat)),("alphaMode",  (WGPUCompositeAlphaMode)),("presentMode",  (WGPUPresentMode))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceConfiguration : allocStructPrimType WGPUSurfaceConfiguration
-%foreign_impl prim__allocStructWGPUSurfaceConfiguration (allocStructPrimCodegen WGPUSurfaceConfiguration)
-
-export
-AllocStruct WGPUSurfaceConfiguration where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceConfiguration xs
 
 public export
 WGPUSurfaceDescriptor : Type
 WGPUSurfaceDescriptor = Struct "WGPUSurfaceDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceDescriptor : allocStructPrimType WGPUSurfaceDescriptor
-%foreign_impl prim__allocStructWGPUSurfaceDescriptor (allocStructPrimCodegen WGPUSurfaceDescriptor)
-
-export
-AllocStruct WGPUSurfaceDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceDescriptor xs
 
 public export
 WGPUSurfaceSourceAndroidNativeWindow : Type
-WGPUSurfaceSourceAndroidNativeWindow = Struct "WGPUSurfaceSourceAndroidNativeWindow" [("chain",  (WGPUChainedStruct)),("window", Ptr (()))]
+WGPUSurfaceSourceAndroidNativeWindow = Struct "WGPUSurfaceSourceAndroidNativeWindow" [("chain",  (WGPUChainedStruct)),("window",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceAndroidNativeWindow : allocStructPrimType WGPUSurfaceSourceAndroidNativeWindow
-%foreign_impl prim__allocStructWGPUSurfaceSourceAndroidNativeWindow (allocStructPrimCodegen WGPUSurfaceSourceAndroidNativeWindow)
-
-export
-AllocStruct WGPUSurfaceSourceAndroidNativeWindow where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceAndroidNativeWindow xs
 
 public export
 WGPUSurfaceSourceMetalLayer : Type
-WGPUSurfaceSourceMetalLayer = Struct "WGPUSurfaceSourceMetalLayer" [("chain",  (WGPUChainedStruct)),("layer", Ptr (()))]
+WGPUSurfaceSourceMetalLayer = Struct "WGPUSurfaceSourceMetalLayer" [("chain",  (WGPUChainedStruct)),("layer",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceMetalLayer : allocStructPrimType WGPUSurfaceSourceMetalLayer
-%foreign_impl prim__allocStructWGPUSurfaceSourceMetalLayer (allocStructPrimCodegen WGPUSurfaceSourceMetalLayer)
-
-export
-AllocStruct WGPUSurfaceSourceMetalLayer where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceMetalLayer xs
 
 public export
 WGPUSurfaceSourceWaylandSurface : Type
-WGPUSurfaceSourceWaylandSurface = Struct "WGPUSurfaceSourceWaylandSurface" [("chain",  (WGPUChainedStruct)),("display", Ptr (())),("surface", Ptr (()))]
+WGPUSurfaceSourceWaylandSurface = Struct "WGPUSurfaceSourceWaylandSurface" [("chain",  (WGPUChainedStruct)),("display",  (AnyPtr)),("surface",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceWaylandSurface : allocStructPrimType WGPUSurfaceSourceWaylandSurface
-%foreign_impl prim__allocStructWGPUSurfaceSourceWaylandSurface (allocStructPrimCodegen WGPUSurfaceSourceWaylandSurface)
-
-export
-AllocStruct WGPUSurfaceSourceWaylandSurface where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceWaylandSurface xs
 
 public export
 WGPUSurfaceSourceWindowsHWND : Type
-WGPUSurfaceSourceWindowsHWND = Struct "WGPUSurfaceSourceWindowsHWND" [("chain",  (WGPUChainedStruct)),("hinstance", Ptr (())),("hwnd", Ptr (()))]
+WGPUSurfaceSourceWindowsHWND = Struct "WGPUSurfaceSourceWindowsHWND" [("chain",  (WGPUChainedStruct)),("hinstance",  (AnyPtr)),("hwnd",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceWindowsHWND : allocStructPrimType WGPUSurfaceSourceWindowsHWND
-%foreign_impl prim__allocStructWGPUSurfaceSourceWindowsHWND (allocStructPrimCodegen WGPUSurfaceSourceWindowsHWND)
-
-export
-AllocStruct WGPUSurfaceSourceWindowsHWND where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceWindowsHWND xs
 
 public export
 WGPUSurfaceSourceXCBWindow : Type
-WGPUSurfaceSourceXCBWindow = Struct "WGPUSurfaceSourceXCBWindow" [("chain",  (WGPUChainedStruct)),("connection", Ptr (())),("window",  (Bits32))]
+WGPUSurfaceSourceXCBWindow = Struct "WGPUSurfaceSourceXCBWindow" [("chain",  (WGPUChainedStruct)),("connection",  (AnyPtr)),("window",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceXCBWindow : allocStructPrimType WGPUSurfaceSourceXCBWindow
-%foreign_impl prim__allocStructWGPUSurfaceSourceXCBWindow (allocStructPrimCodegen WGPUSurfaceSourceXCBWindow)
-
-export
-AllocStruct WGPUSurfaceSourceXCBWindow where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceXCBWindow xs
 
 public export
 WGPUSurfaceSourceXlibWindow : Type
-WGPUSurfaceSourceXlibWindow = Struct "WGPUSurfaceSourceXlibWindow" [("chain",  (WGPUChainedStruct)),("display", Ptr (())),("window",  (Bits64))]
+WGPUSurfaceSourceXlibWindow = Struct "WGPUSurfaceSourceXlibWindow" [("chain",  (WGPUChainedStruct)),("display",  (AnyPtr)),("window",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceXlibWindow : allocStructPrimType WGPUSurfaceSourceXlibWindow
-%foreign_impl prim__allocStructWGPUSurfaceSourceXlibWindow (allocStructPrimCodegen WGPUSurfaceSourceXlibWindow)
-
-export
-AllocStruct WGPUSurfaceSourceXlibWindow where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceXlibWindow xs
 
 public export
 WGPUSurfaceTexture : Type
 WGPUSurfaceTexture = Struct "WGPUSurfaceTexture" [("nextInChain", Ptr (WGPUChainedStructOut)),("texture",  (WGPUTexture)),("status",  (WGPUSurfaceGetCurrentTextureStatus))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceTexture : allocStructPrimType WGPUSurfaceTexture
-%foreign_impl prim__allocStructWGPUSurfaceTexture (allocStructPrimCodegen WGPUSurfaceTexture)
-
-export
-AllocStruct WGPUSurfaceTexture where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceTexture xs
 
 public export
 WGPUTexelCopyBufferLayout : Type
 WGPUTexelCopyBufferLayout = Struct "WGPUTexelCopyBufferLayout" [("offset",  (Bits64)),("bytesPerRow",  (Bits32)),("rowsPerImage",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTexelCopyBufferLayout : allocStructPrimType WGPUTexelCopyBufferLayout
-%foreign_impl prim__allocStructWGPUTexelCopyBufferLayout (allocStructPrimCodegen WGPUTexelCopyBufferLayout)
-
-export
-AllocStruct WGPUTexelCopyBufferLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTexelCopyBufferLayout xs
 
 public export
 WGPUTextureBindingLayout : Type
 WGPUTextureBindingLayout = Struct "WGPUTextureBindingLayout" [("nextInChain", Ptr (WGPUChainedStruct)),("sampleType",  (WGPUTextureSampleType)),("viewDimension",  (WGPUTextureViewDimension)),("multisampled",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTextureBindingLayout : allocStructPrimType WGPUTextureBindingLayout
-%foreign_impl prim__allocStructWGPUTextureBindingLayout (allocStructPrimCodegen WGPUTextureBindingLayout)
-
-export
-AllocStruct WGPUTextureBindingLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTextureBindingLayout xs
 
 public export
 WGPUTextureViewDescriptor : Type
 WGPUTextureViewDescriptor = Struct "WGPUTextureViewDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("format",  (WGPUTextureFormat)),("dimension",  (WGPUTextureViewDimension)),("baseMipLevel",  (Bits32)),("mipLevelCount",  (Bits32)),("baseArrayLayer",  (Bits32)),("arrayLayerCount",  (Bits32)),("aspect",  (WGPUTextureAspect)),("usage",  (WGPUTextureUsage))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTextureViewDescriptor : allocStructPrimType WGPUTextureViewDescriptor
-%foreign_impl prim__allocStructWGPUTextureViewDescriptor (allocStructPrimCodegen WGPUTextureViewDescriptor)
-
-export
-AllocStruct WGPUTextureViewDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTextureViewDescriptor xs
 
 public export
 WGPUVertexAttribute : Type
 WGPUVertexAttribute = Struct "WGPUVertexAttribute" [("format",  (WGPUVertexFormat)),("offset",  (Bits64)),("shaderLocation",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUVertexAttribute : allocStructPrimType WGPUVertexAttribute
-%foreign_impl prim__allocStructWGPUVertexAttribute (allocStructPrimCodegen WGPUVertexAttribute)
-
-export
-AllocStruct WGPUVertexAttribute where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUVertexAttribute xs
 
 public export
 WGPUBindGroupDescriptor : Type
 WGPUBindGroupDescriptor = Struct "WGPUBindGroupDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("layout",  (WGPUBindGroupLayout)),("entryCount",  (Bits64)),("entries", Ptr (WGPUBindGroupEntry))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupDescriptor : allocStructPrimType WGPUBindGroupDescriptor
-%foreign_impl prim__allocStructWGPUBindGroupDescriptor (allocStructPrimCodegen WGPUBindGroupDescriptor)
-
-export
-AllocStruct WGPUBindGroupDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupDescriptor xs
 
 public export
 WGPUBindGroupLayoutEntry : Type
 WGPUBindGroupLayoutEntry = Struct "WGPUBindGroupLayoutEntry" [("nextInChain", Ptr (WGPUChainedStruct)),("binding",  (Bits32)),("visibility",  (WGPUShaderStage)),("buffer",  (WGPUBufferBindingLayout)),("sampler",  (WGPUSamplerBindingLayout)),("texture",  (WGPUTextureBindingLayout)),("storageTexture",  (WGPUStorageTextureBindingLayout))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupLayoutEntry : allocStructPrimType WGPUBindGroupLayoutEntry
-%foreign_impl prim__allocStructWGPUBindGroupLayoutEntry (allocStructPrimCodegen WGPUBindGroupLayoutEntry)
-
-export
-AllocStruct WGPUBindGroupLayoutEntry where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupLayoutEntry xs
 
 public export
 WGPUBlendState : Type
 WGPUBlendState = Struct "WGPUBlendState" [("color",  (WGPUBlendComponent)),("alpha",  (WGPUBlendComponent))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBlendState : allocStructPrimType WGPUBlendState
-%foreign_impl prim__allocStructWGPUBlendState (allocStructPrimCodegen WGPUBlendState)
-
-export
-AllocStruct WGPUBlendState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBlendState xs
 
 public export
 WGPUCompilationInfo : Type
 WGPUCompilationInfo = Struct "WGPUCompilationInfo" [("nextInChain", Ptr (WGPUChainedStruct)),("messageCount",  (Bits64)),("messages", Ptr (WGPUCompilationMessage))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUCompilationInfo : allocStructPrimType WGPUCompilationInfo
-%foreign_impl prim__allocStructWGPUCompilationInfo (allocStructPrimCodegen WGPUCompilationInfo)
-
-export
-AllocStruct WGPUCompilationInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUCompilationInfo xs
 
 public export
 WGPUComputePassDescriptor : Type
 WGPUComputePassDescriptor = Struct "WGPUComputePassDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("timestampWrites", Ptr (WGPUComputePassTimestampWrites))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUComputePassDescriptor : allocStructPrimType WGPUComputePassDescriptor
-%foreign_impl prim__allocStructWGPUComputePassDescriptor (allocStructPrimCodegen WGPUComputePassDescriptor)
-
-export
-AllocStruct WGPUComputePassDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUComputePassDescriptor xs
 
 public export
 WGPUDepthStencilState : Type
 WGPUDepthStencilState = Struct "WGPUDepthStencilState" [("nextInChain", Ptr (WGPUChainedStruct)),("format",  (WGPUTextureFormat)),("depthWriteEnabled",  (WGPUOptionalBool)),("depthCompare",  (WGPUCompareFunction)),("stencilFront",  (WGPUStencilFaceState)),("stencilBack",  (WGPUStencilFaceState)),("stencilReadMask",  (Bits32)),("stencilWriteMask",  (Bits32)),("depthBias",  (Int32)),("depthBiasSlopeScale",  (Float)),("depthBiasClamp",  (Float))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUDepthStencilState : allocStructPrimType WGPUDepthStencilState
-%foreign_impl prim__allocStructWGPUDepthStencilState (allocStructPrimCodegen WGPUDepthStencilState)
-
-export
-AllocStruct WGPUDepthStencilState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUDepthStencilState xs
 
 public export
 WGPUDeviceDescriptor : Type
 WGPUDeviceDescriptor = Struct "WGPUDeviceDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("requiredFeatureCount",  (Bits64)),("requiredFeatures", Ptr (WGPUFeatureName)),("requiredLimits", Ptr (WGPULimits)),("defaultQueue",  (WGPUQueueDescriptor)),("deviceLostCallbackInfo",  (WGPUDeviceLostCallbackInfo)),("uncapturedErrorCallbackInfo",  (WGPUUncapturedErrorCallbackInfo))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUDeviceDescriptor : allocStructPrimType WGPUDeviceDescriptor
-%foreign_impl prim__allocStructWGPUDeviceDescriptor (allocStructPrimCodegen WGPUDeviceDescriptor)
-
-export
-AllocStruct WGPUDeviceDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUDeviceDescriptor xs
 
 public export
 WGPUFutureWaitInfo : Type
 WGPUFutureWaitInfo = Struct "WGPUFutureWaitInfo" [("future",  (WGPUFuture)),("completed",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUFutureWaitInfo : allocStructPrimType WGPUFutureWaitInfo
-%foreign_impl prim__allocStructWGPUFutureWaitInfo (allocStructPrimCodegen WGPUFutureWaitInfo)
-
-export
-AllocStruct WGPUFutureWaitInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUFutureWaitInfo xs
 
 public export
 WGPUInstanceDescriptor : Type
-WGPUInstanceDescriptor = Struct "WGPUInstanceDescriptor" [("features",  (WGPUInstanceCapabilities))]
+WGPUInstanceDescriptor = Struct "WGPUInstanceDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("features",  (WGPUInstanceCapabilities))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUInstanceDescriptor : allocStructPrimType WGPUInstanceDescriptor
-%foreign_impl prim__allocStructWGPUInstanceDescriptor (allocStructPrimCodegen WGPUInstanceDescriptor)
-
-export
-AllocStruct WGPUInstanceDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUInstanceDescriptor xs
 
 public export
 WGPUProgrammableStageDescriptor : Type
 WGPUProgrammableStageDescriptor = Struct "WGPUProgrammableStageDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("module",  (WGPUShaderModule)),("entryPoint",  (WGPUStringView)),("constantCount",  (Bits64)),("constants", Ptr (WGPUConstantEntry))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUProgrammableStageDescriptor : allocStructPrimType WGPUProgrammableStageDescriptor
-%foreign_impl prim__allocStructWGPUProgrammableStageDescriptor (allocStructPrimCodegen WGPUProgrammableStageDescriptor)
-
-export
-AllocStruct WGPUProgrammableStageDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUProgrammableStageDescriptor xs
 
 public export
 WGPURenderPassColorAttachment : Type
 WGPURenderPassColorAttachment = Struct "WGPURenderPassColorAttachment" [("nextInChain", Ptr (WGPUChainedStruct)),("view",  (WGPUTextureView)),("depthSlice",  (Bits32)),("resolveTarget",  (WGPUTextureView)),("loadOp",  (WGPULoadOp)),("storeOp",  (WGPUStoreOp)),("clearValue",  (WGPUColor))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPassColorAttachment : allocStructPrimType WGPURenderPassColorAttachment
-%foreign_impl prim__allocStructWGPURenderPassColorAttachment (allocStructPrimCodegen WGPURenderPassColorAttachment)
-
-export
-AllocStruct WGPURenderPassColorAttachment where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPassColorAttachment xs
 
 public export
 WGPUTexelCopyBufferInfo : Type
 WGPUTexelCopyBufferInfo = Struct "WGPUTexelCopyBufferInfo" [("layout",  (WGPUTexelCopyBufferLayout)),("buffer",  (WGPUBuffer))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTexelCopyBufferInfo : allocStructPrimType WGPUTexelCopyBufferInfo
-%foreign_impl prim__allocStructWGPUTexelCopyBufferInfo (allocStructPrimCodegen WGPUTexelCopyBufferInfo)
-
-export
-AllocStruct WGPUTexelCopyBufferInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTexelCopyBufferInfo xs
 
 public export
 WGPUTexelCopyTextureInfo : Type
 WGPUTexelCopyTextureInfo = Struct "WGPUTexelCopyTextureInfo" [("texture",  (WGPUTexture)),("mipLevel",  (Bits32)),("origin",  (WGPUOrigin3D)),("aspect",  (WGPUTextureAspect))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTexelCopyTextureInfo : allocStructPrimType WGPUTexelCopyTextureInfo
-%foreign_impl prim__allocStructWGPUTexelCopyTextureInfo (allocStructPrimCodegen WGPUTexelCopyTextureInfo)
-
-export
-AllocStruct WGPUTexelCopyTextureInfo where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTexelCopyTextureInfo xs
 
 public export
 WGPUTextureDescriptor : Type
 WGPUTextureDescriptor = Struct "WGPUTextureDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("usage",  (WGPUTextureUsage)),("dimension",  (WGPUTextureDimension)),("size",  (WGPUExtent3D)),("format",  (WGPUTextureFormat)),("mipLevelCount",  (Bits32)),("sampleCount",  (Bits32)),("viewFormatCount",  (Bits64)),("viewFormats", Ptr (WGPUTextureFormat))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUTextureDescriptor : allocStructPrimType WGPUTextureDescriptor
-%foreign_impl prim__allocStructWGPUTextureDescriptor (allocStructPrimCodegen WGPUTextureDescriptor)
-
-export
-AllocStruct WGPUTextureDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUTextureDescriptor xs
 
 public export
 WGPUVertexBufferLayout : Type
 WGPUVertexBufferLayout = Struct "WGPUVertexBufferLayout" [("stepMode",  (WGPUVertexStepMode)),("arrayStride",  (Bits64)),("attributeCount",  (Bits64)),("attributes", Ptr (WGPUVertexAttribute))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUVertexBufferLayout : allocStructPrimType WGPUVertexBufferLayout
-%foreign_impl prim__allocStructWGPUVertexBufferLayout (allocStructPrimCodegen WGPUVertexBufferLayout)
-
-export
-AllocStruct WGPUVertexBufferLayout where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUVertexBufferLayout xs
 
 public export
 WGPUBindGroupLayoutDescriptor : Type
 WGPUBindGroupLayoutDescriptor = Struct "WGPUBindGroupLayoutDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("entryCount",  (Bits64)),("entries", Ptr (WGPUBindGroupLayoutEntry))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupLayoutDescriptor : allocStructPrimType WGPUBindGroupLayoutDescriptor
-%foreign_impl prim__allocStructWGPUBindGroupLayoutDescriptor (allocStructPrimCodegen WGPUBindGroupLayoutDescriptor)
-
-export
-AllocStruct WGPUBindGroupLayoutDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupLayoutDescriptor xs
 
 public export
 WGPUColorTargetState : Type
 WGPUColorTargetState = Struct "WGPUColorTargetState" [("nextInChain", Ptr (WGPUChainedStruct)),("format",  (WGPUTextureFormat)),("blend", Ptr (WGPUBlendState)),("writeMask",  (WGPUColorWriteMask))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUColorTargetState : allocStructPrimType WGPUColorTargetState
-%foreign_impl prim__allocStructWGPUColorTargetState (allocStructPrimCodegen WGPUColorTargetState)
-
-export
-AllocStruct WGPUColorTargetState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUColorTargetState xs
 
 public export
 WGPUComputePipelineDescriptor : Type
 WGPUComputePipelineDescriptor = Struct "WGPUComputePipelineDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("layout",  (WGPUPipelineLayout)),("compute",  (WGPUProgrammableStageDescriptor))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUComputePipelineDescriptor : allocStructPrimType WGPUComputePipelineDescriptor
-%foreign_impl prim__allocStructWGPUComputePipelineDescriptor (allocStructPrimCodegen WGPUComputePipelineDescriptor)
-
-export
-AllocStruct WGPUComputePipelineDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUComputePipelineDescriptor xs
 
 public export
 WGPURenderPassDescriptor : Type
 WGPURenderPassDescriptor = Struct "WGPURenderPassDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("colorAttachmentCount",  (Bits64)),("colorAttachments", Ptr (WGPURenderPassColorAttachment)),("depthStencilAttachment", Ptr (WGPURenderPassDepthStencilAttachment)),("occlusionQuerySet",  (WGPUQuerySet)),("timestampWrites", Ptr (WGPURenderPassTimestampWrites))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPassDescriptor : allocStructPrimType WGPURenderPassDescriptor
-%foreign_impl prim__allocStructWGPURenderPassDescriptor (allocStructPrimCodegen WGPURenderPassDescriptor)
-
-export
-AllocStruct WGPURenderPassDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPassDescriptor xs
 
 public export
 WGPUVertexState : Type
 WGPUVertexState = Struct "WGPUVertexState" [("nextInChain", Ptr (WGPUChainedStruct)),("module",  (WGPUShaderModule)),("entryPoint",  (WGPUStringView)),("constantCount",  (Bits64)),("constants", Ptr (WGPUConstantEntry)),("bufferCount",  (Bits64)),("buffers", Ptr (WGPUVertexBufferLayout))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUVertexState : allocStructPrimType WGPUVertexState
-%foreign_impl prim__allocStructWGPUVertexState (allocStructPrimCodegen WGPUVertexState)
-
-export
-AllocStruct WGPUVertexState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUVertexState xs
 
 public export
 WGPUFragmentState : Type
 WGPUFragmentState = Struct "WGPUFragmentState" [("nextInChain", Ptr (WGPUChainedStruct)),("module",  (WGPUShaderModule)),("entryPoint",  (WGPUStringView)),("constantCount",  (Bits64)),("constants", Ptr (WGPUConstantEntry)),("targetCount",  (Bits64)),("targets", Ptr (WGPUColorTargetState))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUFragmentState : allocStructPrimType WGPUFragmentState
-%foreign_impl prim__allocStructWGPUFragmentState (allocStructPrimCodegen WGPUFragmentState)
-
-export
-AllocStruct WGPUFragmentState where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUFragmentState xs
 
 public export
 WGPURenderPipelineDescriptor : Type
 WGPURenderPipelineDescriptor = Struct "WGPURenderPipelineDescriptor" [("nextInChain", Ptr (WGPUChainedStruct)),("label",  (WGPUStringView)),("layout",  (WGPUPipelineLayout)),("vertex",  (WGPUVertexState)),("primitive",  (WGPUPrimitiveState)),("depthStencil", Ptr (WGPUDepthStencilState)),("multisample",  (WGPUMultisampleState)),("fragment", Ptr (WGPUFragmentState))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURenderPipelineDescriptor : allocStructPrimType WGPURenderPipelineDescriptor
-%foreign_impl prim__allocStructWGPURenderPipelineDescriptor (allocStructPrimCodegen WGPURenderPipelineDescriptor)
-
-export
-AllocStruct WGPURenderPipelineDescriptor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURenderPipelineDescriptor xs
 
 public export
 WGPUProcCreateInstance : Type
@@ -3590,11 +2825,11 @@ mkWGPUProcBufferDestroy : (WGPUBuffer -> PrimIO (())) -> PrimIO $ WGPUProcBuffer
 
 public export
 WGPUProcBufferGetConstMappedRange : Type
-WGPUProcBufferGetConstMappedRange = Ptr (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (())))
+WGPUProcBufferGetConstMappedRange = Ptr (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUProcBufferGetConstMappedRange : (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (()))) -> PrimIO $ WGPUProcBufferGetConstMappedRange
+mkWGPUProcBufferGetConstMappedRange : (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr)) -> PrimIO $ WGPUProcBufferGetConstMappedRange
 
 public export
 WGPUProcBufferGetMapState : Type
@@ -3606,11 +2841,11 @@ mkWGPUProcBufferGetMapState : (WGPUBuffer -> PrimIO (WGPUBufferMapState)) -> Pri
 
 public export
 WGPUProcBufferGetMappedRange : Type
-WGPUProcBufferGetMappedRange = Ptr (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (())))
+WGPUProcBufferGetMappedRange = Ptr (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUProcBufferGetMappedRange : (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (()))) -> PrimIO $ WGPUProcBufferGetMappedRange
+mkWGPUProcBufferGetMappedRange : (WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr)) -> PrimIO $ WGPUProcBufferGetMappedRange
 
 public export
 WGPUProcBufferGetSize : Type
@@ -4310,19 +3545,19 @@ mkWGPUProcQueueSubmit : (WGPUQueue -> Bits64 -> Ptr (WGPUCommandBuffer) -> PrimI
 
 public export
 WGPUProcQueueWriteBuffer : Type
-WGPUProcQueueWriteBuffer = Ptr (WGPUQueue -> WGPUBuffer -> Bits64 -> Ptr (()) -> Bits64 -> PrimIO (()))
+WGPUProcQueueWriteBuffer = Ptr (WGPUQueue -> WGPUBuffer -> Bits64 -> AnyPtr -> Bits64 -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUProcQueueWriteBuffer : (WGPUQueue -> WGPUBuffer -> Bits64 -> Ptr (()) -> Bits64 -> PrimIO (())) -> PrimIO $ WGPUProcQueueWriteBuffer
+mkWGPUProcQueueWriteBuffer : (WGPUQueue -> WGPUBuffer -> Bits64 -> AnyPtr -> Bits64 -> PrimIO (())) -> PrimIO $ WGPUProcQueueWriteBuffer
 
 public export
 WGPUProcQueueWriteTexture : Type
-WGPUProcQueueWriteTexture = Ptr (WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (()) -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (()))
+WGPUProcQueueWriteTexture = Ptr (WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> AnyPtr -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPUProcQueueWriteTexture : (WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (()) -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (())) -> PrimIO $ WGPUProcQueueWriteTexture
+mkWGPUProcQueueWriteTexture : (WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> AnyPtr -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (())) -> PrimIO $ WGPUProcQueueWriteTexture
 
 public export
 WGPUProcQueueAddRef : Type
@@ -4967,956 +4202,956 @@ mkWGPUProcTextureViewRelease : (WGPUTextureView -> PrimIO (())) -> PrimIO $ WGPU
 %foreign "C:wgpuCreateInstance,libwgpu_native"
 export
 wgpuCreateInstance : Ptr (WGPUInstanceDescriptor) -> PrimIO (WGPUInstance)
-
+    
 
 %foreign "C:wgpuGetInstanceCapabilities,libwgpu_native"
 export
 wgpuGetInstanceCapabilities : Ptr (WGPUInstanceCapabilities) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuGetProcAddress,libwgpu_native"
 export
 wgpuGetProcAddress : WGPUStringView -> PrimIO (WGPUProc)
-
+    
 
 %foreign "C:wgpuAdapterGetFeatures,libwgpu_native"
 export
 wgpuAdapterGetFeatures : WGPUAdapter -> Ptr (WGPUSupportedFeatures) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuAdapterGetInfo,libwgpu_native"
 export
 wgpuAdapterGetInfo : WGPUAdapter -> Ptr (WGPUAdapterInfo) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuAdapterGetLimits,libwgpu_native"
 export
 wgpuAdapterGetLimits : WGPUAdapter -> Ptr (WGPULimits) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuAdapterHasFeature,libwgpu_native"
 export
 wgpuAdapterHasFeature : WGPUAdapter -> WGPUFeatureName -> PrimIO (WGPUBool)
-
+    
 
 %foreign "C:wgpuAdapterRequestDevice,libwgpu_native"
 export
 wgpuAdapterRequestDevice : WGPUAdapter -> Ptr (WGPUDeviceDescriptor) -> WGPURequestDeviceCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuAdapterAddRef,libwgpu_native"
 export
 wgpuAdapterAddRef : WGPUAdapter -> PrimIO (())
-
+    
 
 %foreign "C:wgpuAdapterRelease,libwgpu_native"
 export
 wgpuAdapterRelease : WGPUAdapter -> PrimIO (())
-
+    
 
 %foreign "C:wgpuAdapterInfoFreeMembers,libwgpu_native"
 export
 wgpuAdapterInfoFreeMembers : WGPUAdapterInfo -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupSetLabel,libwgpu_native"
 export
 wgpuBindGroupSetLabel : WGPUBindGroup -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupAddRef,libwgpu_native"
 export
 wgpuBindGroupAddRef : WGPUBindGroup -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupRelease,libwgpu_native"
 export
 wgpuBindGroupRelease : WGPUBindGroup -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupLayoutSetLabel,libwgpu_native"
 export
 wgpuBindGroupLayoutSetLabel : WGPUBindGroupLayout -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupLayoutAddRef,libwgpu_native"
 export
 wgpuBindGroupLayoutAddRef : WGPUBindGroupLayout -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBindGroupLayoutRelease,libwgpu_native"
 export
 wgpuBindGroupLayoutRelease : WGPUBindGroupLayout -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBufferDestroy,libwgpu_native"
 export
 wgpuBufferDestroy : WGPUBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBufferGetConstMappedRange,libwgpu_native"
 export
-wgpuBufferGetConstMappedRange : WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (()))
-
+wgpuBufferGetConstMappedRange : WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr)
+    
 
 %foreign "C:wgpuBufferGetMapState,libwgpu_native"
 export
 wgpuBufferGetMapState : WGPUBuffer -> PrimIO (WGPUBufferMapState)
-
+    
 
 %foreign "C:wgpuBufferGetMappedRange,libwgpu_native"
 export
-wgpuBufferGetMappedRange : WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (Ptr (()))
-
+wgpuBufferGetMappedRange : WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (AnyPtr)
+    
 
 %foreign "C:wgpuBufferGetSize,libwgpu_native"
 export
 wgpuBufferGetSize : WGPUBuffer -> PrimIO (Bits64)
-
+    
 
 %foreign "C:wgpuBufferGetUsage,libwgpu_native"
 export
 wgpuBufferGetUsage : WGPUBuffer -> PrimIO (WGPUBufferUsage)
-
+    
 
 %foreign "C:wgpuBufferMapAsync,libwgpu_native"
 export
 wgpuBufferMapAsync : WGPUBuffer -> WGPUMapMode -> Bits64 -> Bits64 -> WGPUBufferMapCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuBufferSetLabel,libwgpu_native"
 export
 wgpuBufferSetLabel : WGPUBuffer -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBufferUnmap,libwgpu_native"
 export
 wgpuBufferUnmap : WGPUBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBufferAddRef,libwgpu_native"
 export
 wgpuBufferAddRef : WGPUBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuBufferRelease,libwgpu_native"
 export
 wgpuBufferRelease : WGPUBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandBufferSetLabel,libwgpu_native"
 export
 wgpuCommandBufferSetLabel : WGPUCommandBuffer -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandBufferAddRef,libwgpu_native"
 export
 wgpuCommandBufferAddRef : WGPUCommandBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandBufferRelease,libwgpu_native"
 export
 wgpuCommandBufferRelease : WGPUCommandBuffer -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderBeginComputePass,libwgpu_native"
 export
 wgpuCommandEncoderBeginComputePass : WGPUCommandEncoder -> Ptr (WGPUComputePassDescriptor) -> PrimIO (WGPUComputePassEncoder)
-
+    
 
 %foreign "C:wgpuCommandEncoderBeginRenderPass,libwgpu_native"
 export
 wgpuCommandEncoderBeginRenderPass : WGPUCommandEncoder -> Ptr (WGPURenderPassDescriptor) -> PrimIO (WGPURenderPassEncoder)
-
+    
 
 %foreign "C:wgpuCommandEncoderClearBuffer,libwgpu_native"
 export
 wgpuCommandEncoderClearBuffer : WGPUCommandEncoder -> WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderCopyBufferToBuffer,libwgpu_native"
 export
 wgpuCommandEncoderCopyBufferToBuffer : WGPUCommandEncoder -> WGPUBuffer -> Bits64 -> WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderCopyBufferToTexture,libwgpu_native"
 export
 wgpuCommandEncoderCopyBufferToTexture : WGPUCommandEncoder -> Ptr (WGPUTexelCopyBufferInfo) -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (WGPUExtent3D) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderCopyTextureToBuffer,libwgpu_native"
 export
 wgpuCommandEncoderCopyTextureToBuffer : WGPUCommandEncoder -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (WGPUTexelCopyBufferInfo) -> Ptr (WGPUExtent3D) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderCopyTextureToTexture,libwgpu_native"
 export
 wgpuCommandEncoderCopyTextureToTexture : WGPUCommandEncoder -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (WGPUExtent3D) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderFinish,libwgpu_native"
 export
 wgpuCommandEncoderFinish : WGPUCommandEncoder -> Ptr (WGPUCommandBufferDescriptor) -> PrimIO (WGPUCommandBuffer)
-
+    
 
 %foreign "C:wgpuCommandEncoderInsertDebugMarker,libwgpu_native"
 export
 wgpuCommandEncoderInsertDebugMarker : WGPUCommandEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderPopDebugGroup,libwgpu_native"
 export
 wgpuCommandEncoderPopDebugGroup : WGPUCommandEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderPushDebugGroup,libwgpu_native"
 export
 wgpuCommandEncoderPushDebugGroup : WGPUCommandEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderResolveQuerySet,libwgpu_native"
 export
 wgpuCommandEncoderResolveQuerySet : WGPUCommandEncoder -> WGPUQuerySet -> Bits32 -> Bits32 -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderSetLabel,libwgpu_native"
 export
 wgpuCommandEncoderSetLabel : WGPUCommandEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderWriteTimestamp,libwgpu_native"
 export
 wgpuCommandEncoderWriteTimestamp : WGPUCommandEncoder -> WGPUQuerySet -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderAddRef,libwgpu_native"
 export
 wgpuCommandEncoderAddRef : WGPUCommandEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuCommandEncoderRelease,libwgpu_native"
 export
 wgpuCommandEncoderRelease : WGPUCommandEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderDispatchWorkgroups,libwgpu_native"
 export
 wgpuComputePassEncoderDispatchWorkgroups : WGPUComputePassEncoder -> Bits32 -> Bits32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderDispatchWorkgroupsIndirect,libwgpu_native"
 export
 wgpuComputePassEncoderDispatchWorkgroupsIndirect : WGPUComputePassEncoder -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderEnd,libwgpu_native"
 export
 wgpuComputePassEncoderEnd : WGPUComputePassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderInsertDebugMarker,libwgpu_native"
 export
 wgpuComputePassEncoderInsertDebugMarker : WGPUComputePassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderPopDebugGroup,libwgpu_native"
 export
 wgpuComputePassEncoderPopDebugGroup : WGPUComputePassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderPushDebugGroup,libwgpu_native"
 export
 wgpuComputePassEncoderPushDebugGroup : WGPUComputePassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderSetBindGroup,libwgpu_native"
 export
 wgpuComputePassEncoderSetBindGroup : WGPUComputePassEncoder -> Bits32 -> WGPUBindGroup -> Bits64 -> Ptr (Bits32) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderSetLabel,libwgpu_native"
 export
 wgpuComputePassEncoderSetLabel : WGPUComputePassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderSetPipeline,libwgpu_native"
 export
 wgpuComputePassEncoderSetPipeline : WGPUComputePassEncoder -> WGPUComputePipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderAddRef,libwgpu_native"
 export
 wgpuComputePassEncoderAddRef : WGPUComputePassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderRelease,libwgpu_native"
 export
 wgpuComputePassEncoderRelease : WGPUComputePassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePipelineGetBindGroupLayout,libwgpu_native"
 export
 wgpuComputePipelineGetBindGroupLayout : WGPUComputePipeline -> Bits32 -> PrimIO (WGPUBindGroupLayout)
-
+    
 
 %foreign "C:wgpuComputePipelineSetLabel,libwgpu_native"
 export
 wgpuComputePipelineSetLabel : WGPUComputePipeline -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePipelineAddRef,libwgpu_native"
 export
 wgpuComputePipelineAddRef : WGPUComputePipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePipelineRelease,libwgpu_native"
 export
 wgpuComputePipelineRelease : WGPUComputePipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceCreateBindGroup,libwgpu_native"
 export
 wgpuDeviceCreateBindGroup : WGPUDevice -> Ptr (WGPUBindGroupDescriptor) -> PrimIO (WGPUBindGroup)
-
+    
 
 %foreign "C:wgpuDeviceCreateBindGroupLayout,libwgpu_native"
 export
 wgpuDeviceCreateBindGroupLayout : WGPUDevice -> Ptr (WGPUBindGroupLayoutDescriptor) -> PrimIO (WGPUBindGroupLayout)
-
+    
 
 %foreign "C:wgpuDeviceCreateBuffer,libwgpu_native"
 export
 wgpuDeviceCreateBuffer : WGPUDevice -> Ptr (WGPUBufferDescriptor) -> PrimIO (WGPUBuffer)
-
+    
 
 %foreign "C:wgpuDeviceCreateCommandEncoder,libwgpu_native"
 export
 wgpuDeviceCreateCommandEncoder : WGPUDevice -> Ptr (WGPUCommandEncoderDescriptor) -> PrimIO (WGPUCommandEncoder)
-
+    
 
 %foreign "C:wgpuDeviceCreateComputePipeline,libwgpu_native"
 export
 wgpuDeviceCreateComputePipeline : WGPUDevice -> Ptr (WGPUComputePipelineDescriptor) -> PrimIO (WGPUComputePipeline)
-
+    
 
 %foreign "C:wgpuDeviceCreateComputePipelineAsync,libwgpu_native"
 export
 wgpuDeviceCreateComputePipelineAsync : WGPUDevice -> Ptr (WGPUComputePipelineDescriptor) -> WGPUCreateComputePipelineAsyncCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuDeviceCreatePipelineLayout,libwgpu_native"
 export
 wgpuDeviceCreatePipelineLayout : WGPUDevice -> Ptr (WGPUPipelineLayoutDescriptor) -> PrimIO (WGPUPipelineLayout)
-
+    
 
 %foreign "C:wgpuDeviceCreateQuerySet,libwgpu_native"
 export
 wgpuDeviceCreateQuerySet : WGPUDevice -> Ptr (WGPUQuerySetDescriptor) -> PrimIO (WGPUQuerySet)
-
+    
 
 %foreign "C:wgpuDeviceCreateRenderBundleEncoder,libwgpu_native"
 export
 wgpuDeviceCreateRenderBundleEncoder : WGPUDevice -> Ptr (WGPURenderBundleEncoderDescriptor) -> PrimIO (WGPURenderBundleEncoder)
-
+    
 
 %foreign "C:wgpuDeviceCreateRenderPipeline,libwgpu_native"
 export
 wgpuDeviceCreateRenderPipeline : WGPUDevice -> Ptr (WGPURenderPipelineDescriptor) -> PrimIO (WGPURenderPipeline)
-
+    
 
 %foreign "C:wgpuDeviceCreateRenderPipelineAsync,libwgpu_native"
 export
 wgpuDeviceCreateRenderPipelineAsync : WGPUDevice -> Ptr (WGPURenderPipelineDescriptor) -> WGPUCreateRenderPipelineAsyncCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuDeviceCreateSampler,libwgpu_native"
 export
 wgpuDeviceCreateSampler : WGPUDevice -> Ptr (WGPUSamplerDescriptor) -> PrimIO (WGPUSampler)
-
+    
 
 %foreign "C:wgpuDeviceCreateShaderModule,libwgpu_native"
 export
 wgpuDeviceCreateShaderModule : WGPUDevice -> Ptr (WGPUShaderModuleDescriptor) -> PrimIO (WGPUShaderModule)
-
+    
 
 %foreign "C:wgpuDeviceCreateTexture,libwgpu_native"
 export
 wgpuDeviceCreateTexture : WGPUDevice -> Ptr (WGPUTextureDescriptor) -> PrimIO (WGPUTexture)
-
+    
 
 %foreign "C:wgpuDeviceDestroy,libwgpu_native"
 export
 wgpuDeviceDestroy : WGPUDevice -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceGetAdapterInfo,libwgpu_native"
 export
 wgpuDeviceGetAdapterInfo : WGPUDevice -> PrimIO (WGPUAdapterInfo)
-
+    
 
 %foreign "C:wgpuDeviceGetFeatures,libwgpu_native"
 export
 wgpuDeviceGetFeatures : WGPUDevice -> Ptr (WGPUSupportedFeatures) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceGetLimits,libwgpu_native"
 export
 wgpuDeviceGetLimits : WGPUDevice -> Ptr (WGPULimits) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuDeviceGetLostFuture,libwgpu_native"
 export
 wgpuDeviceGetLostFuture : WGPUDevice -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuDeviceGetQueue,libwgpu_native"
 export
 wgpuDeviceGetQueue : WGPUDevice -> PrimIO (WGPUQueue)
-
+    
 
 %foreign "C:wgpuDeviceHasFeature,libwgpu_native"
 export
 wgpuDeviceHasFeature : WGPUDevice -> WGPUFeatureName -> PrimIO (WGPUBool)
-
+    
 
 %foreign "C:wgpuDevicePopErrorScope,libwgpu_native"
 export
 wgpuDevicePopErrorScope : WGPUDevice -> WGPUPopErrorScopeCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuDevicePushErrorScope,libwgpu_native"
 export
 wgpuDevicePushErrorScope : WGPUDevice -> WGPUErrorFilter -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceSetLabel,libwgpu_native"
 export
 wgpuDeviceSetLabel : WGPUDevice -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceAddRef,libwgpu_native"
 export
 wgpuDeviceAddRef : WGPUDevice -> PrimIO (())
-
+    
 
 %foreign "C:wgpuDeviceRelease,libwgpu_native"
 export
 wgpuDeviceRelease : WGPUDevice -> PrimIO (())
-
+    
 
 %foreign "C:wgpuInstanceCreateSurface,libwgpu_native"
 export
 wgpuInstanceCreateSurface : WGPUInstance -> Ptr (WGPUSurfaceDescriptor) -> PrimIO (WGPUSurface)
-
+    
 
 %foreign "C:wgpuInstanceGetWGSLLanguageFeatures,libwgpu_native"
 export
 wgpuInstanceGetWGSLLanguageFeatures : WGPUInstance -> Ptr (WGPUSupportedWGSLLanguageFeatures) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuInstanceHasWGSLLanguageFeature,libwgpu_native"
 export
 wgpuInstanceHasWGSLLanguageFeature : WGPUInstance -> WGPUWGSLLanguageFeatureName -> PrimIO (WGPUBool)
-
+    
 
 %foreign "C:wgpuInstanceProcessEvents,libwgpu_native"
 export
 wgpuInstanceProcessEvents : WGPUInstance -> PrimIO (())
-
+    
 
 %foreign "C:wgpuInstanceRequestAdapter,libwgpu_native"
 export
 wgpuInstanceRequestAdapter : WGPUInstance -> Ptr (WGPURequestAdapterOptions) -> WGPURequestAdapterCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuInstanceWaitAny,libwgpu_native"
 export
 wgpuInstanceWaitAny : WGPUInstance -> Bits64 -> Ptr (WGPUFutureWaitInfo) -> Bits64 -> PrimIO (WGPUWaitStatus)
-
+    
 
 %foreign "C:wgpuInstanceAddRef,libwgpu_native"
 export
 wgpuInstanceAddRef : WGPUInstance -> PrimIO (())
-
+    
 
 %foreign "C:wgpuInstanceRelease,libwgpu_native"
 export
 wgpuInstanceRelease : WGPUInstance -> PrimIO (())
-
+    
 
 %foreign "C:wgpuPipelineLayoutSetLabel,libwgpu_native"
 export
 wgpuPipelineLayoutSetLabel : WGPUPipelineLayout -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuPipelineLayoutAddRef,libwgpu_native"
 export
 wgpuPipelineLayoutAddRef : WGPUPipelineLayout -> PrimIO (())
-
+    
 
 %foreign "C:wgpuPipelineLayoutRelease,libwgpu_native"
 export
 wgpuPipelineLayoutRelease : WGPUPipelineLayout -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQuerySetDestroy,libwgpu_native"
 export
 wgpuQuerySetDestroy : WGPUQuerySet -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQuerySetGetCount,libwgpu_native"
 export
 wgpuQuerySetGetCount : WGPUQuerySet -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuQuerySetGetType,libwgpu_native"
 export
 wgpuQuerySetGetType : WGPUQuerySet -> PrimIO (WGPUQueryType)
-
+    
 
 %foreign "C:wgpuQuerySetSetLabel,libwgpu_native"
 export
 wgpuQuerySetSetLabel : WGPUQuerySet -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQuerySetAddRef,libwgpu_native"
 export
 wgpuQuerySetAddRef : WGPUQuerySet -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQuerySetRelease,libwgpu_native"
 export
 wgpuQuerySetRelease : WGPUQuerySet -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQueueOnSubmittedWorkDone,libwgpu_native"
 export
 wgpuQueueOnSubmittedWorkDone : WGPUQueue -> WGPUQueueWorkDoneCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuQueueSetLabel,libwgpu_native"
 export
 wgpuQueueSetLabel : WGPUQueue -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQueueSubmit,libwgpu_native"
 export
 wgpuQueueSubmit : WGPUQueue -> Bits64 -> Ptr (WGPUCommandBuffer) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQueueWriteBuffer,libwgpu_native"
 export
-wgpuQueueWriteBuffer : WGPUQueue -> WGPUBuffer -> Bits64 -> Ptr (()) -> Bits64 -> PrimIO (())
-
+wgpuQueueWriteBuffer : WGPUQueue -> WGPUBuffer -> Bits64 -> AnyPtr -> Bits64 -> PrimIO (())
+    
 
 %foreign "C:wgpuQueueWriteTexture,libwgpu_native"
 export
-wgpuQueueWriteTexture : WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> Ptr (()) -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (())
-
+wgpuQueueWriteTexture : WGPUQueue -> Ptr (WGPUTexelCopyTextureInfo) -> AnyPtr -> Bits64 -> Ptr (WGPUTexelCopyBufferLayout) -> Ptr (WGPUExtent3D) -> PrimIO (())
+    
 
 %foreign "C:wgpuQueueAddRef,libwgpu_native"
 export
 wgpuQueueAddRef : WGPUQueue -> PrimIO (())
-
+    
 
 %foreign "C:wgpuQueueRelease,libwgpu_native"
 export
 wgpuQueueRelease : WGPUQueue -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleSetLabel,libwgpu_native"
 export
 wgpuRenderBundleSetLabel : WGPURenderBundle -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleAddRef,libwgpu_native"
 export
 wgpuRenderBundleAddRef : WGPURenderBundle -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleRelease,libwgpu_native"
 export
 wgpuRenderBundleRelease : WGPURenderBundle -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderDraw,libwgpu_native"
 export
 wgpuRenderBundleEncoderDraw : WGPURenderBundleEncoder -> Bits32 -> Bits32 -> Bits32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderDrawIndexed,libwgpu_native"
 export
 wgpuRenderBundleEncoderDrawIndexed : WGPURenderBundleEncoder -> Bits32 -> Bits32 -> Bits32 -> Int32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderDrawIndexedIndirect,libwgpu_native"
 export
 wgpuRenderBundleEncoderDrawIndexedIndirect : WGPURenderBundleEncoder -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderDrawIndirect,libwgpu_native"
 export
 wgpuRenderBundleEncoderDrawIndirect : WGPURenderBundleEncoder -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderFinish,libwgpu_native"
 export
 wgpuRenderBundleEncoderFinish : WGPURenderBundleEncoder -> Ptr (WGPURenderBundleDescriptor) -> PrimIO (WGPURenderBundle)
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderInsertDebugMarker,libwgpu_native"
 export
 wgpuRenderBundleEncoderInsertDebugMarker : WGPURenderBundleEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderPopDebugGroup,libwgpu_native"
 export
 wgpuRenderBundleEncoderPopDebugGroup : WGPURenderBundleEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderPushDebugGroup,libwgpu_native"
 export
 wgpuRenderBundleEncoderPushDebugGroup : WGPURenderBundleEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetBindGroup,libwgpu_native"
 export
 wgpuRenderBundleEncoderSetBindGroup : WGPURenderBundleEncoder -> Bits32 -> WGPUBindGroup -> Bits64 -> Ptr (Bits32) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetIndexBuffer,libwgpu_native"
 export
 wgpuRenderBundleEncoderSetIndexBuffer : WGPURenderBundleEncoder -> WGPUBuffer -> WGPUIndexFormat -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetLabel,libwgpu_native"
 export
 wgpuRenderBundleEncoderSetLabel : WGPURenderBundleEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetPipeline,libwgpu_native"
 export
 wgpuRenderBundleEncoderSetPipeline : WGPURenderBundleEncoder -> WGPURenderPipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetVertexBuffer,libwgpu_native"
 export
 wgpuRenderBundleEncoderSetVertexBuffer : WGPURenderBundleEncoder -> Bits32 -> WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderAddRef,libwgpu_native"
 export
 wgpuRenderBundleEncoderAddRef : WGPURenderBundleEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderBundleEncoderRelease,libwgpu_native"
 export
 wgpuRenderBundleEncoderRelease : WGPURenderBundleEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderBeginOcclusionQuery,libwgpu_native"
 export
 wgpuRenderPassEncoderBeginOcclusionQuery : WGPURenderPassEncoder -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderDraw,libwgpu_native"
 export
 wgpuRenderPassEncoderDraw : WGPURenderPassEncoder -> Bits32 -> Bits32 -> Bits32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderDrawIndexed,libwgpu_native"
 export
 wgpuRenderPassEncoderDrawIndexed : WGPURenderPassEncoder -> Bits32 -> Bits32 -> Bits32 -> Int32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderDrawIndexedIndirect,libwgpu_native"
 export
 wgpuRenderPassEncoderDrawIndexedIndirect : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderDrawIndirect,libwgpu_native"
 export
 wgpuRenderPassEncoderDrawIndirect : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderEnd,libwgpu_native"
 export
 wgpuRenderPassEncoderEnd : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderEndOcclusionQuery,libwgpu_native"
 export
 wgpuRenderPassEncoderEndOcclusionQuery : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderExecuteBundles,libwgpu_native"
 export
 wgpuRenderPassEncoderExecuteBundles : WGPURenderPassEncoder -> Bits64 -> Ptr (WGPURenderBundle) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderInsertDebugMarker,libwgpu_native"
 export
 wgpuRenderPassEncoderInsertDebugMarker : WGPURenderPassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderPopDebugGroup,libwgpu_native"
 export
 wgpuRenderPassEncoderPopDebugGroup : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderPushDebugGroup,libwgpu_native"
 export
 wgpuRenderPassEncoderPushDebugGroup : WGPURenderPassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetBindGroup,libwgpu_native"
 export
 wgpuRenderPassEncoderSetBindGroup : WGPURenderPassEncoder -> Bits32 -> WGPUBindGroup -> Bits64 -> Ptr (Bits32) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetBlendConstant,libwgpu_native"
 export
 wgpuRenderPassEncoderSetBlendConstant : WGPURenderPassEncoder -> Ptr (WGPUColor) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetIndexBuffer,libwgpu_native"
 export
 wgpuRenderPassEncoderSetIndexBuffer : WGPURenderPassEncoder -> WGPUBuffer -> WGPUIndexFormat -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetLabel,libwgpu_native"
 export
 wgpuRenderPassEncoderSetLabel : WGPURenderPassEncoder -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetPipeline,libwgpu_native"
 export
 wgpuRenderPassEncoderSetPipeline : WGPURenderPassEncoder -> WGPURenderPipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetScissorRect,libwgpu_native"
 export
 wgpuRenderPassEncoderSetScissorRect : WGPURenderPassEncoder -> Bits32 -> Bits32 -> Bits32 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetStencilReference,libwgpu_native"
 export
 wgpuRenderPassEncoderSetStencilReference : WGPURenderPassEncoder -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetVertexBuffer,libwgpu_native"
 export
 wgpuRenderPassEncoderSetVertexBuffer : WGPURenderPassEncoder -> Bits32 -> WGPUBuffer -> Bits64 -> Bits64 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetViewport,libwgpu_native"
 export
 wgpuRenderPassEncoderSetViewport : WGPURenderPassEncoder -> Float -> Float -> Float -> Float -> Float -> Float -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderAddRef,libwgpu_native"
 export
 wgpuRenderPassEncoderAddRef : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderRelease,libwgpu_native"
 export
 wgpuRenderPassEncoderRelease : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPipelineGetBindGroupLayout,libwgpu_native"
 export
 wgpuRenderPipelineGetBindGroupLayout : WGPURenderPipeline -> Bits32 -> PrimIO (WGPUBindGroupLayout)
-
+    
 
 %foreign "C:wgpuRenderPipelineSetLabel,libwgpu_native"
 export
 wgpuRenderPipelineSetLabel : WGPURenderPipeline -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPipelineAddRef,libwgpu_native"
 export
 wgpuRenderPipelineAddRef : WGPURenderPipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPipelineRelease,libwgpu_native"
 export
 wgpuRenderPipelineRelease : WGPURenderPipeline -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSamplerSetLabel,libwgpu_native"
 export
 wgpuSamplerSetLabel : WGPUSampler -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSamplerAddRef,libwgpu_native"
 export
 wgpuSamplerAddRef : WGPUSampler -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSamplerRelease,libwgpu_native"
 export
 wgpuSamplerRelease : WGPUSampler -> PrimIO (())
-
+    
 
 %foreign "C:wgpuShaderModuleGetCompilationInfo,libwgpu_native"
 export
 wgpuShaderModuleGetCompilationInfo : WGPUShaderModule -> WGPUCompilationInfoCallbackInfo -> PrimIO (WGPUFuture)
-
+    
 
 %foreign "C:wgpuShaderModuleSetLabel,libwgpu_native"
 export
 wgpuShaderModuleSetLabel : WGPUShaderModule -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuShaderModuleAddRef,libwgpu_native"
 export
 wgpuShaderModuleAddRef : WGPUShaderModule -> PrimIO (())
-
+    
 
 %foreign "C:wgpuShaderModuleRelease,libwgpu_native"
 export
 wgpuShaderModuleRelease : WGPUShaderModule -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSupportedFeaturesFreeMembers,libwgpu_native"
 export
 wgpuSupportedFeaturesFreeMembers : WGPUSupportedFeatures -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSupportedWGSLLanguageFeaturesFreeMembers,libwgpu_native"
 export
 wgpuSupportedWGSLLanguageFeaturesFreeMembers : WGPUSupportedWGSLLanguageFeatures -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceConfigure,libwgpu_native"
 export
 wgpuSurfaceConfigure : WGPUSurface -> Ptr (WGPUSurfaceConfiguration) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceGetCapabilities,libwgpu_native"
 export
 wgpuSurfaceGetCapabilities : WGPUSurface -> WGPUAdapter -> Ptr (WGPUSurfaceCapabilities) -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuSurfaceGetCurrentTexture,libwgpu_native"
 export
 wgpuSurfaceGetCurrentTexture : WGPUSurface -> Ptr (WGPUSurfaceTexture) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfacePresent,libwgpu_native"
 export
 wgpuSurfacePresent : WGPUSurface -> PrimIO (WGPUStatus)
-
+    
 
 %foreign "C:wgpuSurfaceSetLabel,libwgpu_native"
 export
 wgpuSurfaceSetLabel : WGPUSurface -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceUnconfigure,libwgpu_native"
 export
 wgpuSurfaceUnconfigure : WGPUSurface -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceAddRef,libwgpu_native"
 export
 wgpuSurfaceAddRef : WGPUSurface -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceRelease,libwgpu_native"
 export
 wgpuSurfaceRelease : WGPUSurface -> PrimIO (())
-
+    
 
 %foreign "C:wgpuSurfaceCapabilitiesFreeMembers,libwgpu_native"
 export
 wgpuSurfaceCapabilitiesFreeMembers : WGPUSurfaceCapabilities -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureCreateView,libwgpu_native"
 export
 wgpuTextureCreateView : WGPUTexture -> Ptr (WGPUTextureViewDescriptor) -> PrimIO (WGPUTextureView)
-
+    
 
 %foreign "C:wgpuTextureDestroy,libwgpu_native"
 export
 wgpuTextureDestroy : WGPUTexture -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureGetDepthOrArrayLayers,libwgpu_native"
 export
 wgpuTextureGetDepthOrArrayLayers : WGPUTexture -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuTextureGetDimension,libwgpu_native"
 export
 wgpuTextureGetDimension : WGPUTexture -> PrimIO (WGPUTextureDimension)
-
+    
 
 %foreign "C:wgpuTextureGetFormat,libwgpu_native"
 export
 wgpuTextureGetFormat : WGPUTexture -> PrimIO (WGPUTextureFormat)
-
+    
 
 %foreign "C:wgpuTextureGetHeight,libwgpu_native"
 export
 wgpuTextureGetHeight : WGPUTexture -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuTextureGetMipLevelCount,libwgpu_native"
 export
 wgpuTextureGetMipLevelCount : WGPUTexture -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuTextureGetSampleCount,libwgpu_native"
 export
 wgpuTextureGetSampleCount : WGPUTexture -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuTextureGetUsage,libwgpu_native"
 export
 wgpuTextureGetUsage : WGPUTexture -> PrimIO (WGPUTextureUsage)
-
+    
 
 %foreign "C:wgpuTextureGetWidth,libwgpu_native"
 export
 wgpuTextureGetWidth : WGPUTexture -> PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuTextureSetLabel,libwgpu_native"
 export
 wgpuTextureSetLabel : WGPUTexture -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureAddRef,libwgpu_native"
 export
 wgpuTextureAddRef : WGPUTexture -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureRelease,libwgpu_native"
 export
 wgpuTextureRelease : WGPUTexture -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureViewSetLabel,libwgpu_native"
 export
 wgpuTextureViewSetLabel : WGPUTextureView -> WGPUStringView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureViewAddRef,libwgpu_native"
 export
 wgpuTextureViewAddRef : WGPUTextureView -> PrimIO (())
-
+    
 
 %foreign "C:wgpuTextureViewRelease,libwgpu_native"
 export
 wgpuTextureViewRelease : WGPUTextureView -> PrimIO (())
-
+    
 
 public export
 WGPUNativeSType : Type
-WGPUNativeSType = Enum
+WGPUNativeSType = Bits32
 
 public export
 WGPUSType_DeviceExtras : WGPUNativeSType
@@ -5968,7 +5203,7 @@ WGPUNativeSType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUNativeFeature : Type
-WGPUNativeFeature = Enum
+WGPUNativeFeature = Bits32
 
 public export
 WGPUNativeFeature_PushConstants : WGPUNativeFeature
@@ -6100,7 +5335,7 @@ WGPUNativeFeature_Force32 = 0x7FFFFFFF
 
 public export
 WGPULogLevel : Type
-WGPULogLevel = Enum
+WGPULogLevel = Bits32
 
 public export
 WGPULogLevel_Off : WGPULogLevel
@@ -6200,7 +5435,7 @@ WGPUInstanceFlag_Force32 = 0x7FFFFFFF
 
 public export
 WGPUDx12Compiler : Type
-WGPUDx12Compiler = Enum
+WGPUDx12Compiler = Bits32
 
 public export
 WGPUDx12Compiler_Undefined : WGPUDx12Compiler
@@ -6220,7 +5455,7 @@ WGPUDx12Compiler_Force32 = 0x7FFFFFFF
 
 public export
 WGPUGles3MinorVersion : Type
-WGPUGles3MinorVersion = Enum
+WGPUGles3MinorVersion = Bits32
 
 public export
 WGPUGles3MinorVersion_Automatic : WGPUGles3MinorVersion
@@ -6244,7 +5479,7 @@ WGPUGles3MinorVersion_Force32 = 0x7FFFFFFF
 
 public export
 WGPUPipelineStatisticName : Type
-WGPUPipelineStatisticName = Enum
+WGPUPipelineStatisticName = Bits32
 
 public export
 WGPUPipelineStatisticName_VertexShaderInvocations : WGPUPipelineStatisticName
@@ -6272,7 +5507,7 @@ WGPUPipelineStatisticName_Force32 = 0x7FFFFFFF
 
 public export
 WGPUNativeQueryType : Type
-WGPUNativeQueryType = Enum
+WGPUNativeQueryType = Bits32
 
 public export
 WGPUNativeQueryType_PipelineStatistics : WGPUNativeQueryType
@@ -6284,7 +5519,7 @@ WGPUNativeQueryType_Force32 = 0x7FFFFFFF
 
 public export
 WGPUDxcMaxShaderModel : Type
-WGPUDxcMaxShaderModel = Enum
+WGPUDxcMaxShaderModel = Bits32
 
 public export
 WGPUDxcMaxShaderModel_V6_0 : WGPUDxcMaxShaderModel
@@ -6324,7 +5559,7 @@ WGPUDxcMaxShaderModel_Force32 = 0x7FFFFFFF
 
 public export
 WGPUGLFenceBehaviour : Type
-WGPUGLFenceBehaviour = Enum
+WGPUGLFenceBehaviour = Bits32
 
 public export
 WGPUGLFenceBehaviour_Normal : WGPUGLFenceBehaviour
@@ -6342,71 +5577,26 @@ public export
 WGPUInstanceExtras : Type
 WGPUInstanceExtras = Struct "WGPUInstanceExtras" [("chain",  (WGPUChainedStruct)),("backends",  (WGPUInstanceBackend)),("flags",  (WGPUInstanceFlag)),("dx12ShaderCompiler",  (WGPUDx12Compiler)),("gles3MinorVersion",  (WGPUGles3MinorVersion)),("glFenceBehaviour",  (WGPUGLFenceBehaviour)),("dxcPath",  (WGPUStringView)),("dxcMaxShaderModel",  (WGPUDxcMaxShaderModel)),("budgetForDeviceCreation", Ptr (Bits8)),("budgetForDeviceLoss", Ptr (Bits8))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUInstanceExtras : allocStructPrimType WGPUInstanceExtras
-%foreign_impl prim__allocStructWGPUInstanceExtras (allocStructPrimCodegen WGPUInstanceExtras)
-
-export
-AllocStruct WGPUInstanceExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUInstanceExtras xs
 
 public export
 WGPUDeviceExtras : Type
 WGPUDeviceExtras = Struct "WGPUDeviceExtras" [("chain",  (WGPUChainedStruct)),("tracePath",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUDeviceExtras : allocStructPrimType WGPUDeviceExtras
-%foreign_impl prim__allocStructWGPUDeviceExtras (allocStructPrimCodegen WGPUDeviceExtras)
-
-export
-AllocStruct WGPUDeviceExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUDeviceExtras xs
 
 public export
 WGPUNativeLimits : Type
 WGPUNativeLimits = Struct "WGPUNativeLimits" [("chain",  (WGPUChainedStructOut)),("maxPushConstantSize",  (Bits32)),("maxNonSamplerBindings",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUNativeLimits : allocStructPrimType WGPUNativeLimits
-%foreign_impl prim__allocStructWGPUNativeLimits (allocStructPrimCodegen WGPUNativeLimits)
-
-export
-AllocStruct WGPUNativeLimits where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUNativeLimits xs
 
 public export
 WGPUPushConstantRange : Type
 WGPUPushConstantRange = Struct "WGPUPushConstantRange" [("stages",  (WGPUShaderStage)),("start",  (Bits32)),("end",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPushConstantRange : allocStructPrimType WGPUPushConstantRange
-%foreign_impl prim__allocStructWGPUPushConstantRange (allocStructPrimCodegen WGPUPushConstantRange)
-
-export
-AllocStruct WGPUPushConstantRange where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPushConstantRange xs
 
 public export
 WGPUPipelineLayoutExtras : Type
 WGPUPipelineLayoutExtras = Struct "WGPUPipelineLayoutExtras" [("chain",  (WGPUChainedStruct)),("pushConstantRangeCount",  (Bits64)),("pushConstantRanges", Ptr (WGPUPushConstantRange))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPipelineLayoutExtras : allocStructPrimType WGPUPipelineLayoutExtras
-%foreign_impl prim__allocStructWGPUPipelineLayoutExtras (allocStructPrimCodegen WGPUPipelineLayoutExtras)
-
-export
-AllocStruct WGPUPipelineLayoutExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPipelineLayoutExtras xs
 
 public export
 WGPUSubmissionIndex : Type
@@ -6416,173 +5606,65 @@ public export
 WGPUShaderDefine : Type
 WGPUShaderDefine = Struct "WGPUShaderDefine" [("name",  (WGPUStringView)),("value",  (WGPUStringView))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderDefine : allocStructPrimType WGPUShaderDefine
-%foreign_impl prim__allocStructWGPUShaderDefine (allocStructPrimCodegen WGPUShaderDefine)
-
-export
-AllocStruct WGPUShaderDefine where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderDefine xs
 
 public export
 WGPUShaderSourceGLSL : Type
 WGPUShaderSourceGLSL = Struct "WGPUShaderSourceGLSL" [("chain",  (WGPUChainedStruct)),("stage",  (WGPUShaderStage)),("code",  (WGPUStringView)),("defineCount",  (Bits32)),("defines", Ptr (WGPUShaderDefine))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderSourceGLSL : allocStructPrimType WGPUShaderSourceGLSL
-%foreign_impl prim__allocStructWGPUShaderSourceGLSL (allocStructPrimCodegen WGPUShaderSourceGLSL)
-
-export
-AllocStruct WGPUShaderSourceGLSL where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderSourceGLSL xs
 
 public export
 WGPUShaderModuleDescriptorSpirV : Type
 WGPUShaderModuleDescriptorSpirV = Struct "WGPUShaderModuleDescriptorSpirV" [("label",  (WGPUStringView)),("sourceSize",  (Bits32)),("source", Ptr (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUShaderModuleDescriptorSpirV : allocStructPrimType WGPUShaderModuleDescriptorSpirV
-%foreign_impl prim__allocStructWGPUShaderModuleDescriptorSpirV (allocStructPrimCodegen WGPUShaderModuleDescriptorSpirV)
-
-export
-AllocStruct WGPUShaderModuleDescriptorSpirV where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUShaderModuleDescriptorSpirV xs
 
 public export
 WGPURegistryReport : Type
 WGPURegistryReport = Struct "WGPURegistryReport" [("numAllocated",  (Bits64)),("numKeptFromUser",  (Bits64)),("numReleasedFromUser",  (Bits64)),("elementSize",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPURegistryReport : allocStructPrimType WGPURegistryReport
-%foreign_impl prim__allocStructWGPURegistryReport (allocStructPrimCodegen WGPURegistryReport)
-
-export
-AllocStruct WGPURegistryReport where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPURegistryReport xs
 
 public export
 WGPUHubReport : Type
 WGPUHubReport = Struct "WGPUHubReport" [("adapters",  (WGPURegistryReport)),("devices",  (WGPURegistryReport)),("queues",  (WGPURegistryReport)),("pipelineLayouts",  (WGPURegistryReport)),("shaderModules",  (WGPURegistryReport)),("bindGroupLayouts",  (WGPURegistryReport)),("bindGroups",  (WGPURegistryReport)),("commandBuffers",  (WGPURegistryReport)),("renderBundles",  (WGPURegistryReport)),("renderPipelines",  (WGPURegistryReport)),("computePipelines",  (WGPURegistryReport)),("pipelineCaches",  (WGPURegistryReport)),("querySets",  (WGPURegistryReport)),("buffers",  (WGPURegistryReport)),("textures",  (WGPURegistryReport)),("textureViews",  (WGPURegistryReport)),("samplers",  (WGPURegistryReport))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUHubReport : allocStructPrimType WGPUHubReport
-%foreign_impl prim__allocStructWGPUHubReport (allocStructPrimCodegen WGPUHubReport)
-
-export
-AllocStruct WGPUHubReport where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUHubReport xs
 
 public export
 WGPUGlobalReport : Type
 WGPUGlobalReport = Struct "WGPUGlobalReport" [("surfaces",  (WGPURegistryReport)),("hub",  (WGPUHubReport))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUGlobalReport : allocStructPrimType WGPUGlobalReport
-%foreign_impl prim__allocStructWGPUGlobalReport (allocStructPrimCodegen WGPUGlobalReport)
-
-export
-AllocStruct WGPUGlobalReport where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUGlobalReport xs
 
 public export
 WGPUInstanceEnumerateAdapterOptions : Type
 WGPUInstanceEnumerateAdapterOptions = Struct "WGPUInstanceEnumerateAdapterOptions" [("nextInChain", Ptr (WGPUChainedStruct)),("backends",  (WGPUInstanceBackend))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUInstanceEnumerateAdapterOptions : allocStructPrimType WGPUInstanceEnumerateAdapterOptions
-%foreign_impl prim__allocStructWGPUInstanceEnumerateAdapterOptions (allocStructPrimCodegen WGPUInstanceEnumerateAdapterOptions)
-
-export
-AllocStruct WGPUInstanceEnumerateAdapterOptions where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUInstanceEnumerateAdapterOptions xs
 
 public export
 WGPUBindGroupEntryExtras : Type
 WGPUBindGroupEntryExtras = Struct "WGPUBindGroupEntryExtras" [("chain",  (WGPUChainedStruct)),("buffers", Ptr (WGPUBuffer)),("bufferCount",  (Bits64)),("samplers", Ptr (WGPUSampler)),("samplerCount",  (Bits64)),("textureViews", Ptr (WGPUTextureView)),("textureViewCount",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupEntryExtras : allocStructPrimType WGPUBindGroupEntryExtras
-%foreign_impl prim__allocStructWGPUBindGroupEntryExtras (allocStructPrimCodegen WGPUBindGroupEntryExtras)
-
-export
-AllocStruct WGPUBindGroupEntryExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupEntryExtras xs
 
 public export
 WGPUBindGroupLayoutEntryExtras : Type
 WGPUBindGroupLayoutEntryExtras = Struct "WGPUBindGroupLayoutEntryExtras" [("chain",  (WGPUChainedStruct)),("count",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUBindGroupLayoutEntryExtras : allocStructPrimType WGPUBindGroupLayoutEntryExtras
-%foreign_impl prim__allocStructWGPUBindGroupLayoutEntryExtras (allocStructPrimCodegen WGPUBindGroupLayoutEntryExtras)
-
-export
-AllocStruct WGPUBindGroupLayoutEntryExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUBindGroupLayoutEntryExtras xs
 
 public export
 WGPUQuerySetDescriptorExtras : Type
 WGPUQuerySetDescriptorExtras = Struct "WGPUQuerySetDescriptorExtras" [("chain",  (WGPUChainedStruct)),("pipelineStatistics", Ptr (WGPUPipelineStatisticName)),("pipelineStatisticCount",  (Bits64))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUQuerySetDescriptorExtras : allocStructPrimType WGPUQuerySetDescriptorExtras
-%foreign_impl prim__allocStructWGPUQuerySetDescriptorExtras (allocStructPrimCodegen WGPUQuerySetDescriptorExtras)
-
-export
-AllocStruct WGPUQuerySetDescriptorExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUQuerySetDescriptorExtras xs
 
 public export
 WGPUSurfaceConfigurationExtras : Type
 WGPUSurfaceConfigurationExtras = Struct "WGPUSurfaceConfigurationExtras" [("chain",  (WGPUChainedStruct)),("desiredMaximumFrameLatency",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceConfigurationExtras : allocStructPrimType WGPUSurfaceConfigurationExtras
-%foreign_impl prim__allocStructWGPUSurfaceConfigurationExtras (allocStructPrimCodegen WGPUSurfaceConfigurationExtras)
-
-export
-AllocStruct WGPUSurfaceConfigurationExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceConfigurationExtras xs
 
 public export
 WGPUSurfaceSourceSwapChainPanel : Type
-WGPUSurfaceSourceSwapChainPanel = Struct "WGPUSurfaceSourceSwapChainPanel" [("chain",  (WGPUChainedStruct)),("panelNative", Ptr (()))]
+WGPUSurfaceSourceSwapChainPanel = Struct "WGPUSurfaceSourceSwapChainPanel" [("chain",  (WGPUChainedStruct)),("panelNative",  (AnyPtr))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUSurfaceSourceSwapChainPanel : allocStructPrimType WGPUSurfaceSourceSwapChainPanel
-%foreign_impl prim__allocStructWGPUSurfaceSourceSwapChainPanel (allocStructPrimCodegen WGPUSurfaceSourceSwapChainPanel)
-
-export
-AllocStruct WGPUSurfaceSourceSwapChainPanel where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUSurfaceSourceSwapChainPanel xs
 
 public export
 WGPUPolygonMode : Type
-WGPUPolygonMode = Enum
+WGPUPolygonMode = Bits32
 
 public export
 WGPUPolygonMode_Fill : WGPUPolygonMode
@@ -6600,27 +5682,18 @@ public export
 WGPUPrimitiveStateExtras : Type
 WGPUPrimitiveStateExtras = Struct "WGPUPrimitiveStateExtras" [("chain",  (WGPUChainedStruct)),("polygonMode",  (WGPUPolygonMode)),("conservative",  (WGPUBool))]
 
--- struct here!!
-%foreign ""
-prim__allocStructWGPUPrimitiveStateExtras : allocStructPrimType WGPUPrimitiveStateExtras
-%foreign_impl prim__allocStructWGPUPrimitiveStateExtras (allocStructPrimCodegen WGPUPrimitiveStateExtras)
-
-export
-AllocStruct WGPUPrimitiveStateExtras where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructWGPUPrimitiveStateExtras xs
 
 public export
 WGPULogCallback : Type
-WGPULogCallback = Ptr (WGPULogLevel -> WGPUStringView -> Ptr (()) -> PrimIO (()))
+WGPULogCallback = Ptr (WGPULogLevel -> WGPUStringView -> AnyPtr -> PrimIO (()))
 
 export
 %foreign "C:mkFunctionPtr,libidris_wgpu_support"
-mkWGPULogCallback : (WGPULogLevel -> WGPUStringView -> Ptr (()) -> PrimIO (())) -> PrimIO $ WGPULogCallback
+mkWGPULogCallback : (WGPULogLevel -> WGPUStringView -> AnyPtr -> PrimIO (())) -> PrimIO $ WGPULogCallback
 
 public export
 WGPUNativeTextureFormat : Type
-WGPUNativeTextureFormat = Enum
+WGPUNativeTextureFormat = Bits32
 
 public export
 WGPUNativeTextureFormat_R16Unorm : WGPUNativeTextureFormat
@@ -6657,104 +5730,104 @@ WGPUNativeTextureFormat_P010 = 0x00030008
 %foreign "C:wgpuGenerateReport,libwgpu_native"
 export
 wgpuGenerateReport : WGPUInstance -> Ptr (WGPUGlobalReport) -> PrimIO (())
-
+    
 
 %foreign "C:wgpuInstanceEnumerateAdapters,libwgpu_native"
 export
 wgpuInstanceEnumerateAdapters : WGPUInstance -> Ptr (WGPUInstanceEnumerateAdapterOptions) -> Ptr (WGPUAdapter) -> PrimIO (Bits64)
-
+    
 
 %foreign "C:wgpuQueueSubmitForIndex,libwgpu_native"
 export
 wgpuQueueSubmitForIndex : WGPUQueue -> Bits64 -> Ptr (WGPUCommandBuffer) -> PrimIO (WGPUSubmissionIndex)
-
+    
 
 %foreign "C:wgpuDevicePoll,libwgpu_native"
 export
 wgpuDevicePoll : WGPUDevice -> WGPUBool -> Ptr (WGPUSubmissionIndex) -> PrimIO (WGPUBool)
-
+    
 
 %foreign "C:wgpuDeviceCreateShaderModuleSpirV,libwgpu_native"
 export
 wgpuDeviceCreateShaderModuleSpirV : WGPUDevice -> Ptr (WGPUShaderModuleDescriptorSpirV) -> PrimIO (WGPUShaderModule)
-
+    
 
 %foreign "C:wgpuSetLogCallback,libwgpu_native"
 export
-wgpuSetLogCallback : WGPULogCallback -> Ptr (()) -> PrimIO (())
-
+wgpuSetLogCallback : WGPULogCallback -> AnyPtr -> PrimIO (())
+    
 
 %foreign "C:wgpuSetLogLevel,libwgpu_native"
 export
 wgpuSetLogLevel : WGPULogLevel -> PrimIO (())
-
+    
 
 %foreign "C:wgpuGetVersion,libwgpu_native"
 export
 wgpuGetVersion : PrimIO (Bits32)
-
+    
 
 %foreign "C:wgpuRenderPassEncoderSetPushConstants,libwgpu_native"
 export
-wgpuRenderPassEncoderSetPushConstants : WGPURenderPassEncoder -> WGPUShaderStage -> Bits32 -> Bits32 -> Ptr (()) -> PrimIO (())
-
+wgpuRenderPassEncoderSetPushConstants : WGPURenderPassEncoder -> WGPUShaderStage -> Bits32 -> Bits32 -> AnyPtr -> PrimIO (())
+    
 
 %foreign "C:wgpuComputePassEncoderSetPushConstants,libwgpu_native"
 export
-wgpuComputePassEncoderSetPushConstants : WGPUComputePassEncoder -> Bits32 -> Bits32 -> Ptr (()) -> PrimIO (())
-
+wgpuComputePassEncoderSetPushConstants : WGPUComputePassEncoder -> Bits32 -> Bits32 -> AnyPtr -> PrimIO (())
+    
 
 %foreign "C:wgpuRenderBundleEncoderSetPushConstants,libwgpu_native"
 export
-wgpuRenderBundleEncoderSetPushConstants : WGPURenderBundleEncoder -> WGPUShaderStage -> Bits32 -> Bits32 -> Ptr (()) -> PrimIO (())
-
+wgpuRenderBundleEncoderSetPushConstants : WGPURenderBundleEncoder -> WGPUShaderStage -> Bits32 -> Bits32 -> AnyPtr -> PrimIO (())
+    
 
 %foreign "C:wgpuRenderPassEncoderMultiDrawIndirect,libwgpu_native"
 export
 wgpuRenderPassEncoderMultiDrawIndirect : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderMultiDrawIndexedIndirect,libwgpu_native"
 export
 wgpuRenderPassEncoderMultiDrawIndexedIndirect : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderMultiDrawIndirectCount,libwgpu_native"
 export
 wgpuRenderPassEncoderMultiDrawIndirectCount : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> WGPUBuffer -> Bits64 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderMultiDrawIndexedIndirectCount,libwgpu_native"
 export
 wgpuRenderPassEncoderMultiDrawIndexedIndirectCount : WGPURenderPassEncoder -> WGPUBuffer -> Bits64 -> WGPUBuffer -> Bits64 -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderBeginPipelineStatisticsQuery,libwgpu_native"
 export
 wgpuComputePassEncoderBeginPipelineStatisticsQuery : WGPUComputePassEncoder -> WGPUQuerySet -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderEndPipelineStatisticsQuery,libwgpu_native"
 export
 wgpuComputePassEncoderEndPipelineStatisticsQuery : WGPUComputePassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderBeginPipelineStatisticsQuery,libwgpu_native"
 export
 wgpuRenderPassEncoderBeginPipelineStatisticsQuery : WGPURenderPassEncoder -> WGPUQuerySet -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderEndPipelineStatisticsQuery,libwgpu_native"
 export
 wgpuRenderPassEncoderEndPipelineStatisticsQuery : WGPURenderPassEncoder -> PrimIO (())
-
+    
 
 %foreign "C:wgpuComputePassEncoderWriteTimestamp,libwgpu_native"
 export
 wgpuComputePassEncoderWriteTimestamp : WGPUComputePassEncoder -> WGPUQuerySet -> Bits32 -> PrimIO (())
-
+    
 
 %foreign "C:wgpuRenderPassEncoderWriteTimestamp,libwgpu_native"
 export
 wgpuRenderPassEncoderWriteTimestamp : WGPURenderPassEncoder -> WGPUQuerySet -> Bits32 -> PrimIO (())
-
+    

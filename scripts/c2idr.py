@@ -17,6 +17,10 @@ def getfield(x):
 
     ty = ty2idr(x.type)
 
+    if is_ptr and ty == "()":
+        is_ptr = False
+        ty = "AnyPtr"
+
     return f"(\"{ x.name }\", { "Ptr" if is_ptr else "" } ({ ty }))"
 
 def ty2idr(node):
@@ -24,6 +28,9 @@ def ty2idr(node):
     # assert node.quals == ["const"]
     match node:
         case c_ast.PtrDecl():
+            inner = ty2idr(node.type)
+            if inner == "()":
+                return "AnyPtr"
             return f"Ptr ({ ty2idr(node.type) })"
 
         case c_ast.TypeDecl():
@@ -88,7 +95,7 @@ def ty2idr(node):
                     return f"Struct \"{ node.type.name }\" [{ ",".join(fields) }]"
 
                 case c_ast.Enum():
-                    return "Enum"
+                    return "Bits32"
 
                 case _:
                     assert False, f"unknown type {node}"
@@ -252,15 +259,6 @@ class Visitor(c_ast.NodeVisitor):
 
         if isinstance(node.type.type, c_ast.Struct):
             print()
-            print("-- struct here!!")
-            print("%foreign \"\"")
-            print(f"prim__allocStruct{ node.name } : allocStructPrimType { node.name }")
-            print(f"%foreign_impl prim__allocStruct{ node.name } (allocStructPrimCodegen { node.name })")
-            print()
-            print("export")
-            print(f"AllocStruct { node.name } where")
-            print(f"    allocStruct xs =")
-            print(f"        primIO $ hlistApply prim__allocStruct{ node.name } xs")
 
         if isinstance(node.type.type, c_ast.FuncDecl):
             print()
@@ -289,13 +287,12 @@ ast = parse_file(
 )
 
 # print(ast)
-print(f"""
+print(f"""\
 module { sys.argv[2] }
 
-import public System.FFI
 import Data.Bits
 
-import Utils.CTypes
-
+import System.ScopedIO
+import Utils.FFI
 """)
 Visitor().visit(ast)

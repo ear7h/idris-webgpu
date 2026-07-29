@@ -1,11 +1,10 @@
 
 module Graphics.GLFW.Sys
 
-import public System.FFI
 import Data.Bits
 
-import Utils.CTypes
-
+import System.ScopedIO
+import Utils.FFI
 
 
 public export
@@ -28,43 +27,16 @@ public export
 GLFWmonitor : Type
 GLFWmonitor = Struct "GLFWmonitor" []
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWmonitor : allocStructPrimType GLFWmonitor
-%foreign_impl prim__allocStructGLFWmonitor (allocStructPrimCodegen GLFWmonitor)
-
-export
-AllocStruct GLFWmonitor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWmonitor xs
 
 public export
 GLFWwindow : Type
 GLFWwindow = Struct "GLFWwindow" []
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWwindow : allocStructPrimType GLFWwindow
-%foreign_impl prim__allocStructGLFWwindow (allocStructPrimCodegen GLFWwindow)
-
-export
-AllocStruct GLFWwindow where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWwindow xs
 
 public export
 GLFWcursor : Type
 GLFWcursor = Struct "GLFWcursor" []
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWcursor : allocStructPrimType GLFWcursor
-%foreign_impl prim__allocStructGLFWcursor (allocStructPrimCodegen GLFWcursor)
-
-export
-AllocStruct GLFWcursor where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWcursor xs
 
 public export
 GLFWallocatefun : Type
@@ -254,71 +226,26 @@ public export
 GLFWvidmode : Type
 GLFWvidmode = Struct "GLFWvidmode" [("width",  (Int32)),("height",  (Int32)),("redBits",  (Int32)),("greenBits",  (Int32)),("blueBits",  (Int32)),("refreshRate",  (Int32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWvidmode : allocStructPrimType GLFWvidmode
-%foreign_impl prim__allocStructGLFWvidmode (allocStructPrimCodegen GLFWvidmode)
-
-export
-AllocStruct GLFWvidmode where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWvidmode xs
 
 public export
 GLFWgammaramp : Type
 GLFWgammaramp = Struct "GLFWgammaramp" [("red", Ptr (Bits16)),("green", Ptr (Bits16)),("blue", Ptr (Bits16)),("size",  (Bits32))]
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWgammaramp : allocStructPrimType GLFWgammaramp
-%foreign_impl prim__allocStructGLFWgammaramp (allocStructPrimCodegen GLFWgammaramp)
-
-export
-AllocStruct GLFWgammaramp where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWgammaramp xs
 
 public export
 GLFWimage : Type
 GLFWimage = Struct "GLFWimage" [("width",  (Int32)),("height",  (Int32)),("pixels", Ptr (Bits8))]
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWimage : allocStructPrimType GLFWimage
-%foreign_impl prim__allocStructGLFWimage (allocStructPrimCodegen GLFWimage)
-
-export
-AllocStruct GLFWimage where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWimage xs
 
 public export
 GLFWgamepadstate : Type
 GLFWgamepadstate = Struct "GLFWgamepadstate" [("buttons",  (CArray 15 (Bits8))),("axes",  (CArray 6 (Float)))]
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWgamepadstate : allocStructPrimType GLFWgamepadstate
-%foreign_impl prim__allocStructGLFWgamepadstate (allocStructPrimCodegen GLFWgamepadstate)
-
-export
-AllocStruct GLFWgamepadstate where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWgamepadstate xs
 
 public export
 GLFWallocator : Type
 GLFWallocator = Struct "GLFWallocator" [("allocate",  (GLFWallocatefun)),("reallocate",  (GLFWreallocatefun)),("deallocate",  (GLFWdeallocatefun)),("user", Ptr (()))]
 
--- struct here!!
-%foreign ""
-prim__allocStructGLFWallocator : allocStructPrimType GLFWallocator
-%foreign_impl prim__allocStructGLFWallocator (allocStructPrimCodegen GLFWallocator)
-
-export
-AllocStruct GLFWallocator where
-    allocStruct xs =
-        primIO $ hlistApply prim__allocStructGLFWallocator xs
 
 %foreign "C:glfwInit,libglfw"
 export

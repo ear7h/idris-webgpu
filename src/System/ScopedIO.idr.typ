@@ -273,6 +273,7 @@ free : Ptr a -> IO ()
 free ptr = primIO $ prim__free $ prim__forgetPtr ptr
 ```
 
+
 == Memory safety with lifetimes
 
 Now that memory can be allocated, the type system can be used
@@ -804,7 +805,7 @@ well. The lifetimes above can be used to create a safe and
 composable `Marshal` type:
 
 ```idris
-data Marshal : Lifetime -> ity -> cty -> Type where
+data Marshal : Lifetime -> (ity : Type) -> (cty : Type) -> Type where
   MkMarshal : { auto repr : CType cty } -> (ity -> Ptr cty -> IO Int64) -> Marshal a' ity cty
 ```
 
@@ -1082,21 +1083,42 @@ marshalStructRec :
 TODO
 
 ```idris
-export
-%hint
-marshalDerefStructRef: Marshal a' (Ref a' (Struct name fields)) (Struct name fields)
+
+%foreign "C:memcpy,libc"
+prim__memcpy : AnyPtr -> AnyPtr -> Int64 -> PrimIO AnyPtr
 
 export
 %hint
-marshalDerefStructPtr: Marshal a' (Ptr (Struct name fields)) (Struct name fields)
+marshalDerefStructPtr:
+  { auto reprs : All (CType . Builtin.snd) fields } ->
+  Marshal a' (Ptr (Struct name fields)) (Struct name fields)
+marshalDerefStructPtr = MkMarshal $ \x, ptr => do
+  let len = sizeof (CStruct { name } reprs)
+  _ <- primIO $ prim__memcpy (prim__forgetPtr ptr) (prim__forgetPtr x) len
+  pure len
+
+export
+%hint
+marshalDerefStructRef:
+  { auto reprs : All (CType . Builtin.snd) fields } ->
+  Marshal a' (Ref a' (Struct name fields)) (Struct name fields)
+marshalDerefStructRef = MkMarshal $ \x, ptr => do
+  let MkMarshal f = marshalDerefStructPtr { a' }
+  f (unsafeRefPtr x) ptr
 
 export
 %hint
 marshalAnyPtr: Marshal a' AnyPtr AnyPtr
+marshalAnyPtr = MkMarshal $ \x, ptr =>
+  primIO $ prim__ptrWrite64 (prim__forgetPtr ptr) (prim__PtrToBits x)
+
 
 export
 %hint
 marshalFnPtr: FFIFn t -> Marshal a' (Ptr t) (Ptr t)
+marshalFnPtr _ = MkMarshal $ \x, ptr => do
+  let MkMarshal f = marshalAnyPtr { a' }
+  f (prim__forgetPtr x) (prim__castPtr $ prim__forgetPtr ptr)
 ```
 
 /* idris
@@ -1180,12 +1202,15 @@ shortenRef :
   Ref a' cty ->
   { auto 0 p : AtLeastAsLong a' b' } ->
   Ref b' cty
+shortenRef _ ref = believe_me ref
+
 
 export
 %hint
 unmarshalInt : Unmarshal a' Int Int
 unmarshalInt = MkUnmarshal $ \ptr =>
   map cast $ primIO $ prim__ptrRead32 (prim__forgetPtr ptr)
+
 ```
 
 /* idris
@@ -1316,9 +1341,16 @@ Ptr2Ref a' t = Ref a' t
 
 export
 getPtr :
+  HasIO io =>
   { auto repr : CType t } ->
   Ref a' (Ptr t) ->
-  Ref a' t
+  io (Ref a' t)
+-- point free steez
+getPtr =
+  map
+    (unsafePtrRef . prim__castPtr . prim__PtrFromBits)
+    .
+    (primIO . prim__ptrRead64 . prim__forgetPtr . unsafeRefPtr)
 ```
 
 
@@ -1338,25 +1370,36 @@ failing "Can't solve constraint"
     x <- runSubScopedIO a' $ \b' => do
       newRef { cty = Int } $ the Int 10
     readRef x
+
+failing "Can't solve constraint"
+  testScope3 : IO Int
+  testScope3 = runScopedIO $ \a' => do
+    x <- runSubScopedIO a' $ \b' => do
+      newRef { cty = Int } $ the Int 10
+    runSubScopedIO a' $ \b' => do
+      readRef x
 ```
 
 == Discussion and caveats
 
 ```idris
+%foreign "C:memcpy,libc"
+prim__memcpyStr : AnyPtr -> String -> Int64 -> PrimIO ()
+
 export
 stringRef : String -> ScopedIO a' (Ref a' Bits8)
-{-
-TODO: add to cleanup, memcpy
 stringRef s = do
-  ptr <- primIO $ prim__malloc $ cast $ strLength s
+  let len = strLength s
+  ptr <- primIO $ prim__malloc $ cast len
+  defer (primIO $ prim__free ptr)
+  primIO $ prim__memcpyStr ptr s (cast len)
   pure $ unsafePtrRef $ prim__castPtr ptr
--}
 
 ```
 
 ```idris
 public export
-data FFICall : Lifetime -> List Type -> Type -> Type where
+data FFICall : (0 a' : Lifetime) -> List Type -> (fty : Type) -> Type where [search fty]
   FCReturn :
     CType b =>
     FFICall a' [] (PrimIO b)
@@ -1471,6 +1514,3 @@ autoMarshal : (cty : Type) -> { auto x : Marshal a' ity cty } -> Marshal a' ity 
 autoMarshal _ = x
 ```
 
-#pagebreak()
-
-#bibliography("../../doc/cs5099/refs.bib", title: "References", style: "association-for-computing-machinery")

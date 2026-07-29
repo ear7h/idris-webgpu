@@ -1,7 +1,9 @@
-import System
+module Example.Triangle1
+
+-- import System
 import Data.List.Quantifiers
 import Data.Buffer
-import System.File.ReadWrite
+-- import System.File.ReadWrite
 import Control.Monad.Maybe
 import Control.Monad.Trans
 
@@ -10,11 +12,13 @@ import Graphics.GLFW.Sys
 import Graphics.GLFW3WebGPU
 import Graphics.Wavefront
 
-import Utils.CTypes
+import Utils.FFI
 
 import System.ScopedIO
 
-%hide System.FFI.Struct
+-- %ambiguity_depth 6
+-- %auto_implicit_depth 200
+-- %search_timeout 2000
 
 TODO : String -> a
 TODO msg = assert_total $ idris_crash $ "TODO: " ++ msg
@@ -24,72 +28,115 @@ dbg x = unsafePerformIO $ do
   putStrLn "dbg: \{ show x }\n"
   pure x
 
-while : IO Bool -> IO () -> IO ()
-while cond body = do
-  b <- cond
-  when b (body *> while cond body)
+Show (Ptr t) where
+  show p = show $ the (Int64) $ believe_me p
 
-{-
+Show (Ref _ t) where
+  show p = show $ the (Int64) $ believe_me p
+
+while :
+  (0 a' : Lifetime) ->
+  ((0 b' : Lifetime) -> { 0 p1 : AtLeastAsLong a' b' } -> ScopedIO b' Bool) ->
+  ((0 c' : Lifetime) -> ( 0 p2 : AtLeastAsLong a' c' ) -> ScopedIO c' ()) ->
+  ScopedIO a' ()
+while a' cond body = do
+  cond' <- runSubScopedIO a' cond
+  when cond' (runSubScopedIO' a' body *> while a' cond body)
+
+wgpuStringRef : String -> ScopedIO a' (Ref a' WGPUStringView)
+wgpuStringRef s = do
+  newRef
+    -- { cty = WGPUStringView }
+    ( !(stringRef s)
+    , cast { to = Bits64 } $ strLength s
+    )
+
+wgpuChainedNULL : Ptr WGPUChainedStruct
+wgpuChainedNULL = NULL
+
+%ambiguity_depth 6
+
 render :
+    (0 b' : Lifetime) ->
     Ptr GLFWwindow ->
     WGPUAdapter ->
     WGPUSurface ->
-    WGPUTexture ->
+    Ptr2Ref a' WGPUTexture ->
     WGPUDevice ->
     WGPUQueue ->
     WGPURenderPipeline ->
-    IO ()
-render window adapter surface texture device queue pipeline = runScoped $ do
-    enc <- primIO $ wgpuDeviceCreateCommandEncoder
-      device
-      !(alloc'
-        [ NULL
-        , !(allocStr "command-encoder")
-        ])
+    { auto 0 p : AtLeastAsLong a' b' } ->
+    ScopedIO b' ()
+render b' window adapter surface texture device queue pipeline = do
+    enc <- safeFFI
+      wgpuDeviceCreateCommandEncoder
+      [ device
+      , !(newRef
+          -- { cty = WGPUCommandEncoderDescriptor }
+          ( mkNULL WGPUChainedStruct
+          , !(wgpuStringRef "command-encoder")
+          ))
+      ]
 
     putStrLn $ "wgpuTextureCreateView"
 
-    view <- primIO $ wgpuTextureCreateView texture NULL
+    view <- safeFFI
+      wgpuTextureCreateView
+      [ shortenRef b' texture
+      , mkNULL WGPUTextureViewDescriptor
+      ]
 
     putStrLn $ "wgpuCommandEncoderBeginRenderPass"
 
-    pass <- primIO $ wgpuCommandEncoderBeginRenderPass
-      enc
-      !(alloc'
-        [ NULL
-        , !(allocStr "render-pass")
+    pass <- safeFFI
+      wgpuCommandEncoderBeginRenderPass
+      [ enc
+      , !(newRef
+        { cty = WGPURenderPassDescriptor }
+        ( mkNULL WGPUChainedStruct
+        , !(wgpuStringRef "render-pass")
         , 1
-        , !(alloc' -- color attachment
-            [ NULL
-            , view
-            , 0xffffffff -- depth slice undefined macro
-            , NULL
-            , WGPULoadOp_Load
-            , WGPUStoreOp_Store
-            , !(alloc [0.0, 1.1, 0.0, 1.0])
-            ])
-        , NULL -- depth stencil
-        , NULL -- query set
-        , NULL -- timestamp writes
-        ])
+        , !(newRef
+          { cty = WGPURenderPassColorAttachment }
+          ( mkNULL WGPUChainedStruct
+          , view
+          , 0xffffffff -- depth slice undefined macro
+          , the WGPUTextureView NULL
+          , WGPULoadOp_Load
+          , WGPUStoreOp_Store
+          , !(newRef
+            { cty = WGPUColor }
+            (0.0, 1.1, 0.0, 1.0))
+          ))
+        , mkNULL WGPURenderPassDepthStencilAttachment
+        , the WGPUQuerySet NULL
+        , mkNULL WGPURenderPassTimestampWrites
+        ))
+      ]
 
+    safeFFI
+      wgpuRenderPassEncoderSetPipeline
+      [pass, pipeline]
 
-    primIO $ wgpuRenderPassEncoderSetPipeline pass pipeline
+    safeFFI
+      wgpuRenderPassEncoderDraw
+      [ pass
+      , 3, 1
+      , 0, 0
+      ]
 
-    primIO $ wgpuRenderPassEncoderDraw
-      pass
-      3 1
-      0 0
+    safeFFI wgpuRenderPassEncoderEnd [pass]
+    safeFFI wgpuRenderPassEncoderRelease [pass]
 
-    primIO $ wgpuRenderPassEncoderEnd pass
-    primIO $ wgpuRenderPassEncoderRelease pass
-
-    buf <- primIO $ wgpuCommandEncoderFinish
-      enc
-      !(alloc'
-        [ NULL
-        , !(allocStr "command-buffer")
-        ])
+    buf <- safeFFI
+      wgpuCommandEncoderFinish
+      [ enc
+      , !(newRef
+        -- { cty = WGPUCommandBufferDescriptor }
+        ( mkNULL WGPUChainedStruct
+        , !(wgpuStringRef "command-buffer")
+        ))
+      ]
 
     Just bufbuf <- newBuffer 8
       | Nothing => TODO "buf nothing"
@@ -97,16 +144,18 @@ render window adapter surface texture device queue pipeline = runScoped $ do
     setInt64 bufbuf 0 (cast $ ptr2int buf)
 
     putStrLn "wgpuQueueSubmit"
-    primIO $ wgpuQueueSubmit
-      queue
-      1
-      (prim__castPtr !(primIO $ buf2ptr bufbuf))
+    safeFFI
+      wgpuQueueSubmit
+      [ queue
+      , 1
+      , (prim__castPtr { t = WGPUCommandBuffer } !(primIO $ buf2ptr bufbuf))
+      ]
 
     _ <- primIO $ wgpuSurfacePresent surface
 
-    primIO $ wgpuCommandBufferRelease buf
-    primIO $ wgpuCommandEncoderRelease enc
-    primIO $ wgpuTextureViewRelease view
+    safeFFI wgpuCommandBufferRelease [buf]
+    safeFFI wgpuCommandEncoderRelease [enc]
+    safeFFI wgpuTextureViewRelease [view]
 
 
 SHADER : String
@@ -149,266 +198,312 @@ fn frag_main(
 }
 """
 
-tris2buf : HasIO io => List (Face 3 Vec3) -> io (Maybe Buffer)
-tris2buf tris = runMaybeT $ do
-  buf <- MkMaybeT $ newBuffer (9 * 4 * (cast { to = Int } $ length tris))
-  _ <- lift $ foldlM (\i, x => setFace buf (i*9) x >> pure (i + 1)) 0 tris
-  pure buf
-  where
-  setList : Buffer -> Int -> List Double -> io ()
-  setList buf i xs = do
-    _ <- foldlM (\i', x => setFloat buf (cast $ dbg i') x >> pure (i' + 1)) i xs
-    pure ()
+mkDevice : WGPUInstance -> WGPUAdapter -> ScopedIO a' WGPUDevice
+mkDevice instance adapter = do
+  safeFFI
+    wgpuAdapterRequestDeviceSync
+    [ instance
+    , adapter
+    , !(newRef
+        -- { cty = WGPUDeviceDescriptor }
+        ( mkNULL WGPUChainedStruct
+        , !(wgpuStringRef "device")
+        , the Bits64 0
+        , NULL { t = WGPUFeatureName } -- no extra features
+        , NULL { t = WGPULimits } -- default limits
+        , !(newRef
+            { cty = WGPUQueueDescriptor }
+            ( wgpuChainedNULL
+            , !(wgpuStringRef "default-queue")
+            )
+          )
+        , !(newRef
+            { cty = WGPUDeviceLostCallbackInfo }
+            ( mkNULL WGPUChainedStruct
+            , WGPUCallbackMode_AllowSpontaneous
+            , !(map dbg $ primIO $ mkWGPUDeviceLostCallback $
+                \device, reason, msg, data1, data2 => toPrim $ putStrLn "device lost cb")
+            , prim__getNullAnyPtr
+            , prim__getNullAnyPtr
+            )
+          )
+        , !(newRef
+            { cty = WGPUUncapturedErrorCallbackInfo }
+            ( mkNULL WGPUChainedStruct
+            , !(primIO $ mkWGPUUncapturedErrorCallback $
+                \device, error, msg, data1, data2 => toPrim $ do
+                  msg' <- primIO $ wgpuStringClone msg
+                  putStrLn msg'
+              )
+            , prim__getNullAnyPtr
+            , prim__getNullAnyPtr
+            )
+          )
+        )
+      )
+    ]
 
-  setFace : Buffer -> Int -> Face 3 Vec3 -> io ()
-  setFace buf idx tri = setList buf idx $ toList $ Data.Vect.concat tri.v
 
-WGPUInstanceCapabilities1 : Type
-WGPUInstanceCapabilities1 = Struct "WGPUInstanceCapabilities" [("timedWaitAnyEnable",  (WGPUBool)),("timedWaitAnyMaxCount",  (Bits64))]
--}
+mkPipeline : WGPUDevice -> WGPUShaderModule -> ScopedIO a' WGPURenderPipeline
+mkPipeline device shader = do
+  safeFFI
+    wgpuDeviceCreateRenderPipeline
+    [ device
+    , !(newRef
+        { cty = WGPURenderPipelineDescriptor } -- render pipeline descriptor
+        ( mkNULL WGPUChainedStruct
+        , !(wgpuStringRef "render-pipeline")
+        , !(safeFFI
+              wgpuDeviceCreatePipelineLayout
+              [ device
+              , !(newRef
+                { cty = WGPUPipelineLayoutDescriptor }
+                ( wgpuChainedNULL
+                , !(wgpuStringRef "pipeline-layout-descriptor")
+                , 0 -- bind group layout count
+                , mkNULL WGPUBindGroupLayout
+                ))
+              ]
+          )
+        , !(newRef
+            { cty = WGPUVertexState }
+            ( mkNULL WGPUChainedStruct
+            , shader
+            , !(wgpuStringRef "vert_main")
+            , 0 -- const count
+            , mkNULL WGPUConstantEntry
+            , 0 -- buf count
+            , mkNULL WGPUVertexBufferLayout
+            ))
+        , !(newRef -- primitive state
+            { cty = WGPUPrimitiveState }
+            ( mkNULL WGPUChainedStruct
+            , WGPUPrimitiveTopology_TriangleList
+            , WGPUIndexFormat_Undefined
+            , WGPUFrontFace_CCW
+            , WGPUCullMode_None
+            , 0
+            ))
+        , NULL { t = WGPUDepthStencilState }
+        , !(newRef
+           { cty = WGPUMultisampleState }
+            ( mkNULL WGPUChainedStruct
+           , 1
+           , 0xffffffff
+           , 0
+           ))
+        , !(newRef
+            { cty = WGPUFragmentState }
+            ( mkNULL WGPUChainedStruct
+            , shader
+            , !(wgpuStringRef "frag_main")
+            , 0 -- const count
+            , mkNULL WGPUConstantEntry
+            , 1 -- color targets
+            , !(newRef
+              { cty = WGPUColorTargetState }
+              ( mkNULL WGPUChainedStruct
+              , WGPUTextureFormat_BGRA8UnormSrgb
+              , mkNULL WGPUBlendState
+              , WGPUColorWriteMask_All
+              ))
+            ))
+        ))
+    ]
+
 
 export
 main : IO ()
-main = runScopedIO $ \_ => do -- putStrLn "starting"
-    _ <- safeFFI wgpuSetupLogging (1, ())
-    _ <- safeFFI wgpuSetLogLevel (WGPULogLevel_Error, ())
+main = runScopedIO { io = IO } $ \a' => do -- putStrLn "starting"
+    _ <- safeFFI wgpuSetupLogging [1]
+    _ <- safeFFI wgpuSetLogLevel [WGPULogLevel_Error]
 
-    initOk <- safeFFI glfwInit ()
+    initOk <- safeFFI glfwInit []
     putStrLn $ "init glfw " ++ (show initOk)
 
-    _ <- pure $ dbgAuto { x = CStruct [CBits32, CBits64] } WGPUInstanceCapabilities
-
-    -- instance <- safeFFI { call = FCSame FCReturn } wgpuCreateInstance (NULL { t = WGPUInstanceDescriptor } , ())
+    instance <- safeFFI wgpuCreateInstance [NULL { t = WGPUInstanceDescriptor } ]
     putStrLn "got wgpu"
 
-    _ <- safeFFI glfwWindowHint (GLFW_CLIENT_API_, GLFW_NO_API_, ())
-
-
+    _ <- safeFFI glfwWindowHint [GLFW_CLIENT_API_, GLFW_NO_API_]
     putStrLn "a"
 
-{-
-    window <- runSubScopedIO $
-        \_ => do
-          s <- stirngVar "hello")
-          safeFFI glfwCreateWindow (200, 200, s, NULL, NULL, ())
+    window <- runSubScopedIO _ $ \_ => do
+        s <- stringRef "hello"
+        safeFFI
+          glfwCreateWindow
+          [ 200
+          , 200
+          , s
+          , NULL { t = GLFWmonitor }
+          , NULL { t = GLFWwindow }
+          ]
 
     putStrLn "got window"
 
 
-    surface <- primIO $ glfwCreateWindowWGPUSurface instance window
+    surface <- safeFFI glfwCreateWindowWGPUSurface [instance, window]
     putStrLn $ "got surface "  ++ (show $ ptr2int surface)
 
-    runScoped $ do
-        putStrLn "get adapter sync"
-        opts <- (alloc
-                [ NULL
-                , WGPUFeatureLevel_Core
-                , WGPUPowerPreference_HighPerformance
-                , 0
-                , WGPUBackendType_Metal
-                , surface
-                ]
-            )
+    putStrLn "get adapter sync"
 
-        putStrLn "main"
-        putStrLn $ show $ WGPUBackendType_Metal
-        putStrLn $ show $ ptr2int $ !(toPtr opts)
-        putStrLn $ show $ ptr2int $ the (WGPUSurface) $ getField opts "compatibleSurface"
-        putStrLn $ show $ ptr2int $ surface
+    opts <- newRef
+      -- { cty = WGPURequestAdapterOptions }
+      ( mkNULL WGPUChainedStruct
+      , WGPUFeatureLevel_Core
+      , WGPUPowerPreference_HighPerformance
+      , 0
+      , WGPUBackendType_Metal
+      , surface
+      )
 
-        adapter <- primIO $ wgpuInstanceRequestAdapterSync
-            instance
-            !(toPtr opts)
+    putStrLn "main"
 
-        putStrLn "get device sync"
+    putStrLn $ show $ WGPUBackendType_Metal
+    putStrLn $ show $ ptr2int $ unsafeRefPtr opts
+    putStrLn $ show $ ptr2int $ unsafeRefPtr $ the (Ref _ WGPUSurface) $ getField opts "compatibleSurface"
+    putStrLn $ show $ ptr2int $ surface
 
-        device <- primIO $ wgpuAdapterRequestDeviceSync
-          instance
-          adapter
-          !(alloc'
-            [ NULL
-            , !(allocStr "device")
-            , 0
-            , NULL -- no extra features
-            , NULL -- default limits
-            , !(alloc
-                [ NULL
-                , !(allocStr "default-queue")
-                ]) -- queue descriptor
-            , !(alloc
-                  [ NULL
-                  , WGPUCallbackMode_AllowSpontaneous
-                  , !(primIO $ mkWGPUDeviceLostCallback $ \device, reason, msg, data1, data2 => toPrim $ putStrLn "device lost cb")
-                  , NULL
-                  , NULL
-                  ]) -- device lost callback info
-            , !(alloc
-                [ NULL
-                , !(primIO $ mkWGPUUncapturedErrorCallback $
-                    \device, error, msg, data1, data2 => toPrim $ do
-                      msg' <- primIO $ wgpuStringClone msg
-                      putStrLn msg'
-                  )
-                , NULL
-                , NULL
-                ]) -- uncaptured error callback info
-            ]
-          )
+    adapter <- safeFFI
+      wgpuInstanceRequestAdapterSync
+      [ instance
+      , opts
+      ]
 
-        queue <- primIO $ wgpuDeviceGetQueue device
-
-        shaderSource <- the (Scope $ Ptr WGPUShaderSourceWGSL) $ alloc'
-          [ !(alloc [ NULL, WGPUSType_ShaderSourceWGSL ])
-          , !(allocStr SHADER)
-          ]
-
-        shader <- primIO $ wgpuDeviceCreateShaderModule
-          device
-          !(alloc'
-            [ believe_me shaderSource -- TODO: better handling of chained structs
-            , !(allocStr "shader")
-            ]
-          )
+    putStrLn "get device sync"
 
 
+    device <- mkDevice instance adapter
 
-        pipeline <- primIO $ wgpuDeviceCreateRenderPipeline
-          device
-          !(alloc' -- render pipeline descriptor
-            [ NULL
-            , !(allocStr "render-pipeline")
-            , !(primIO $ wgpuDeviceCreatePipelineLayout
-                device
-                !(alloc' -- pipeline layout descriptor
-                  [ NULL
-                  , !(allocStr "pipeline-layout-descriptor")
-                  , 0 -- bind group layout count
-                  , NULL -- bind group layouts
-                  ])
-              )
-            , !(alloc -- vert state
-                [ NULL
-                , shader
-                , !(allocStr "vert_main")
-                , 0 -- const count
-                , NULL -- consts
-                , 0 -- buf count
-                , NULL -- bufs
-                ])
-            , !(alloc -- primitive state
-                [ NULL
-                , WGPUPrimitiveTopology_TriangleList
-                , WGPUIndexFormat_Undefined
-                , WGPUFrontFace_CCW
-                , WGPUCullMode_None
-                , 0
-                ])
-            , NULL -- no depth stencil
-            , !(alloc -- multisample state
-               [ NULL
-               , 1
-               , 0xffffffff
-               , 0
-               ])
-            , !(alloc' -- fragment state
-                [ NULL
-                , shader
-                , !(allocStr "frag_main")
-                , 0 -- const count
-                , NULL -- consts
-                , 1 -- color targets
-                , !(alloc'
-                   [ NULL
-                   , WGPUTextureFormat_BGRA8UnormSrgb
-                   , NULL
-                   , WGPUColorWriteMask_All
-                   ])
-                ])
-            ])
+    putStrLn "got device"
 
-        putStrLn $ "before wgpuSurfaceConfigHelper"
-        primIO $ wgpuSurfaceConfigHelper
-          window
-          adapter
-          device
-          surface
-        putStrLn $ "after wgpuSurfaceConfigHelper"
+    queue <- primIO $ wgpuDeviceGetQueue device
 
-        _ <- primIO $
-            glfwSetFramebufferSizeCallback
-              window
-              !(primIO $ mkGLFWframebuffersizefun $
-                \ window, width, height => toPrim $ do
-                  putStrLn "resized"
-                  primIO $ wgpuSurfaceConfigHelper
-                    window
-                    adapter
-                    device
-                    surface
-                  pure ()
-              )
+    putStrLn "got queue"
 
-        surfaceTex <- (alloc
-          [ NULL
-          , NULL
-          , WGPUSurfaceGetCurrentTextureStatus_Lost
-          ])
+    shaderSource <- newRef
+      { cty = WGPUShaderSourceWGSL }
+      ( !(newRef { cty = WGPUChainedStruct } (NULL { t = Struct "WGPUChainedStruct" []}, WGPUSType_ShaderSourceWGSL))
+      , !(wgpuStringRef SHADER)
+      )
 
-        primIO $ wgpuSurfaceGetCurrentTexture surface !(toPtr surfaceTex)
 
-        liftIO $ render
-          window
-          adapter
-          surface
-          (getField surfaceTex "texture")
-          device
-          queue
-          pipeline
+    shader <- safeFFI
+      wgpuDeviceCreateShaderModule
+      [ device
+      , !(newRef
+         { cty = WGPUShaderModuleDescriptor }
+          ( the (Ptr WGPUChainedStruct) $ believe_me shaderSource -- TODO: better handling of chained structs
+          , !(wgpuStringRef "shader")
+          ))
+      ]
 
-        liftIO $ while
-          (do
-            putStrLn $ "poll"
-            primIO $ glfwPollEvents
-            x <- primIO $ glfwWindowShouldClose window
-            pure $ x == 0
-          )
-          (do
+    putStrLn "got shader"
 
-            -- putStrLn "wgpuSurfaceGetCurrentTexture"
-            primIO $ wgpuSurfaceGetCurrentTexture surface !(toPtr surfaceTex)
+    pipeline <- mkPipeline device shader
 
-            status <- pure $ getField surfaceTex "status"
-            ok <- pure $
-                 status == WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal
-              || status == WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal
+    putStrLn $ "before wgpuSurfaceConfigHelper"
 
-            when (status /= 1) (putStrLn $ "status " ++ show status)
-            putStrLn $ "surfacetex " ++ (show $ ptr2int $ the WGPUTexture $ getField surfaceTex "texture")
+    safeFFI
+      wgpuSurfaceConfigHelper
+      [ window
+      , adapter
+      , device
+      , surface
+      ]
 
-            liftIO $ when
-              (not ok)
-              (do
-                putStrLn $ "before wgpuSurfaceConfigHelper"
-                primIO $ wgpuSurfaceConfigHelper
-                  window
-                  adapter
-                  device
-                  surface
-                putStrLn $ "after wgpuSurfaceConfigHelper"
-              )
+    putStrLn $ "after wgpuSurfaceConfigHelper"
 
-            liftIO $ when
-              ok
-              (render
+    _ <- safeFFI
+          glfwSetFramebufferSizeCallback
+          [ window
+          , !(primIO $ mkGLFWframebuffersizefun $
+            \window, width, height => toPrim $ do
+              putStrLn "resized"
+              primIO $ wgpuSurfaceConfigHelper
                 window
                 adapter
-                surface
-                (getField surfaceTex "texture")
                 device
-                queue
-                pipeline
-              )
+                surface
+              pure ()
+            )
+          ]
 
-            primIO $ wgpuTextureRelease (getField surfaceTex "texture")
+    putStrLn $ "after glfwSetFramebufferSizeCallback"
+
+    surfaceTex <- newRef
+      { cty = WGPUSurfaceTexture }
+      ( mkNULL WGPUChainedStructOut
+      , the WGPUTexture $ mkNULL _ -- WGPUTexture
+      , WGPUSurfaceGetCurrentTextureStatus_Lost
+      )
+
+    putStrLn "before getCurrentTexture 1"
+
+    safeFFI
+      wgpuSurfaceGetCurrentTexture
+      [surface, dbg surfaceTex]
+
+    putStrLn "after getCurrentTexture 1"
+
+    safeFFI wgpuTextureRelease
+      [!(getPtr $ getField surfaceTex "texture")]
+
+    runSubScopedIO a'
+      (\b' => do
+        while b'
+          (\c' => do
+            liftIO $ putStrLn "poll"
+            safeFFI glfwPollEvents []
+            x <- safeFFI glfwWindowShouldClose [window]
+            pure $ x == 0
           )
+          (\d', _ =>
+            do
+              putStrLn "before wgpuSurfaceGetCurrentTexture 2"
 
+              safeFFI
+                wgpuSurfaceGetCurrentTexture
+                [ surface
+                , dbg $ shortenRef d' surfaceTex
+                ]
+
+              putStrLn "after wgpuSurfaceGetCurrentTexture 2"
+
+              status <- readRef $ getField surfaceTex "status"
+              ok <- pure $
+                   status == WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal
+                || status == WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal
+
+              when (status /= 1) (putStrLn $ "status " ++ show status)
+
+              -- putStrLn $ "surfacetex " ++ (show $ ptr2int $ the WGPUTexture $ getField surfaceTex "texture")
+              -- putStrLn $ "surfacetex " ++ (show $ ptr2int $ the WGPUTexture $ getField surfaceTex "texture")
+
+              when
+                (not ok)
+                (do
+                  putStrLn $ "before wgpuSurfaceConfigHelper"
+                  safeFFI
+                    wgpuSurfaceConfigHelper
+                    [ window
+                    , adapter
+                    , device
+                    , surface
+                    ]
+                  putStrLn $ "after wgpuSurfaceConfigHelper"
+                )
+
+              when ok $
+                render d' -- { p = ALALTrans ab' bd' }
+                  window
+                  adapter
+                  surface
+                  !(getPtr $ getField surfaceTex "texture")
+                  device
+                  queue
+                  pipeline
+
+              safeFFI wgpuTextureRelease
+                [!(getPtr $ getField (shortenRef d' surfaceTex) "texture")]
+          )
+      )

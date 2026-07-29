@@ -7,7 +7,7 @@ modules
 	, Graphics.GLFW3WebGPU
 	, System.ScopedIO
 
-main = Main
+main = Example.Triangle1
 executable = "runTest"
 
 sourcedir = "src"
