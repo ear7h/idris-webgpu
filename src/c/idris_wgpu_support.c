@@ -7,7 +7,11 @@
 
 #include <webgpu/wgpu.h>
 // TODO: patch glfw3webgpu? or set this portably
+
+#ifdef __APPLE__
 #define GLFW_EXPOSE_NATIVE_COCOA
+#endif
+
 #include <glfw3webgpu.c>
 
 struct TestStruct {

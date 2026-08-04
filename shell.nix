@@ -18,23 +18,55 @@
       glfw3webgpu
     ];
 
+    C_INCLUDE_PATH = with pkgs; lib.makeIncludePath
+      (pkgs.lib.optionals pkg.stdenv.isLinux
+        [
+          wgpu-native.dev
+          glfw
+          glfw3webgpu
+          libGL
+        ]);
+
     LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
       wgpu-native
       glfw
     ];
-  } ''
-    mkdir -p $out/lib
+  }
+  (
+    if pkgs.stdenv.isDarwin
+    then
+      ''
+        mkdir -p $out/lib
 
-    cc -dynamiclib \
-      -framework Cocoa \
-      -framework CoreVideo \
-      -framework IOKit \
-      -framework QuartzCore \
-      -lglfw -lwgpu_native \
-      -o $out/lib/libidris_wgpu_support.dylib \
-      -x objective-c \
-      ${ ./src/c/idris_wgpu_support.c }
-  '';
+        cc -dynamiclib \
+          -framework Cocoa \
+          -framework CoreVideo \
+          -framework IOKit \
+          -framework QuartzCore \
+          -lglfw -lwgpu_native \
+          -o $out/lib/libidris_wgpu_support.dylib \
+          -x objective-c \
+          ${ ./src/c/idris_wgpu_support.c }
+      ''
+    else
+      ''
+        mkdir -p $out/lib
+
+        cc -shared \
+          -lglfw -lwgpu_native \
+          -fPIC \
+          -o $out/lib/libidris_wgpu_support.so \
+          ${ ./src/c/idris_wgpu_support.c }
+      ''
+  );
+  idris2 = pkgs.idris2.overrideAttrs (old : {
+    version = "ear7h";
+    src = pkgs.fetchgit {
+      url = "https://github.com/ear7h/idris2";
+      rev = "f38c0ad";
+      hash = "sha256-2NStzz8xpOR9SeuVHvxSWVor9YNTbDGfJMnDd/UV04c=";
+    };
+  });
 in pkgs.mkShell {
   IDRIS2_SH =
     let libs = with pkgs; lib.makeLibraryPath [
@@ -60,6 +92,7 @@ in pkgs.mkShell {
   } + "/utils/fake_libc_include";
 
   packages = with pkgs; [
+    idris2
     chez
     (python3.withPackages (py: with py; [
       pycparser
