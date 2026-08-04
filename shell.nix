@@ -65,5 +65,5 @@ in pkgs.mkShell {
       pycparser
       numpy
     ]))
-  ];
+  ] ++ (pkgs.lib.optional pkgs.stdenv.isLinux pkgs.valgrind);
 }

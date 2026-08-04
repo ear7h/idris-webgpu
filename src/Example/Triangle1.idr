@@ -36,17 +36,17 @@ Show (Ref _ t) where
 
 while :
   (0 a' : Lifetime) ->
-  ((0 b' : Lifetime) -> { 0 p1 : AtLeastAsLong a' b' } -> ScopedIO b' Bool) ->
+  ((0 b' : Lifetime) -> ( 0 p1 : AtLeastAsLong a' b' ) -> ScopedIO b' Bool) ->
   ((0 c' : Lifetime) -> ( 0 p2 : AtLeastAsLong a' c' ) -> ScopedIO c' ()) ->
   ScopedIO a' ()
 while a' cond body = do
   cond' <- runSubScopedIO a' cond
-  when cond' (runSubScopedIO' a' body *> while a' cond body)
+  when cond' (runSubScopedIO a' body *> while a' cond body)
 
 wgpuStringRef : String -> ScopedIO a' (Ref a' WGPUStringView)
 wgpuStringRef s = do
   newRef
-    -- { cty = WGPUStringView }
+    { cty = WGPUStringView }
     ( !(stringRef s)
     , cast { to = Bits64 } $ strLength s
     )
@@ -72,7 +72,7 @@ render b' window adapter surface texture device queue pipeline = do
       wgpuDeviceCreateCommandEncoder
       [ device
       , !(newRef
-          -- { cty = WGPUCommandEncoderDescriptor }
+          { cty = WGPUCommandEncoderDescriptor }
           ( mkNULL WGPUChainedStruct
           , !(wgpuStringRef "command-encoder")
           ))
@@ -327,7 +327,7 @@ main = runScopedIO { io = IO } $ \a' => do -- putStrLn "starting"
     _ <- safeFFI glfwWindowHint [GLFW_CLIENT_API_, GLFW_NO_API_]
     putStrLn "a"
 
-    window <- runSubScopedIO _ $ \_ => do
+    window <- runSubScopedIO _ $ \_, _ => do
         s <- stringRef "hello"
         safeFFI
           glfwCreateWindow
@@ -449,9 +449,9 @@ main = runScopedIO { io = IO } $ \a' => do -- putStrLn "starting"
       [!(getPtr $ getField surfaceTex "texture")]
 
     runSubScopedIO a'
-      (\b' => do
+      (\b', _ => do
         while b'
-          (\c' => do
+          (\c', _ => do
             liftIO $ putStrLn "poll"
             safeFFI glfwPollEvents []
             x <- safeFFI glfwWindowShouldClose [window]
