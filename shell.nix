@@ -59,13 +59,16 @@
           ${ ./src/c/idris_wgpu_support.c }
       ''
   );
-  idris2 = pkgs.idris2.overrideAttrs (old : {
+  idris2-ear7h = pkgs.idris2.overrideAttrs (old : {
     version = "ear7h";
-    src = pkgs.fetchgit {
-      url = "https://github.com/ear7h/idris2";
-      rev = "f38c0ad";
-      hash = "sha256-2NStzz8xpOR9SeuVHvxSWVor9YNTbDGfJMnDd/UV04c=";
-    };
+    idris2-unwraped = pkgs.idris2.unwrapped.overrideAttrs (old: {
+      version = "ear7h";
+      src = pkgs.fetchgit {
+        url = "https://github.com/ear7h/idris2";
+        rev = "f38c0ad";
+        hash = "sha256-2NStzz8xpOR9SeuVHvxSWVor9YNTbDGfJMnDd/UV04c=";
+      };
+    });
   });
 in pkgs.mkShell {
   IDRIS2_SH =
@@ -91,9 +94,9 @@ in pkgs.mkShell {
     hash = "sha256-A/VVi523667bpz/h8hc3f1QeG7ymcfgsbeFH2XAHx9c=";
   } + "/utils/fake_libc_include";
 
-  packages = with pkgs; [
-    idris2
-    chez
+  buildInputs = with pkgs; [
+    idris2-ear7h
+    cowsay
     (python3.withPackages (py: with py; [
       pycparser
       numpy
