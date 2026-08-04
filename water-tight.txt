@@ -1,0 +1,36 @@
+
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 93825006095120
+
+dbg: 93825006095120
+
+after cbd
+dbg enc
+dbg: 93825006304288
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+825006115072in scheme93825006115168in scheme93825006095120==50436==
+==50436== HEAP SUMMARY:
+==50436==     in use at exit: 108,328 bytes in 1,420 blocks
+==50436==   total heap usage: 4,676 allocs, 3,256 frees, 376,949 bytes allocated
+==50436==
+==50436== LEAK SUMMARY:
+==50436==    definitely lost: 0 bytes in 0 blocks
+==50436==    indirectly lost: 0 bytes in 0 blocks
+==50436==      possibly lost: 0 bytes in 0 blocks
+==50436==    still reachable: 108,328 bytes in 1,420 blocks
+==50436==         suppressed: 0 bytes in 0 blocks
+==50436== Reachable blocks (those to which a pointer was found) are not shown.
+==50436== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==50436==
+==50436== For lists of detected and suppressed errors, rerun with: -s
+==50436== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+[julio@julio-thinks:~/projects/idris-webgpu]$
