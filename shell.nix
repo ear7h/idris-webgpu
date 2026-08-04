@@ -24,6 +24,7 @@
           wgpu-native.dev
           glfw
           glfw3webgpu
+          wayland.dev
           libGL
         ]);
 
@@ -59,25 +60,27 @@
           ${ ./src/c/idris_wgpu_support.c }
       ''
   );
-  idris2-ear7h = pkgs.idris2.overrideAttrs (old : {
-    version = "ear7h";
-    idris2-unwraped = pkgs.idris2.unwrapped.overrideAttrs (old: {
-      version = "ear7h";
-      src = pkgs.fetchgit {
-        url = "https://github.com/ear7h/idris2";
-        rev = "f38c0ad";
-        hash = "sha256-2NStzz8xpOR9SeuVHvxSWVor9YNTbDGfJMnDd/UV04c=";
-      };
-    });
-  });
+  idris2-ear7h = (pkgs.idris2.unwrapped.overrideAttrs (old: {
+    src = pkgs.fetchgit {
+      url = "https://github.com/ear7h/idris2";
+      rev = "f38c0ad";
+      hash = "sha256-2NStzz8xpOR9SeuVHvxSWVor9YNTbDGfJMnDd/UV04c=";
+    };
+  })).withPackages (x: [ ]);
+  libPath = with pkgs; lib.makeLibraryPath [
+    wgpu-native
+    glfw
+    idrisWGPUSupport
+    libGL
+    "/run/opengl-driver/"
+  ];
 in pkgs.mkShell {
   IDRIS2_SH =
-    let libs = with pkgs; lib.makeLibraryPath [
-        wgpu-native
-        glfw
-        idrisWGPUSupport
-      ];
-    in "${pkgs.coreutils}/bin/env DYLD_LIBRARY_PATH=${libs} ${pkgs.bash}/bin/sh";
+    if pkgs.stdenv.isDarwin
+    then "${pkgs.coreutils}/bin/env DYLD_LIBRARY_PATH=${libPath} ${pkgs.bash}/bin/sh"
+    else "/bin/sh";
+
+  LD_LIBRARY_PATH = libPath;
 
   C_INCLUDE_PATH = with pkgs; lib.makeIncludePath [
     wgpu-native.dev
