@@ -282,7 +282,7 @@ class Visitor(c_ast.NodeVisitor):
 ast = parse_file(
     sys.argv[3],
     use_cpp = True,
-    cpp_path = "clang",
+    cpp_path = "cc",
     cpp_args=["-E", "-I" + os.getenv("FAKE_LIBC_INCLUDE")],
 )
 

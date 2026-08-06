@@ -1,0 +1,4060 @@
+==3194== Memcheck, a memory error detector
+==3194== Copyright (C) 2002-2026, and GNU GPL'd, by Julian Seward et al.
+==3194== Using Valgrind-3.27.1 and LibVEX; rerun with -h for copyright info
+==3194== Command: /home/julio/projects/idris-webgpu/build/exec/_tmpchez_app/_tmpchez.ss
+==3194== 
+starting
+init glfw 1
+got wgpu
+a
+got window
+got surface 285546592
+get adapter sync
+main
+5
+284410640
+284410664
+285546592
+options: 284410640
+backend type: 7
+adapter options surface: 285546592
+in wgpuInstanceRequestAdapterSync_cb 1 0x10d522e0
+
+adpter requested
+get device sync
+dbg: 118942720
+
+in wgpuInstanceRequestDeviceSync_cb 1 0x4f8a880
+
+got device
+got queue
+got shader
+before wgpuSurfaceConfigHelper
+get window size
+get cap
+configure
+after wgpuSurfaceConfigHelper
+after glfwSetFramebufferSizeCallback
+before getCurrentTexture 1
+dbg: 85073984
+
+after getCurrentTexture 1
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 84202912
+
+dbg: 84202912
+
+after cbd
+dbg enc
+dbg: 82496160
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+resized
+get window size
+get cap
+configure
+resized
+get window size
+get cap
+configure
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 286980192
+
+dbg: 286980192
+
+after cbd
+dbg enc
+dbg: 267905792
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 287657200
+
+dbg: 287657200
+
+after cbd
+dbg enc
+dbg: 268156032
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268336112
+
+dbg: 268336112
+
+after cbd
+dbg enc
+dbg: 268182880
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 287197472
+
+dbg: 287197472
+
+after cbd
+dbg enc
+dbg: 83292096
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268410576
+
+dbg: 268410576
+
+after cbd
+dbg enc
+dbg: 268399024
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 85566272
+
+dbg: 85566272
+
+after cbd
+dbg enc
+dbg: 268447168
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270454176
+
+dbg: 270454176
+
+after cbd
+dbg enc
+dbg: 268492832
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268525952
+
+dbg: 268525952
+
+after cbd
+dbg enc
+dbg: 268513040
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 279746528
+
+dbg: 279746528
+
+after cbd
+dbg enc
+dbg: 279733616
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 282994512
+
+dbg: 282994512
+
+after cbd
+dbg enc
+dbg: 277110160
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 286969664
+
+dbg: 286969664
+
+after cbd
+dbg enc
+dbg: 286956752
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 82906768
+
+dbg: 82906768
+
+after cbd
+dbg enc
+dbg: 288473760
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 82587168
+
+dbg: 82587168
+
+after cbd
+dbg enc
+dbg: 82574416
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 280391280
+
+dbg: 280391280
+
+after cbd
+dbg enc
+dbg: 84606672
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 280402848
+
+dbg: 280402848
+
+after cbd
+dbg enc
+dbg: 254889584
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 280561680
+
+dbg: 280561680
+
+after cbd
+dbg enc
+dbg: 255144576
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 254258128
+
+dbg: 254258128
+
+after cbd
+dbg enc
+dbg: 280601344
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 254262976
+
+dbg: 254262976
+
+after cbd
+dbg enc
+dbg: 83548192
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263517152
+
+dbg: 263517152
+
+after cbd
+dbg enc
+dbg: 263504240
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267670960
+
+dbg: 267670960
+
+after cbd
+dbg enc
+dbg: 259357744
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268553328
+
+dbg: 268553328
+
+after cbd
+dbg enc
+dbg: 268540416
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 275927808
+
+dbg: 275927808
+
+after cbd
+dbg enc
+dbg: 272406864
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260473008
+
+dbg: 260473008
+
+after cbd
+dbg enc
+dbg: 260460096
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 276674448
+
+dbg: 276674448
+
+after cbd
+dbg enc
+dbg: 276661616
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 254046736
+
+dbg: 254046736
+
+after cbd
+dbg enc
+dbg: 254034304
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 283077616
+
+dbg: 283077616
+
+after cbd
+dbg enc
+dbg: 259643392
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 283578464
+
+dbg: 283578464
+
+after cbd
+dbg enc
+dbg: 283543040
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 256088864
+
+dbg: 256088864
+
+after cbd
+dbg enc
+dbg: 285473456
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 256174096
+
+dbg: 256174096
+
+after cbd
+dbg enc
+dbg: 287773040
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 287923952
+
+dbg: 287923952
+
+after cbd
+dbg enc
+dbg: 287911776
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 288374704
+
+dbg: 288374704
+
+after cbd
+dbg enc
+dbg: 288361792
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 288387984
+
+dbg: 288387984
+
+after cbd
+dbg enc
+dbg: 288440288
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293366256
+
+dbg: 293366256
+
+after cbd
+dbg enc
+dbg: 293353504
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 85898432
+
+dbg: 85898432
+
+after cbd
+dbg enc
+dbg: 85885520
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 84307792
+
+dbg: 84307792
+
+after cbd
+dbg enc
+dbg: 293464208
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295615136
+
+dbg: 295615136
+
+after cbd
+dbg enc
+dbg: 295602224
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 264275872
+
+dbg: 264275872
+
+after cbd
+dbg enc
+dbg: 260082928
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 83766720
+
+dbg: 83766720
+
+after cbd
+dbg enc
+dbg: 256868656
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 256388192
+
+dbg: 256388192
+
+after cbd
+dbg enc
+dbg: 83800464
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295661600
+
+dbg: 295661600
+
+after cbd
+dbg enc
+dbg: 295651488
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270514784
+
+dbg: 270514784
+
+after cbd
+dbg enc
+dbg: 270501872
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267764272
+
+dbg: 267764272
+
+after cbd
+dbg enc
+dbg: 267751360
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267809680
+
+dbg: 267809680
+
+after cbd
+dbg enc
+dbg: 267796768
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295682608
+
+dbg: 295682608
+
+after cbd
+dbg enc
+dbg: 295669936
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 277451072
+
+dbg: 277451072
+
+after cbd
+dbg enc
+dbg: 277438160
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 283639632
+
+dbg: 283639632
+
+after cbd
+dbg enc
+dbg: 283626880
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295703840
+
+dbg: 295703840
+
+after cbd
+dbg enc
+dbg: 283672080
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293637600
+
+dbg: 293637600
+
+after cbd
+dbg enc
+dbg: 293625088
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poin scheme84202912in scheme286980192in scheme287657200in scheme268336112in scheme287197472in scheme268410576in scheme85566272in scheme270454176in scheme268525952in scheme279746528in scheme282994512in scheme286969664in scheme82906768in scheme82587168in scheme280391280in scheme280402848in scheme280561680in scheme254258128in scheme254262976in scheme263517152in scheme267670960in scheme268553328in scheme275927808in scheme260473008in scheme276674448in scheme254046736in scheme283077616in scheme283578464in scheme256088864in scheme256174096in scheme287923952in scheme288374704in scheme288387984in scheme293366256in scheme85898432in scheme84307792in scheme295615136in scheme264275872in scheme83766720in scheme256388192in scheme295661600in scheme270514784in scheme267764272in scheme267809680in scheme295682608in scheme277451072in scheme283639632in scheme295703840in scheme293637600in scheme289498752in scheme256055152in scheme290429104in scheme292451344in scheme292428992in scheme292474912in scheme292520592in scheme293676672in scll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 289498752
+
+dbg: 289498752
+
+after cbd
+dbg enc
+dbg: 254954912
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 256055152
+
+dbg: 256055152
+
+after cbd
+dbg enc
+dbg: 289532496
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 290429104
+
+dbg: 290429104
+
+after cbd
+dbg enc
+dbg: 290416192
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 292451344
+
+dbg: 292451344
+
+after cbd
+dbg enc
+dbg: 254621984
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 292428992
+
+dbg: 292428992
+
+after cbd
+dbg enc
+dbg: 292416080
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 292474912
+
+dbg: 292474912
+
+after cbd
+dbg enc
+dbg: 292462000
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 292520592
+
+dbg: 292520592
+
+after cbd
+dbg enc
+dbg: 292505632
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293676672
+
+dbg: 293676672
+
+after cbd
+dbg enc
+dbg: 293663760
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 292576176
+
+dbg: 292576176
+
+after cbd
+dbg enc
+dbg: 292563664
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 294263920
+
+dbg: 294263920
+
+after cbd
+dbg enc
+dbg: 295752832
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 294306368
+
+dbg: 294306368
+
+after cbd
+dbg enc
+dbg: 257291136
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 257820672
+
+dbg: 257820672
+
+after cbd
+dbg enc
+dbg: 294170944
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571308992
+
+dbg: 571308992
+
+after cbd
+dbg enc
+dbg: 294183536
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 257864608
+
+dbg: 257864608
+
+after cbd
+dbg enc
+dbg: 257851696
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 264837616
+
+dbg: 264837616
+
+after cbd
+dbg enc
+dbg: 294344400
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 264845904
+
+dbg: 264845904
+
+after cbd
+dbg enc
+dbg: 294378896
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 294422800
+
+dbg: 294422800
+
+after cbd
+dbg enc
+dbg: 294409888
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293706032
+
+dbg: 293706032
+
+after cbd
+dbg enc
+dbg: 293693600
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 264914128
+
+dbg: 264914128
+
+after cbd
+dbg enc
+dbg: 264901216
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 257647152
+
+dbg: 257647152
+
+after cbd
+dbg enc
+dbg: 257634560
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293739200
+
+dbg: 293739200
+
+after cbd
+dbg enc
+dbg: 293726288
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 257677088
+
+dbg: 257677088
+
+after cbd
+dbg enc
+dbg: 257664736
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 262955968
+
+dbg: 262955968
+
+after cbd
+dbg enc
+dbg: 261625744
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 255688704
+
+dbg: 255688704
+
+after cbd
+dbg enc
+dbg: 265013824
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 265037520
+
+dbg: 265037520
+
+after cbd
+dbg enc
+dbg: 265024608
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 265969504
+
+dbg: 265969504
+
+after cbd
+dbg enc
+dbg: 265069952
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 567148176
+
+dbg: 567148176
+
+after cbd
+dbg enc
+dbg: 567136288
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293815904
+
+dbg: 293815904
+
+after cbd
+dbg enc
+dbg: 293802992
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266029680
+
+dbg: 266029680
+
+after cbd
+dbg enc
+dbg: 266017088
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293839424
+
+dbg: 293839424
+
+after cbd
+dbg enc
+dbg: 293826512
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 272551232
+
+dbg: 272551232
+
+after cbd
+dbg enc
+dbg: 272538720
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 272596592
+
+dbg: 272596592
+
+after cbd
+dbg enc
+dbg: 272583680
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293857024
+
+dbg: 293857024
+
+after cbd
+dbg enc
+dbg: 259294784
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268654080
+
+dbg: 268654080
+
+after cbd
+dbg enc
+dbg: 268642432
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571314576
+
+dbg: 571314576
+
+after cbd
+dbg enc
+dbg: 268687824
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 567326800
+
+dbg: 567326800
+
+after cbd
+dbg enc
+dbg: 567313888
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 275094496
+
+dbg: 275094496
+
+after cbd
+dbg enc
+dbg: 567505744
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293917440
+
+dbg: 293917440
+
+after cbd
+dbg enc
+dbg: 293904528
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 275148608
+
+dbg: 275148608
+
+after cbd
+dbg enc
+dbg: 275135696
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293937040
+
+dbg: 293937040
+
+after cbd
+dbg enc
+dbg: 293924528
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295270176
+
+dbg: 295270176
+
+after cbd
+dbg enc
+dbg: 295257264
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 295313728
+
+dbg: 295313728
+
+after cbd
+dbg enc
+dbg: 295300896
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293989728
+
+dbg: 293989728
+
+after cbd
+dbg enc
+dbg: 293976816
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 294030000
+
+dbg: 294030000
+
+after cbd
+dbg enc
+dbg: 567534592
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260110928
+
+dbg: 260110928
+
+after cbd
+dbg enc
+dbg: 83854224
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 567733088
+
+dbg: 567733088
+
+after cbd
+dbg enc
+dbg: 83866768
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 83890176
+
+dbg: 83890176
+
+after cbd
+dbg enc
+dbg: 260234208
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 83902640
+
+dbg: 83902640
+
+after cbd
+dbg enc
+dbg: 294077904
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571387408
+
+dbg: 571387408
+
+after cbd
+dbg enc
+dbg: 83933136
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260160768
+
+dbg: 260160768
+
+after cbd
+dbg enc
+dbg: 260147856
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571431600
+
+dbg: 571431600
+
+after cbd
+dbg enc
+dbg: 571419008
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571466400
+
+dbg: 571466400
+
+after cbd
+dbg enc
+dbg: 571453488
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571497328
+
+dbg: 571497328
+
+after cbd
+dbg enc
+dbg: 571484576
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571528240
+
+dbg: 571528240
+
+after cbd
+dbg enc
+dbg: 571515328
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 269264608
+
+dbg: 269264608
+
+after cbd
+dbg enc
+dbg: 254428112
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571574448
+
+dbg: 571574448
+
+after cbd
+dbg enc
+dbg: 571562752
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260843040
+
+dbg: 260843040
+
+after cbd
+dbg enc
+dbg: 571608192
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 83663632
+
+dbg: 83663632
+
+after cbd
+dbg enc
+dbg: 571640400
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 83676208
+
+dbg: 83676208
+
+after cbd
+dbg enc
+dbg: 571667664
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571706128
+
+dbg: 571706128
+
+after cbd
+dbg enc
+dbg: 571693216
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+heme292576176in scheme294263920in scheme294306368in scheme257820672in scheme571308992in scheme257864608in scheme264837616in scheme264845904in scheme294422800in scheme293706032in scheme264914128in scheme257647152in scheme293739200in scheme257677088in scheme262955968in scheme255688704in scheme265037520in scheme265969504in scheme567148176in scheme293815904in scheme266029680in scheme293839424in scheme272551232in scheme272596592in scheme293857024in scheme268654080in scheme571314576in scheme567326800in scheme275094496in scheme293917440in scheme275148608in scheme293937040in scheme295270176in scheme295313728in scheme293989728in scheme294030000in scheme260110928in scheme567733088in scheme83890176in scheme83902640in scheme571387408in scheme260160768in scheme571431600in scheme571466400in scheme571497328in scheme571528240in scheme269264608in scheme571574448in scheme260843040in scheme83663632in scheme83676208in scheme571706128in scheme83732368in scheme571745680in scheme571798384in scheme571826384in scheme571860960in schemdbg: 83732368
+
+dbg: 83732368
+
+after cbd
+dbg enc
+dbg: 83719456
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571745680
+
+dbg: 571745680
+
+after cbd
+dbg enc
+dbg: 571733168
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571798384
+
+dbg: 571798384
+
+after cbd
+dbg enc
+dbg: 571785472
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571826384
+
+dbg: 571826384
+
+after cbd
+dbg enc
+dbg: 571813472
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571860960
+
+dbg: 571860960
+
+after cbd
+dbg enc
+dbg: 571848048
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571888624
+
+dbg: 571888624
+
+after cbd
+dbg enc
+dbg: 571875952
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571922240
+
+dbg: 571922240
+
+after cbd
+dbg enc
+dbg: 571909328
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293293648
+
+dbg: 293293648
+
+after cbd
+dbg enc
+dbg: 260981296
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 261010016
+
+dbg: 261010016
+
+after cbd
+dbg enc
+dbg: 571957312
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293100592
+
+dbg: 293100592
+
+after cbd
+dbg enc
+dbg: 572002784
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293111232
+
+dbg: 293111232
+
+after cbd
+dbg enc
+dbg: 572032128
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 572068896
+
+dbg: 572068896
+
+after cbd
+dbg enc
+dbg: 572058416
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 572093328
+
+dbg: 572093328
+
+after cbd
+dbg enc
+dbg: 572080416
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 293179952
+
+dbg: 293179952
+
+after cbd
+dbg enc
+dbg: 293167040
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 261804384
+
+dbg: 261804384
+
+after cbd
+dbg enc
+dbg: 261791632
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 261773824
+
+dbg: 261773824
+
+after cbd
+dbg enc
+dbg: 261760912
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260503664
+
+dbg: 260503664
+
+after cbd
+dbg enc
+dbg: 260490752
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 260535776
+
+dbg: 260535776
+
+after cbd
+dbg enc
+dbg: 260522864
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267616768
+
+dbg: 267616768
+
+after cbd
+dbg enc
+dbg: 82174096
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 265163456
+
+dbg: 265163456
+
+after cbd
+dbg enc
+dbg: 267650576
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 567654960
+
+dbg: 567654960
+
+after cbd
+dbg enc
+dbg: 265188336
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 265244960
+
+dbg: 265244960
+
+after cbd
+dbg enc
+dbg: 265232048
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 265290320
+
+dbg: 265290320
+
+after cbd
+dbg enc
+dbg: 265277408
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266121120
+
+dbg: 266121120
+
+after cbd
+dbg enc
+dbg: 265320944
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266143632
+
+dbg: 266143632
+
+after cbd
+dbg enc
+dbg: 263644368
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263670768
+
+dbg: 263670768
+
+after cbd
+dbg enc
+dbg: 263665280
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263700944
+
+dbg: 263700944
+
+after cbd
+dbg enc
+dbg: 263688032
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263744448
+
+dbg: 263744448
+
+after cbd
+dbg enc
+dbg: 263731696
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263790304
+
+dbg: 263790304
+
+after cbd
+dbg enc
+dbg: 263777392
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 263834240
+
+dbg: 263834240
+
+after cbd
+dbg enc
+dbg: 261605856
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 271413680
+
+dbg: 271413680
+
+after cbd
+dbg enc
+dbg: 261457040
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 567665632
+
+dbg: 567665632
+
+after cbd
+dbg enc
+dbg: 266200096
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266252624
+
+dbg: 266252624
+
+after cbd
+dbg enc
+dbg: 266239712
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266298080
+
+dbg: 266298080
+
+after cbd
+dbg enc
+dbg: 266285168
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 266341712
+
+dbg: 266341712
+
+after cbd
+dbg enc
+dbg: 266328800
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267944800
+
+dbg: 267944800
+
+after cbd
+dbg enc
+dbg: 270043760
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 267986464
+
+dbg: 267986464
+
+after cbd
+dbg enc
+dbg: 267973712
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268032320
+
+dbg: 268032320
+
+after cbd
+dbg enc
+dbg: 268019408
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 268076224
+
+dbg: 268076224
+
+after cbd
+dbg enc
+dbg: 268063392
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 262802864
+
+dbg: 262802864
+
+after cbd
+dbg enc
+dbg: 262789952
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270662960
+
+dbg: 270662960
+
+after cbd
+dbg enc
+dbg: 270058368
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfe571888624in scheme571922240in scheme293293648in scheme261010016in scheme293100592in scheme293111232in scheme572068896in scheme572093328in scheme293179952in scheme261804384in scheme261773824in scheme260503664in scheme260535776in scheme267616768in scheme265163456in scheme567654960in scheme265244960in scheme265290320in scheme266121120in scheme266143632in scheme263670768in scheme263700944in scheme263744448in scheme263790304in scheme263834240in scheme271413680in scheme567665632in scheme266252624in scheme266298080in scheme266341712in scheme267944800in scheme267986464in scheme268032320in scheme268076224in scheme262802864in scheme270662960in scheme270686576in scheme571318352in scheme270114768in scheme270738560in scheme270160144in scheme270779520aceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270686576
+
+dbg: 270686576
+
+after cbd
+dbg enc
+dbg: 270081344
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 571318352
+
+dbg: 571318352
+
+after cbd
+dbg enc
+dbg: 270102928
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270114768
+
+dbg: 270114768
+
+after cbd
+dbg enc
+dbg: 264563280
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270738560
+
+dbg: 270738560
+
+after cbd
+dbg enc
+dbg: 270130272
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270160144
+
+dbg: 270160144
+
+after cbd
+dbg enc
+dbg: 270751952
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+before wgpuSurfaceGetCurrentTexture 2
+dbg: 85073984
+
+after wgpuSurfaceGetCurrentTexture 2
+wgpuTextureCreateView
+wgpuCommandEncoderBeginRenderPass
+wgpuRenderPassEncoderSetPipeline
+wgpuRenderPassEncoderDraw
+wgpuRenderPassEncoderEnd
+wgpuRenderPassEncoderRelease
+wgpuCommandEncoderFinish
+dbg: 270779520
+
+dbg: 270779520
+
+after cbd
+dbg enc
+dbg: 270177968
+
+after dbg enc
+new buffer
+setInt64
+wgpuQueueSubmit
+poll
+done
+device drop
+==3194== 
+==3194== HEAP SUMMARY:
+==3194==     in use at exit: 2,987,308 bytes in 33,727 blocks
+==3194==   total heap usage: 495,130 allocs, 461,403 frees, 100,899,541 bytes allocated
+==3194== 
+==3194== 72 bytes in 1 blocks are possibly lost in loss record 7,186 of 9,905
+==3194==    at 0x4A1A7D0: malloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x22AC518C: selectors::parser::parse_selector (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B31AD8: cssparser::parser::parse_until_before (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22AC7B53: selectors::parser::parse_functional_pseudo_class (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B2FF57: cssparser::parser::parse_nested_block (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22AC33F5: selectors::parser::parse_selector (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B31AD8: cssparser::parser::parse_until_before (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A99837: <rsvg::css::RuleParser as cssparser::rules_and_declarations::QualifiedRuleParser>::parse_prelude (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B1929E: <cssparser::rules_and_declarations::StyleSheetParser<P> as core::iter::traits::iterator::Iterator>::next (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A88A8E: rsvg::css::Stylesheet::add_rules_from_string (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A89316: rsvg::css::Stylesheet::from_data (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A5A608: std::sync::once::Once::call_once_force::{{closure}} (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:_ZN9selectors6parser14parse_selector17h3c868ff516024a85E
+   fun:_ZN9cssparser6parser18parse_until_before17h3a0930a4852cccacE
+   fun:_ZN9selectors6parser29parse_functional_pseudo_class17hfe3709b6dd7f2cbfE
+   fun:_ZN9cssparser6parser18parse_nested_block17hab4154f154fb3959E
+   fun:_ZN9selectors6parser14parse_selector17h3c868ff516024a85E
+   fun:_ZN9cssparser6parser18parse_until_before17h3a0930a4852cccacE
+   fun:_ZN96_$LT$rsvg..css..RuleParser$u20$as$u20$cssparser..rules_and_declarations..QualifiedRuleParser$GT$13parse_prelude17h00380b99363d1ce6E
+   fun:_ZN119_$LT$cssparser..rules_and_declarations..StyleSheetParser$LT$P$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$4next17h188a5bb529826f7fE
+   fun:_ZN4rsvg3css10Stylesheet21add_rules_from_string17h8434e8ccedc48170E.llvm.17698208206154426902
+   fun:_ZN4rsvg3css10Stylesheet9from_data17hd5836b86d78345e2E
+   fun:_ZN3std4sync4once4Once15call_once_force28_$u7b$$u7b$closure$u7d$$u7d$17h46eec3826228cd16E.llvm.16817217510886398141
+}
+==3194== 96 bytes in 1 blocks are definitely lost in loss record 8,824 of 9,905
+==3194==    at 0x4A225CF: calloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x6C2269C: proxy_create (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x6C24CDD: wl_proxy_marshal_array_flags (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x6C25396: wl_proxy_marshal_flags (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x534123E: _glfwCreateWindowWayland (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x532796F: glfwCreateWindow (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x716BDC4: ???
+==3194==    by 0x1FFEFFCBFF: ???
+==3194==    by 0x4019BCC: S_call_help (in /nix/store/q632qvg9cgf7m8zmw6xsd6nqs5817r1f-chez-scheme-10.4.1/bin/scheme)
+==3194==    by 0x1101: ???
+==3194==    by 0x58005D9F: ??? (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/memcheck-amd64-linux)
+==3194==    by 0x2D: ???
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   fun:proxy_create
+   fun:wl_proxy_marshal_array_flags
+   fun:wl_proxy_marshal_flags
+   fun:_glfwCreateWindowWayland
+   fun:glfwCreateWindow
+   obj:*
+   obj:*
+   fun:S_call_help
+   obj:*
+   obj:/nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/memcheck-amd64-linux
+   obj:*
+}
+==3194== 96 bytes in 1 blocks are definitely lost in loss record 8,825 of 9,905
+==3194==    at 0x4A225CF: calloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x6C2269C: proxy_create (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x6C24CDD: wl_proxy_marshal_array_flags (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x6C25396: wl_proxy_marshal_flags (in /nix/store/lay2nvvimnv4snsmf3bk2bdnqdcdrg8d-wayland-1.26.0/lib/libwayland-client.so.0.26.0)
+==3194==    by 0x53412E3: _glfwCreateWindowWayland (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x532796F: glfwCreateWindow (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x716BDC4: ???
+==3194==    by 0x1FFEFFCBFF: ???
+==3194==    by 0x4019BCC: S_call_help (in /nix/store/q632qvg9cgf7m8zmw6xsd6nqs5817r1f-chez-scheme-10.4.1/bin/scheme)
+==3194==    by 0x1101: ???
+==3194==    by 0x58005D9F: ??? (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/memcheck-amd64-linux)
+==3194==    by 0x2D: ???
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   fun:proxy_create
+   fun:wl_proxy_marshal_array_flags
+   fun:wl_proxy_marshal_flags
+   fun:_glfwCreateWindowWayland
+   fun:glfwCreateWindow
+   obj:*
+   obj:*
+   fun:S_call_help
+   obj:*
+   obj:/nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/memcheck-amd64-linux
+   obj:*
+}
+==3194== 192 bytes in 2 blocks are possibly lost in loss record 9,198 of 9,905
+==3194==    at 0x4A1A7D0: malloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x22AC6CBC: selectors::parser::SelectorList<Impl>::from_iter (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A99A3A: <rsvg::css::RuleParser as cssparser::rules_and_declarations::QualifiedRuleParser>::parse_prelude (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B1929E: <cssparser::rules_and_declarations::StyleSheetParser<P> as core::iter::traits::iterator::Iterator>::next (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A88A8E: rsvg::css::Stylesheet::add_rules_from_string (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A89316: rsvg::css::Stylesheet::from_data (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A5A608: std::sync::once::Once::call_once_force::{{closure}} (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x229B9806: <std::sys::sync::once::futex::Once>::call (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x229A4960: std::sync::once_lock::OnceLock<T>::initialize (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A00471: rsvg::document::Document::get_intrinsic_dimensions (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22AF275E: rsvg::api::CairoRenderer::intrinsic_size_in_pixels (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x229C9130: <rsvg::api::CairoRenderer as rsvg_2::sizing::LegacySize>::legacy_layer_geometry (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:_ZN9selectors6parser24SelectorList$LT$Impl$GT$9from_iter17h0ad968095def7980E
+   fun:_ZN96_$LT$rsvg..css..RuleParser$u20$as$u20$cssparser..rules_and_declarations..QualifiedRuleParser$GT$13parse_prelude17h00380b99363d1ce6E
+   fun:_ZN119_$LT$cssparser..rules_and_declarations..StyleSheetParser$LT$P$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$4next17h188a5bb529826f7fE
+   fun:_ZN4rsvg3css10Stylesheet21add_rules_from_string17h8434e8ccedc48170E.llvm.17698208206154426902
+   fun:_ZN4rsvg3css10Stylesheet9from_data17hd5836b86d78345e2E
+   fun:_ZN3std4sync4once4Once15call_once_force28_$u7b$$u7b$closure$u7d$$u7d$17h46eec3826228cd16E.llvm.16817217510886398141
+   fun:_RNvMs0_NtNtNtNtCsjk69aaednnH_3std3sys4sync4once5futexNtB5_4Once4call
+   fun:_ZN3std4sync9once_lock17OnceLock$LT$T$GT$10initialize17h3d2efacc567df60cE
+   fun:_ZN4rsvg8document8Document24get_intrinsic_dimensions17h1c4a06f67121f2d0E
+   fun:_ZN4rsvg3api13CairoRenderer24intrinsic_size_in_pixels17hc03a3ec8cf81053fE
+   fun:_ZN71_$LT$rsvg..api..CairoRenderer$u20$as$u20$rsvg_2..sizing..LegacySize$GT$21legacy_layer_geometry17h5dbe6b11bd6f5352E
+}
+==3194== 400 bytes in 1 blocks are possibly lost in loss record 9,446 of 9,905
+==3194==    at 0x4A225CF: calloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x41E55FF: allocate_dtv (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x41E60F1: _dl_allocate_tls (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x4CC9B67: pthread_create@@GLIBC_2.34 (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/libc.so.6)
+==3194==    by 0xAF36638: g_system_thread_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194==    by 0xAF36949: g_thread_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194==    by 0xB5BB8B3: _g_dbus_worker_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgio-2.0.so.0.8800.1)
+==3194==    by 0xB5AAF27: initable_init (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgio-2.0.so.0.8800.1)
+==3194==    by 0xB4D225F: async_init_thread (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgio-2.0.so.0.8800.1)
+==3194==    by 0xB542348: g_task_thread_pool_thread (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgio-2.0.so.0.8800.1)
+==3194==    by 0xAF38379: g_thread_pool_thread_proxy (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194==    by 0xAF37BAD: g_thread_proxy (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:pthread_create@@GLIBC_2.34
+   fun:g_system_thread_new
+   fun:g_thread_new
+   fun:_g_dbus_worker_new
+   fun:initable_init
+   fun:async_init_thread
+   fun:g_task_thread_pool_thread
+   fun:g_thread_pool_thread_proxy
+   fun:g_thread_proxy
+}
+==3194== 400 bytes in 1 blocks are possibly lost in loss record 9,447 of 9,905
+==3194==    at 0x4A225CF: calloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x41E55FF: allocate_dtv (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x41E60F1: _dl_allocate_tls (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x4CC9B67: pthread_create@@GLIBC_2.34 (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/libc.so.6)
+==3194==    by 0xAF36638: g_system_thread_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194==    by 0xAF36949: g_thread_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libglib-2.0.so.0.8800.1)
+==3194==    by 0xEA1F81A: dconf_gdbus_get_worker_context (in /nix/store/i8dcswdbyy337aw266f922lbik0jy8g6-dconf-0.49.0-lib/lib/gio/modules/libdconfsettings.so)
+==3194==    by 0xEA1FC1E: dconf_engine_dbus_call_async_func (in /nix/store/i8dcswdbyy337aw266f922lbik0jy8g6-dconf-0.49.0-lib/lib/gio/modules/libdconfsettings.so)
+==3194==    by 0xEA1B301: dconf_engine_watch_fast (in /nix/store/i8dcswdbyy337aw266f922lbik0jy8g6-dconf-0.49.0-lib/lib/gio/modules/libdconfsettings.so)
+==3194==    by 0xAE58109: g_object_new_internal.part.0 (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgobject-2.0.so.0.8800.1)
+==3194==    by 0xAE5A2BA: g_object_new_valist (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgobject-2.0.so.0.8800.1)
+==3194==    by 0xAE5A66A: g_object_new (in /nix/store/wjvib527dhnf4w04m1axnjv05yr60jn3-glib-2.88.1/lib/libgobject-2.0.so.0.8800.1)
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:pthread_create@@GLIBC_2.34
+   fun:g_system_thread_new
+   fun:g_thread_new
+   fun:dconf_gdbus_get_worker_context
+   fun:dconf_engine_dbus_call_async_func
+   fun:dconf_engine_watch_fast
+   fun:g_object_new_internal.part.0
+   fun:g_object_new_valist
+   fun:g_object_new
+}
+==3194== 512 bytes in 16 blocks are definitely lost in loss record 9,516 of 9,905
+==3194==    at 0x4A1A7D0: malloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x41D4DEE: _dl_close_worker (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x41D55C9: _dl_close (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x41D4485: _dl_catch_exception (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x41D45D8: _dl_catch_error (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/ld-linux-x86-64.so.2)
+==3194==    by 0x4CC4692: _dlerror_run (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/libc.so.6)
+==3194==    by 0x4CC43C2: dlclose@@GLIBC_2.34 (in /nix/store/qqiqd3ah10x8hzsif4j1y4xc1miw23nx-glibc-2.42-67/lib/libc.so.6)
+==3194==    by 0x6CA06B8: libdecor_new (in /nix/store/mdqhig8q9i3sn32344mmh0pqfdz0lgvr-libdecor-0.2.5/lib/libdecor-0.so.0.200.5)
+==3194==    by 0x533B971: _glfwInitWayland (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x5321541: glfwInit (in /nix/store/3zb1c3ih2l0lz0z637klm8cnsaxzs6lr-glfw-3.4/lib/libglfw.so.3.4)
+==3194==    by 0x716E122: ???
+==3194==    by 0x1FFEFFCBFF: ???
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:_dl_close_worker
+   fun:_dl_close
+   fun:_dl_catch_exception
+   fun:_dl_catch_error
+   fun:_dlerror_run
+   fun:dlclose@@GLIBC_2.34
+   fun:libdecor_new
+   fun:_glfwInitWayland
+   fun:glfwInit
+   obj:*
+   obj:*
+}
+==3194== 2,056 bytes in 18 blocks are possibly lost in loss record 9,754 of 9,905
+==3194==    at 0x4A1A7D0: malloc (in /nix/store/g1x8a2mgb9lnjhqpi3cszjham8a3p8zq-valgrind-3.27.1/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3194==    by 0x22AC518C: selectors::parser::parse_selector (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B31AD8: cssparser::parser::parse_until_before (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A99837: <rsvg::css::RuleParser as cssparser::rules_and_declarations::QualifiedRuleParser>::parse_prelude (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22B1929E: <cssparser::rules_and_declarations::StyleSheetParser<P> as core::iter::traits::iterator::Iterator>::next (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A88A8E: rsvg::css::Stylesheet::add_rules_from_string (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A89316: rsvg::css::Stylesheet::from_data (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A5A608: std::sync::once::Once::call_once_force::{{closure}} (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x229B9806: <std::sys::sync::once::futex::Once>::call (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x229A4960: std::sync::once_lock::OnceLock<T>::initialize (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22A00471: rsvg::document::Document::get_intrinsic_dimensions (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194==    by 0x22AF275E: rsvg::api::CairoRenderer::intrinsic_size_in_pixels (in /nix/store/91lgsf2dixa2mni74pvy3k6rxp2m32dr-librsvg-2.62.1/lib/librsvg-2.so.2.62.1)
+==3194== 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:_ZN9selectors6parser14parse_selector17h3c868ff516024a85E
+   fun:_ZN9cssparser6parser18parse_until_before17h3a0930a4852cccacE
+   fun:_ZN96_$LT$rsvg..css..RuleParser$u20$as$u20$cssparser..rules_and_declarations..QualifiedRuleParser$GT$13parse_prelude17h00380b99363d1ce6E
+   fun:_ZN119_$LT$cssparser..rules_and_declarations..StyleSheetParser$LT$P$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$4next17h188a5bb529826f7fE
+   fun:_ZN4rsvg3css10Stylesheet21add_rules_from_string17h8434e8ccedc48170E.llvm.17698208206154426902
+   fun:_ZN4rsvg3css10Stylesheet9from_data17hd5836b86d78345e2E
+   fun:_ZN3std4sync4once4Once15call_once_force28_$u7b$$u7b$closure$u7d$$u7d$17h46eec3826228cd16E.llvm.16817217510886398141
+   fun:_RNvMs0_NtNtNtNtCsjk69aaednnH_3std3sys4sync4once5futexNtB5_4Once4call
+   fun:_ZN3std4sync9once_lock17OnceLock$LT$T$GT$10initialize17h3d2efacc567df60cE
+   fun:_ZN4rsvg8document8Document24get_intrinsic_dimensions17h1c4a06f67121f2d0E
+   fun:_ZN4rsvg3api13CairoRenderer24intrinsic_size_in_pixels17hc03a3ec8cf81053fE
+}
+==3194== LEAK SUMMARY:
+==3194==    definitely lost: 704 bytes in 18 blocks
+==3194==    indirectly lost: 7 bytes in 1 blocks
+==3194==      possibly lost: 3,120 bytes in 23 blocks
+==3194==    still reachable: 900,347 bytes in 5,170 blocks
+==3194==         suppressed: 1,983,146 bytes in 27,627 blocks
+==3194== Reachable blocks (those to which a pointer was found) are not shown.
+==3194== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==3194== 
+==3194== For lists of detected and suppressed errors, rerun with: -s
+==3194== ERROR SUMMARY: 8 errors from 8 contexts (suppressed: 47 from 47)

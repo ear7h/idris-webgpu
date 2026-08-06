@@ -99,6 +99,7 @@ in pkgs.mkShell {
 
   buildInputs = with pkgs; [
     idris2-ear7h
+    chez
     cowsay
     (python3.withPackages (py: with py; [
       pycparser

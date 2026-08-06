@@ -5574,8 +5574,28 @@ WGPUGLFenceBehaviour_Force32 : WGPUGLFenceBehaviour
 WGPUGLFenceBehaviour_Force32 = 0x7FFFFFFF
 
 public export
+WGPUDx12SwapchainKind : Type
+WGPUDx12SwapchainKind = Bits32
+
+public export
+WGPUDx12SwapchainKind_Undefined : WGPUDx12SwapchainKind
+WGPUDx12SwapchainKind_Undefined = 0x00000000
+
+public export
+WGPUDx12SwapchainKind_DxgiFromHwnd : WGPUDx12SwapchainKind
+WGPUDx12SwapchainKind_DxgiFromHwnd = 0x00000001
+
+public export
+WGPUDx12SwapchainKind_DxgiFromVisual : WGPUDx12SwapchainKind
+WGPUDx12SwapchainKind_DxgiFromVisual = 0x00000002
+
+public export
+WGPUDx12SwapchainKind_Force32 : WGPUDx12SwapchainKind
+WGPUDx12SwapchainKind_Force32 = 0x7FFFFFFF
+
+public export
 WGPUInstanceExtras : Type
-WGPUInstanceExtras = Struct "WGPUInstanceExtras" [("chain",  (WGPUChainedStruct)),("backends",  (WGPUInstanceBackend)),("flags",  (WGPUInstanceFlag)),("dx12ShaderCompiler",  (WGPUDx12Compiler)),("gles3MinorVersion",  (WGPUGles3MinorVersion)),("glFenceBehaviour",  (WGPUGLFenceBehaviour)),("dxcPath",  (WGPUStringView)),("dxcMaxShaderModel",  (WGPUDxcMaxShaderModel)),("budgetForDeviceCreation", Ptr (Bits8)),("budgetForDeviceLoss", Ptr (Bits8))]
+WGPUInstanceExtras = Struct "WGPUInstanceExtras" [("chain",  (WGPUChainedStruct)),("backends",  (WGPUInstanceBackend)),("flags",  (WGPUInstanceFlag)),("dx12ShaderCompiler",  (WGPUDx12Compiler)),("gles3MinorVersion",  (WGPUGles3MinorVersion)),("glFenceBehaviour",  (WGPUGLFenceBehaviour)),("dxcPath",  (WGPUStringView)),("dxcMaxShaderModel",  (WGPUDxcMaxShaderModel)),("dx12PresentationSystem",  (WGPUDx12SwapchainKind)),("budgetForDeviceCreation", Ptr (Bits8)),("budgetForDeviceLoss", Ptr (Bits8))]
 
 
 public export
@@ -5740,6 +5760,11 @@ wgpuInstanceEnumerateAdapters : WGPUInstance -> Ptr (WGPUInstanceEnumerateAdapte
 %foreign "C:wgpuQueueSubmitForIndex,libwgpu_native"
 export
 wgpuQueueSubmitForIndex : WGPUQueue -> Bits64 -> Ptr (WGPUCommandBuffer) -> PrimIO (WGPUSubmissionIndex)
+    
+
+%foreign "C:wgpuQueueGetTimestampPeriod,libwgpu_native"
+export
+wgpuQueueGetTimestampPeriod : WGPUQueue -> PrimIO (Float)
     
 
 %foreign "C:wgpuDevicePoll,libwgpu_native"

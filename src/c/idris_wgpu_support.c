@@ -10,6 +10,8 @@
 
 #ifdef __APPLE__
 #define GLFW_EXPOSE_NATIVE_COCOA
+#else
+#define GLFW_EXPOSE_NATIVE_WAYLAND
 #endif
 
 #include <glfw3webgpu.c>
@@ -195,4 +197,5 @@ void wgpuSurfaceConfigHelper(
 
     printf("configure\n");
     wgpuSurfaceConfigure(surface, &conf);
+    wgpuSurfaceCapabilitiesFreeMembers(cap);
 }

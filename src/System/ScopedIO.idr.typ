@@ -1,6 +1,7 @@
 /* idris
 module System.ScopedIO
 
+
 import Data.Bits
 import Data.List
 import Data.List.Elem
@@ -951,6 +952,8 @@ HasIO (ScopedIO a') where
 */
 
 /* idris
+
+export
 defer : IO () -> ScopedIO a' ()
 defer f = MkScopedIO $ pure ([f], ())
 
@@ -1142,6 +1145,13 @@ safeFFI :
   HList args ->
   ScopedIO a' (FFICallRet call)
 
+export
+safeFFIDrop:
+  { auto call : FFICall a' args f } ->
+  f ->
+  (drop : FFICallRet call -> IO ()) ->
+  HList args ->
+  ScopedIO a' (FFICallRet call)
 ```
 
 /* idris
@@ -1153,9 +1163,9 @@ prim__ptrDeref : Ptr a -> a
 prim__ptrDeref = believe_me
 
 
-safeFFI = (assert_total go) call
+safeFFI = go call
   where
-  partial go :
+  go :
     (call' : FFICall a' args' f') ->
     f' -> HList args' -> ScopedIO a' (FFICallRet call')
   go FCReturn f _ = primIO f
@@ -1170,6 +1180,10 @@ safeFFI = (assert_total go) call
     _ <- checkRef a
     go rest (f $ prim__ptrDeref $ unsafeRefPtr a) arg
 
+safeFFIDrop fn drop args = do
+  ret <- safeFFI fn args
+  defer (drop ret)
+  pure ret
 */
 
 ]
@@ -1185,9 +1199,11 @@ export
 stringRef : String -> ScopedIO a' (Ref a' Bits8)
 stringRef s = do
   let len = strLength s
-  ptr <- primIO $ prim__malloc $ cast len
+  ptr <- primIO $ prim__malloc . (+ 1) $ cast len
   defer (primIO $ prim__free ptr)
   primIO $ prim__memcpyStr ptr s (cast len)
+  -- i loooooove c strings <3
+  _ <- primIO $ prim__ptrWrite8 (prim__offsetPtr ptr (cast len)) 0
   pure $ unsafePtrRef $ prim__castPtr ptr
 
 ```

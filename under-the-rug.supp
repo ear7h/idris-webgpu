@@ -1,0 +1,90 @@
+{
+   egl-cleanup-is-bad
+   Memcheck:Leak
+   ...
+   fun:eglInitialize
+}
+{
+   egl-cleanup-is-still-bad
+   Memcheck:Leak
+   ...
+   fun:eglCreateContext
+}
+{
+   egl-cleanup-is-awful
+   Memcheck:Leak
+   ...
+   fun:eglDestroyContext
+}
+{
+   probably-egl-again
+   Memcheck:Leak
+   obj:*libgallium*
+}
+{
+   egl-sigh
+   Memcheck:Leak
+   obj:*libEGL*
+}
+{
+   thanks-wgpu
+   Memcheck:Leak
+   ...
+   fun:*wgpu_core::indirect_validation*
+}
+{
+   who-even-invited-this-guy
+   Memcheck:Leak
+   ...
+   fun:pango_*
+}
+{
+   fonts-what
+   Memcheck:Leak
+   ...
+   fun:FcFont*
+}
+{
+   fonts-what
+   Memcheck:Leak
+   ...
+   fun:FcConfig*
+}
+{
+   okay-seriously-this-party-is-out-of-control
+   Memcheck:Leak
+   ...
+   fun:gtk_*
+}
+{
+   i-still-see-u
+   Memcheck:Leak
+   ...
+   fun:_gtk_*
+}
+{
+   what-the-hell-even-is-a-gdk
+   Memcheck:Leak
+   ...
+   fun:_gdk_*
+}
+{
+   just
+   Memcheck:Leak
+   ...
+   fun:xmlParse*
+}
+{
+   yum
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:*hashbrown*
+}
+{
+   svg-deez
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:rsvg*
+}
